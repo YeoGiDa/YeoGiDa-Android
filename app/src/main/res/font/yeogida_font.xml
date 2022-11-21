@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<font-family xmlns:app="http://schemas.android.com/apk/res-auto">
+<font-family xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <font
         app:font="@font/noto_sans_black"
         app:fontStyle="normal" />
@@ -23,4 +24,8 @@
     <font
         app:font="@font/noto_sans_thin"
         app:fontStyle="normal" />
+
+    <font
+        android:font="@font/nanum_sonpyeonji"
+        android:fontStyle="normal" />
 </font-family>

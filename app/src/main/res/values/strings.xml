@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">YeoGida</string>
+    <string name="login_title_h1">여기다</string>
+    <string name="login_title_h2_1">여</string>
+    <string name="login_title_h2_2">행의</string>
+    <string name="login_title_h2_3">기</string>
+    <string name="login_title_h2_4">록을</string>
+    <string name="login_title_h2_5">남기</string>
+    <string name="login_title_h2_6">다</string>
+    <string name="login_description">여행의 기록을 남겨보아요</string>
+    <string name="login_kakao">카카오로 로그인</string>
+    <string name="login_naver">네이버로 로그인</string>
+    <string name="login_google">구글로 로그인</string>
 </resources>

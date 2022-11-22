@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">YeoGida</string>
+
     <string name="login_title_h1">여기다</string>
     <string name="login_title_h2_1">여</string>
     <string name="login_title_h2_2">행의</string>
@@ -11,4 +12,12 @@
     <string name="login_kakao">카카오로 로그인</string>
     <string name="login_naver">네이버로 로그인</string>
     <string name="login_google">구글로 로그인</string>
+
+    <string name="join_title">회원가입</string>
+    <string name="join_profile_image">프로필 사진</string>
+    <string name="join_profile_image_optional">(선택)</string>
+    <string name="join_nickname">닉네임</string>
+    <string name="join_nickname_hint">닉네임을 입력해주세요.</string>
+    <string name="join_nick_error">이미 사용중인 닉네임입니다.</string>
+    <string name="join_submit">완료</string>
 </resources>

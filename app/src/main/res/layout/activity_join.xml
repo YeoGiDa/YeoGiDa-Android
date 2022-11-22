@@ -79,12 +79,15 @@
 
     <ImageButton
         android:id="@+id/btn_plus"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         android:background="@drawable/oval_white"
         android:backgroundTint="@color/main_blue"
         android:src="@drawable/ic_plus_image"
         app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@id/iv_profile"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:tint="@color/white" />

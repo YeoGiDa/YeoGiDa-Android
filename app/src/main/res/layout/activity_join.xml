@@ -64,11 +64,14 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_profile"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="80dp"
         android:background="@drawable/oval_gray100"
         android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_profile_description"
@@ -78,13 +81,13 @@
         android:id="@+id/btn_plus"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/oval_white"
         android:backgroundTint="@color/main_blue"
         android:src="@drawable/ic_plus_image"
         app:layout_constraintBottom_toBottomOf="@id/iv_profile"
         app:layout_constraintEnd_toEndOf="@id/iv_profile"
-        app:tint="#FFFFFF" />
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/tv_nick"
@@ -106,32 +109,33 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:textCursorDrawable="@drawable/main_blue_cursor"
         android:background="@drawable/selector_et_blue"
         android:fontFamily="@font/noto_sans_regular"
         android:hint="@string/join_nickname_hint"
         android:maxLines="1"
         android:padding="16dp"
         android:textColor="@color/black"
+        android:textCursorDrawable="@drawable/main_blue_cursor"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
 
     <TextView
-        app:layout_constraintTop_toBottomOf="@+id/et_nick"
-        app:layout_constraintStart_toStartOf="@id/et_nick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
-        android:textColor="@color/red"
         android:text="@string/join_nick_error"
-        tools:visibility="visible"
+        android:textColor="@color/red"
+        android:textSize="12sp"
         android:visibility="gone"
-        />
+        app:layout_constraintStart_toStartOf="@id/et_nick"
+        app:layout_constraintTop_toBottomOf="@+id/et_nick"
+        tools:visibility="visible" />
+
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/appCompatButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -145,5 +149,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

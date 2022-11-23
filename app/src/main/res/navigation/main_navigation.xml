@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigaion"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_around"
+        android:name="com.starters.yeogida.AroundFragment"
+        android:label="AroundFragment"
+        tools:layout="@layout/fragment_around" />
+    <fragment
+        android:id="@+id/navigation_like"
+        android:name="com.starters.yeogida.LikeFragment"
+        android:label="LikeFragment"
+        tools:layout="@layout/fragment_like" />
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.starters.yeogida.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/navigation_follow"
+        android:name="com.starters.yeogida.FollowFragment"
+        android:label="FollowFragment"
+        tools:layout="@layout/fragment_follow" />
+</navigation>

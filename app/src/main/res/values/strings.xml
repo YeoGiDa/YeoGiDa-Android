@@ -20,4 +20,12 @@
     <string name="join_nickname_hint">닉네임을 입력해주세요.</string>
     <string name="join_nick_error">이미 사용중인 닉네임입니다.</string>
     <string name="join_submit">완료</string>
+
+    <!-- bottom navigation -->
+    <string name="navi_home">홈</string>
+    <string name="navi_around">둘러보기</string>
+    <string name="navi_like">여기좋아</string>
+    <string name="navi_follow">팔로우</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

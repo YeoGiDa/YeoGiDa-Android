@@ -1,4 +1,4 @@
-package com.starters.yeogida.ui.user
+package com.starters.yeogida.presentation.user
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

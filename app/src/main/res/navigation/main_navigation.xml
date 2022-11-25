@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/navigation_follow"
-        android:name="com.starters.yeogida.FollowFragment"
-        android:label="FollowFragment"
-        tools:layout="@layout/fragment_follow" />
+        android:name="com.starters.yeogida.presentation.follow.FollowHomeFragment"
+        android:label="FollowHomeFragment"
+        tools:layout="@layout/fragment_follow_home" />
 </navigation>

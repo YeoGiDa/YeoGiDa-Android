@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/navigation_around"
-        android:name="com.starters.yeogida.AroundFragment"
+        android:name="com.starters.yeogida.presentation.around.AroundFragment"
         android:label="AroundFragment"
         tools:layout="@layout/fragment_around" />
     <fragment
         android:id="@+id/navigation_like"
-        android:name="com.starters.yeogida.LikeFragment"
+        android:name="com.starters.yeogida.presentation.like.LikeFragment"
         android:label="LikeFragment"
         tools:layout="@layout/fragment_like" />
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.starters.yeogida.HomeFragment"
+        android:name="com.starters.yeogida.presentation.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
     <fragment

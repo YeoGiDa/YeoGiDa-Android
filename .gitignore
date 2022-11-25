@@ -42,7 +42,6 @@ captures/
 
 # IntelliJ
 *.iml
-.idea/
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
@@ -248,6 +247,6 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 .idea/
-app/src/main/res/values/kakao_app_key.xml
+/app/src/main/res/values/kakao_app_key.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin,gradle

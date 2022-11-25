@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  ImageView Style  -->
+    <style name="Circle">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="RoundedBig">
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="RoundedMedium">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="tab_text" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/noto_sans_medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+</resources>

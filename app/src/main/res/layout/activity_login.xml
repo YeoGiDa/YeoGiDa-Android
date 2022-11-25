@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/main_blue"
-        tools:context=".LoginActivity">
+        tools:context=".presentation.user.LoginActivity">
 
         <TextView
             android:id="@+id/txt_h1"
@@ -122,7 +122,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="100dp"
             android:orientation="horizontal"
-            android:background="@drawable/rectangle_kakao_yellow_radius_12"
+            android:background="@drawable/rectangle_fill_kakao_yellow_12"
             app:layout_constraintTop_toBottomOf="@+id/tv_login_description"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -166,7 +166,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="100dp"
             android:orientation="horizontal"
-            android:background="@drawable/rectangle_naver_green_radius_12"
+            android:background="@drawable/rectangle_fill_naver_green_12"
             app:layout_constraintTop_toBottomOf="@+id/layout_login_kakao"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -209,7 +209,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="100dp"
             android:orientation="horizontal"
-            android:background="@drawable/rectangle_white_radius_12"
+            android:background="@drawable/rectangle_fill_white_12"
             app:layout_constraintTop_toBottomOf="@+id/layout_login_naver"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"

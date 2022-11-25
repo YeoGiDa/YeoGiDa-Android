@@ -1,4 +1,4 @@
-package com.starters.yeogida
+package com.starters.yeogida.presentation.user
 
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.user.UserApiClient
+import com.starters.yeogida.R
 import com.starters.yeogida.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {

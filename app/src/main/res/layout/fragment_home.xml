@@ -1,15 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.home.HomeFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="230dp"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".presentation.home.HomeFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_home_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/nanum_sonpyeonji"
+            android:text="@string/home_title"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_setting"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_home_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_home_title" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home_title"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_best_traveler_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/home_best_traveler_title"
+                    android:textColor="@color/black_blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_best_traveler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:paddingEnd="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_best_traveler_title"
+                    tools:listitem="@layout/item_best_traveler">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/tv_more_best_traveler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:padding="4dp"
+                    android:textSize="12sp"
+                    android:text="@string/home_more_text"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_best_traveler_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_best_traveler_title"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/tv_best_monthly_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/home_best_monthly_trip_title"
+                    android:textColor="@color/black_blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/tv_best_traveler_title"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_best_traveler" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_best_monthly_trip"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:paddingEnd="10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_best_monthly_trip"
+                    tools:listitem="@layout/item_trip" />
+
+                <TextView
+                    android:id="@+id/tv_more_best_monthly_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:padding="4dp"
+                    android:textSize="12sp"
+                    android:text="@string/home_more_text"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_best_monthly_trip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_best_monthly_trip" />
+
+                <TextView
+                    android:id="@+id/tv_recent_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/home_recent_trip_title"
+                    android:textColor="@color/black_blue"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/tv_best_traveler_title"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_best_monthly_trip" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recent_trip"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="24dp"
+                    android:orientation="horizontal"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="24dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_recent_trip"
+                    tools:listitem="@layout/item_trip" />
+
+                <TextView
+                    android:id="@+id/tv_more_recent_trip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:padding="4dp"
+                    android:textSize="12sp"
+                    android:text="@string/home_more_text"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_recent_trip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_recent_trip" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

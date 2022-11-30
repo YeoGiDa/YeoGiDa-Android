@@ -15,6 +15,11 @@ import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.ActivityJoinBinding
+import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.util.shortToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class JoinActivity : AppCompatActivity() {
@@ -30,21 +35,31 @@ class JoinActivity : AppCompatActivity() {
         setNickname()
         setProfileImage()
 
+        binding.btnPlus.setOnClickListener {
+
+        }
+
         binding.btnJoinSubmit.setOnClickListener {
             if ( hasSameNickname() ) {
-                binding.tvProfileDescription.visibility = View.VISIBLE  // 중복된다는 문구 보이기.
-
-                with(binding.etNick) {
-                    text.clear()
-                    setBackgroundResource(R.drawable.rectangle_border_red_10)
-                    requestFocus()
-                    keyboardShow()
+                with(binding) {
+                    tvProfileDescription.visibility = View.VISIBLE // 중복된다는 문구 보이기.
+                    etNick.text.clear()
+                    etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
+                    etNick.requestFocus()
                 }
-                Toast.makeText(this, "닉네임이 중복됩니다.", Toast.LENGTH_SHORT).show()
+                keyboardShow()
+                shortToast("닉네임이 중복됩니다.")
             } else {
-                // TODO. 회원등록 API
                 intent.getStringExtra("email")?.let {
                     Log.d("JoinActivity", "이메일 : $it")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        /*val service = ApiClient.userService
+                        service.addUser()*/
+                    }
+                }
+
+                intent.getStringExtra("userNum")?.let {
+                    Log.d("JoinActivity", "회원번호 : $it")
                 }
             }
         }
@@ -61,10 +76,6 @@ class JoinActivity : AppCompatActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 // 완료 버튼 Enabled 이벤트
                 binding.btnJoinSubmit.isEnabled = !binding.etNick.text.isNullOrBlank()
-
-                if(binding.etNick.text.length > 8)
-                    Toast.makeText(this@JoinActivity, "닉네임은 8글자를 넘을 수 없습니다.", Toast.LENGTH_SHORT)
-                        .show()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -79,10 +90,9 @@ class JoinActivity : AppCompatActivity() {
                 requestFocus()  // Focusing 하기
                 setText(it)
                 setSelection(length())  // 커서 끝으로
-
-                // 키보드도 올라오게
-                keyboardShow()
             }
+
+            keyboardShow()  // 키보드도 올라오게
         }
     }
 

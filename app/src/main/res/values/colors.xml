@@ -28,6 +28,7 @@
     <color name="gray_100">#F5F5F5</color>
 
     <color name="red">#FF4E44</color>
+    <color name="black_blue">#1C1C1E</color>
 
     <!-- Sub color -->
     <color name="kakao_yellow">#FEE500</color>

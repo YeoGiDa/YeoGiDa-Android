@@ -4,57 +4,68 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.starters.yeogida.R
+import com.starters.yeogida.data.local.BestTravelerData
+import com.starters.yeogida.data.local.TripData
+import com.starters.yeogida.databinding.FragmentHomeBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val bestTravelerAdapter = BestTravelerAdapter()
+        val bestTripAdapter = TripAdapter()
+        val recentTripAdapter = TripAdapter()
+
+        binding.rvBestTraveler.adapter = bestTravelerAdapter
+        binding.rvBestMonthlyTrip.adapter = bestTripAdapter
+        binding.rvRecentTrip.adapter = recentTripAdapter
+
+        bestTravelerAdapter.bestTravelerList.addAll(
+            listOf(
+                BestTravelerData("https://image.bugsm.co.kr/album/images/500/204708/20470857.jpg", "하현상", "999+"),
+                BestTravelerData("https://image.yes24.com/goods/96827725/XL", "호피폴라", "129"),
+                BestTravelerData("https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg", "여행왕", "20"),
+                BestTravelerData("https://cdn.pixabay.com/photo/2017/06/05/11/01/airport-2373727_1280.jpg", "뱅기", "14"),
+                BestTravelerData("https://cdn.pixabay.com/photo/2016/11/22/22/21/adventure-1850912_1280.jpg", "레모나", "2")
+            )
+        )
+        bestTripAdapter.tripList.addAll(
+            listOf(
+                TripData("https://cdn.pixabay.com/photo/2017/08/31/09/26/korea-2699930_1280.jpg", "담양", "설렁탕탕구리"),
+                TripData("https://cdn.pixabay.com/photo/2020/05/05/07/52/republic-of-korea-5131925_1280.jpg", "제주도", "닉넴"),
+                TripData("https://cdn.pixabay.com/photo/2022/08/05/05/59/korea-7366036_1280.jpg", "서울", "텀플러러버"),
+                TripData("https://cdn.pixabay.com/photo/2020/11/24/02/13/gyeongbok-palace-5771324_1280.jpg", "서울", "한복좋아"),
+                TripData("https://cdn.pixabay.com/photo/2016/08/23/09/38/pohang-1613923_1280.jpg", "포항", "포항항")
+            )
+        )
+        recentTripAdapter.tripList.addAll(
+            listOf(
+                TripData("https://cdn.pixabay.com/photo/2016/08/19/04/59/the-bulguksa-temple-1604556_1280.jpg", "경주", "귤귤"),
+                TripData("https://cdn.pixabay.com/photo/2020/05/24/11/56/to-5213925_1280.jpg", "경주", "포항항"),
+                TripData("https://cdn.pixabay.com/photo/2020/03/19/07/37/suwon-4946628_1280.jpg", "수원", "비타민C"),
+                TripData("https://cdn.pixabay.com/photo/2017/04/03/11/14/gangneung-2198025_1280.jpg", "강릉", "지브리짱")
+            )
+        )
+
+        bestTravelerAdapter.notifyDataSetChanged()
+        bestTripAdapter.notifyDataSetChanged()
+        recentTripAdapter.notifyDataSetChanged()
     }
 }

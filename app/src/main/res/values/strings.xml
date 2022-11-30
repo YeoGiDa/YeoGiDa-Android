@@ -36,4 +36,11 @@
     <string name="follow_item_delete">삭제</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Home Fragment -->
+    <string name="home_title">여기다</string>
+    <string name="home_best_traveler_title">Best Traveler</string>
+    <string name="home_best_monthly_trip_title">월간 Best 여행지</string>
+    <string name="home_recent_trip_title">팔로우의 최근 여행지</string>
+    <string name="home_more_text">더보기</string>
 </resources>

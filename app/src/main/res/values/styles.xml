@@ -17,4 +17,19 @@
         <item name="android:fontFamily">@font/noto_sans_medium</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <!-- Custom Chip -->
+    <style name="Widget.MaterialComponents.Chip.MyStyle" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:checkable">true</item>
+
+        <item name="chipIconVisible">true</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+
+        <item name="android:textColor">@color/text_color_chip</item>
+        <item name="chipIconTint">@color/text_color_chip</item>
+        <item name="rippleColor">@null</item>
+        <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
+
+    </style>
 </resources>

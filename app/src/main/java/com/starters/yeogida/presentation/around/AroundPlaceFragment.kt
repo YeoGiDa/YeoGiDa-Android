@@ -1,60 +1,48 @@
 package com.starters.yeogida.presentation.around
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.starters.yeogida.R
+import com.starters.yeogida.data.local.PlaceData
+import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AroundPlaceFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AroundPlaceFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentAroundPlaceBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_around_place, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_around_place, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AroundPlaceFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AroundPlaceFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val aroundPlaceAdapter = AroundPlaceAdapter()
+        binding.rvAroundPlace.adapter = aroundPlaceAdapter
+        aroundPlaceAdapter.aroundPlaceList.addAll(
+            listOf(
+                PlaceData("https://cdn.pixabay.com/photo/2016/04/26/03/55/salmon-1353598_1280.jpg", "연어맛집", "4.5", 30, "식당"),
+                PlaceData("https://cdn.pixabay.com/photo/2013/04/11/19/46/building-102840_1280.jpg", "박물관", "2.0", 1, "카페"),
+                PlaceData("https://cdn.pixabay.com/photo/2017/08/07/23/11/iceland-2608985_1280.jpg", "오오폭포", "3.0", 0, "바"),
+                PlaceData("https://cdn.pixabay.com/photo/2016/11/21/13/04/alcoholic-beverages-1845295_1280.jpg", "수울수울", "1.5", 999, "관광지"),
+                PlaceData("https://cdn.pixabay.com/photo/2013/04/11/19/46/building-102840_1280.jpg", "박물관", "2.0", 1, "카페"),
+                PlaceData("https://cdn.pixabay.com/photo/2017/08/07/23/11/iceland-2608985_1280.jpg", "오오폭포", "3.0", 0, "바"),
+                PlaceData("https://cdn.pixabay.com/photo/2016/04/26/03/55/salmon-1353598_1280.jpg", "연어맛집", "4.5", 30, "쇼핑"),
+                PlaceData("https://cdn.pixabay.com/photo/2013/04/11/19/46/building-102840_1280.jpg", "박물관", "2.0", 1, "숙소"),
+                PlaceData("https://cdn.pixabay.com/photo/2017/08/07/23/11/iceland-2608985_1280.jpg", "오오폭포", "3.0", 0, "기타")
+            )
+        )
+        aroundPlaceAdapter.notifyDataSetChanged()
     }
 }

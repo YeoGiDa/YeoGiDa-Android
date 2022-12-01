@@ -29,6 +29,14 @@
 
     <color name="red">#FF4E44</color>
     <color name="black_blue">#1C1C1E</color>
+    <color name="pastel_red">#66FDD6D6</color>
+    <color name="pastel_orange">#66FFE7B6</color>
+    <color name="pastel_yellow">#66FFF6B6</color>
+    <color name="pastel_green">#66E1FFDC</color>
+    <color name="pastel_blue">#66DCF2FF</color>
+    <color name="pastel_purple">#66F8DCFF</color>
+    <color name="white_blue">#CCD9EAFF</color>
+    <color name="white_gray">#E6EFEFEF</color>
 
     <!-- Sub color -->
     <color name="kakao_yellow">#FEE500</color>

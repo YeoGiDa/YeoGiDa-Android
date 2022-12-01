@@ -268,7 +268,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="맨 위로"
+                        android:text="@string/around_place_top"
                         android:textSize="16sp"
                         android:layout_gravity="center"
                         android:fontFamily="@font/noto_sans_regular"

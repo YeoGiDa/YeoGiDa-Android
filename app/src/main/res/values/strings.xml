@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">YeoGida</string>
 
+    <!-- Unit -->
+    <string name="unit_int">%d</string>
+
     <string name="login_title_h1">여기다</string>
     <string name="login_title_h2_1">여</string>
     <string name="login_title_h2_2">행의</string>
@@ -41,6 +44,33 @@
     <string name="home_title">여기다</string>
     <string name="home_best_traveler_title">Best Traveler</string>
     <string name="home_best_monthly_trip_title">월간 Best 여행지</string>
-    <string name="home_recent_trip_title">팔로우의 최근 여행지</string>
+    <string name="home_recent_trip_title">팔로잉의 최근 여행지</string>
     <string name="home_more_text">더보기</string>
+
+    <!-- Around Place Fragment -->
+    <string name="around_place_recent">최신순</string>
+    <string name="around_place_star">별점순</string>
+    <string name="around_place_comment">댓글순</string>
+    <string name="around_place_food">식당</string>
+    <string name="around_place_cafe">카페</string>
+    <string name="around_place_alcohol">술집</string>
+    <string name="around_place_tourist">관광지</string>
+    <string name="around_place_shopping">쇼핑</string>
+    <string name="around_place_hotel">숙소</string>
+    <string name="around_place_etc">기타</string>
+    <string name="around_place_report">여행지 신고</string>
+    <string name="around_place_top">맨 위로</string>
+
+    <!-- MypageFragment -->
+    <string name="mypage_follow">팔로우</string>
+    <string name="mypage_trip">여행지</string>
+    <string name="mypage_following">팔로잉</string>
+    <string name="mypage_like">좋아요</string>
+    <string name="mypage_mytrip">나의 여행지</string>
+    <string name="mypage_mycomment">내가 댓글 단 장소</string>
+    <string name="mypage_account">내 정보 변경</string>
+    <string name="mypage_notice">공지사항</string>
+    <string name="mypage_center">고객센터</string>
+    <string name="mypage_logout">로그아웃</string>
+    <string name="mypage_withdraw">회원탈퇴</string>
 </resources>

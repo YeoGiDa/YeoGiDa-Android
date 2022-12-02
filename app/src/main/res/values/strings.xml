@@ -59,4 +59,17 @@
     <string name="around_place_etc">기타</string>
     <string name="around_place_report">여행지 신고</string>
     <string name="around_place_top">맨 위로</string>
+
+    <!-- MypageFragment -->
+    <string name="mypage_follow">팔로우</string>
+    <string name="mypage_trip">여행지</string>
+    <string name="mypage_following">팔로잉</string>
+    <string name="mypage_like">좋아요</string>
+    <string name="mypage_mytrip">나의 여행지</string>
+    <string name="mypage_mycomment">내가 댓글 단 장소</string>
+    <string name="mypage_account">내 정보 변경</string>
+    <string name="mypage_notice">공지사항</string>
+    <string name="mypage_center">고객센터</string>
+    <string name="mypage_logout">로그아웃</string>
+    <string name="mypage_withdraw">회원탈퇴</string>
 </resources>

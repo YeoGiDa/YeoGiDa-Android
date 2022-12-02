@@ -57,9 +57,7 @@ class MypageFragment : Fragment() {
                         // TODO. API 사용하여 서버 회원 제거
 
                         // DataStore 값 지우기
-                        dataStore.saveRefreshToken("")
-                        dataStore.saveAccessToken("")
-                        dataStore.saveIsLogin(false)
+                        removeUserPref()
 
                         // 카카오 계정 연결 끊기
                         UserApiClient.instance.unlink { error ->
@@ -93,9 +91,7 @@ class MypageFragment : Fragment() {
                     Log.i("UserLogout", "로그아웃 성공")
                     CoroutineScope(Dispatchers.IO).launch {
                         // DataStore 값 지우기
-                        dataStore.saveRefreshToken("")
-                        dataStore.saveAccessToken("")
-                        dataStore.saveIsLogin(false)
+                        removeUserPref()
                     }
 
                     // 로그인 화면으로
@@ -106,5 +102,11 @@ class MypageFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private suspend fun removeUserPref() {
+        dataStore.saveRefreshToken("")
+        dataStore.saveAccessToken("")
+        dataStore.saveIsLogin(false)
     }
 }

@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.user.JoinViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,9 +45,9 @@
             android:id="@+id/view_separate"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gray_300"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tb_join" />
@@ -78,6 +81,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/oval_gray100"
+            android:onClick="@{ () -> viewModel.onImageButtonClick() }"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,10 +93,12 @@
             android:id="@+id/btn_plus"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/oval_white"
             android:backgroundTint="@color/main_blue"
+            android:onClick="@{ () -> viewModel.onImageButtonClick() }"
             android:padding="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_plus_image"
@@ -125,8 +131,8 @@
             android:text="@string/join_nick_description"
             android:textColor="@color/gray_500"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tv_nick"
-            app:layout_constraintBottom_toBottomOf="@id/tv_nick" />
+            app:layout_constraintBottom_toBottomOf="@id/tv_nick"
+            app:layout_constraintStart_toEndOf="@+id/tv_nick" />
 
         <EditText
             android:id="@+id/et_nick"
@@ -135,10 +141,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:maxLength="8"
             android:background="@drawable/selector_et_blue"
             android:fontFamily="@font/noto_sans_regular"
             android:hint="@string/join_nickname_hint"
+            android:maxLength="8"
             android:maxLines="1"
             android:padding="16dp"
             android:textColor="@color/black"
@@ -149,6 +155,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
 
         <TextView
+            android:id="@+id/tv_warn_nick_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

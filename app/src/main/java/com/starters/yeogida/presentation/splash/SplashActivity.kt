@@ -6,12 +6,8 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
-import com.kakao.sdk.auth.TokenManagerProvider
-import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.MainActivity
 import com.starters.yeogida.presentation.user.LoginActivity
-import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
 
@@ -21,32 +17,33 @@ class SplashActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        // Data Store에 JWT 토큰이 발급되어
-        lifecycleScope.launch {
-            YeogidaApplication.getInstance().getDataStore().userJWTAccessToken.collect {
-                Log.d("Splash/DSJWTAccessToken", it)
-            }
-        }
-
         viewModel.isLoading.observe(this) { isLoading ->
             splashScreen.setKeepOnScreenCondition { isLoading }
+        }
 
-            if( !isLoading ) {
-                // 로그인되어있는 사용자이면, MainActivity
+        viewModel.isLogin.observe(this) { isLogin ->
+            if (isLogin) {
+                Log.e("Splash/isLogin", "isLogin => true")
+                startMain()
+            } else {
+                Log.e("Splash/isLogin", "isLogin => false")
                 startLogin()
-                finish()
             }
         }
     }
 
     private fun startLogin() {
         Intent(this, LoginActivity::class.java).also {
+            it.flags =
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(it)
         }
     }
 
     private fun startMain() {
         Intent(this, MainActivity::class.java).also {
+            it.flags =
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(it)
         }
     }

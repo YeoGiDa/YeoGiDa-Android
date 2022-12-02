@@ -7,25 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import com.kakao.sdk.user.model.AccessTokenInfo
+import com.kakao.sdk.user.model.Account
 import com.starters.yeogida.MainActivity
 import com.starters.yeogida.R
-import com.starters.yeogida.data.remote.response.BaseResponse
-import com.starters.yeogida.data.remote.response.CheckMemberResponseData
+import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.databinding.ActivityLoginBinding
 import com.starters.yeogida.network.ApiClient
-import com.starters.yeogida.util.customEnqueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private var userPrefEmail: String = ""
-
-    private var isLogined = false
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -39,33 +37,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        /*lifecycleScope.launch {
-            GlobalApplication.getInstance().getDataStore().userEmail
-                .collect{
-
-                    userPrefEmail = it
-                    Log.d("collect" ,it)
-                    Log.d("userPrefEmail" ,userPrefEmail)
-                }
-        }*/
-
-        /*UserApiClient.instance.unlink { error ->
-            if (error != null) {
-                Toast.makeText(this, "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
-            }
-        }*/
-
-        /*UserApiClient.instance.logout { error ->
-            if (error != null) {
-                Log.e("카카오 로그인", "로그아웃 실패. SDK에서 토큰 삭제됨", error)
-            }
-            else {
-                Log.i("카카오 로그인", "로그아웃 성공. SDK에서 토큰 삭제됨")
-            }
-        }*/
-
         binding.layoutLoginKakao.setOnClickListener {
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
                 loginWithKakaoTalk()
@@ -76,10 +47,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginWithKakaoTalk() {
-
         UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-            if (error != null) { }
-            else if (token != null) {
+            if (error != null) {
+                Log.e("카카오 로그인", "로그인 실패", error)
+            } else if (token != null) {
                 Log.e("카카오 로그인", "accessToken : ${token.accessToken}")
                 Log.e("카카오 로그인", "refreshToken : ${token.refreshToken}")
 
@@ -96,49 +67,47 @@ class LoginActivity : AppCompatActivity() {
 
                         UserApiClient.instance.me { user, error ->
                             user?.kakaoAccount?.let { userAccount ->
-                                // 이메일
-                                // Log.d("카카오 로그인", "email = ${userAccount.email}")
 
-                                // TODO. 이메일로 가입되어있는 회원인지 확인
-                                val service = ApiClient.userService
+                                val userService = ApiClient.userService
 
                                 CoroutineScope(Dispatchers.IO).launch {
                                     Log.d("카카오 로그인", "email = ${userAccount.email}")
-                                    /*
-                                    val response = service.checkMember(userAccount.email.toString())
+                                    Log.d("카카오 로그인", "회원번호 = ${tokenInfo.id}")
 
-                                    if (response.isSuccessful) {
-                                        val result = response.body()
-                                        Log.d("회원가입 성공", "$result")
-                                    } else {
-                                        Log.d("회원가입 실패", response.code().toString())
-                                    }*/
+                                    val loginResponse = userService.postLogin(
+                                        LoginRequestData(
+                                            userAccount.email.toString(),
+                                            tokenInfo.id.toString()
+                                        )
+                                    )
+                                    Log.d("loginResponse", "$loginResponse")
 
-                                    /*withContext(Dispatchers.Main) {
-                                        if(response.data?.isMember == true){
-                                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                            finish()
-                                        } else {
-                                            // 신규회원이면 Join으로
-                                            val intent = Intent(this@LoginActivity, JoinActivity::class.java)
+                                    if (loginResponse.isSuccessful) {
+                                        Log.d("loginResponse", "$loginResponse")
+                                        dataStore.saveAccessToken(loginResponse.body()!!.data!!.accessToken)
+                                        dataStore.saveRefreshToken(loginResponse.body()!!.data!!.refreshToken)
+                                        dataStore.saveIsLogin(true)
 
-                                            intent.putExtra("email", userAccount.email)     // 이메일
-                                            intent.putExtra("userNum", tokenInfo.id.toString()) // 회원번호
-
-                                            // 닉네임
-                                            userAccount.profile?.nickname?.let { nickname ->
-                                                intent.putExtra("nickname", nickname)
-                                            }
-
-                                            // 프로필 사진
-                                            userAccount.profile?.profileImageUrl?.let { profileImageUrl ->
-                                                intent.putExtra("profileImageUrl", profileImageUrl)
-                                            }
-
-                                            startActivity(intent)
+                                        withContext(Dispatchers.Main) {
+                                            Log.e(
+                                                "Login/userAccessToken",
+                                                dataStore.userAccessToken.first()
+                                            )
+                                            Log.e(
+                                                "Login/userRefreshToken",
+                                                dataStore.userRefreshToken.first()
+                                            )
+                                            startMain()
                                         }
 
-                                    }*/
+                                    } else if (loginResponse.code() == 404) { // 회원이 아닐 때
+                                        Log.e("loginResponse", "$loginResponse")
+                                        withContext(Dispatchers.Main) {
+                                            startJoin(userAccount, tokenInfo)
+                                        }
+                                    } else { // 서버 에러
+                                        Log.e("loginResponse", "$loginResponse")
+                                    }
                                 }
                             }
                         }
@@ -148,16 +117,35 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-/*private fun isJoinedMember(email: String): Boolean {
-    var userEmail : String? = null
+    private fun startJoin(
+        userAccount: Account,
+        tokenInfo: AccessTokenInfo
+    ) {
+        val intent = Intent(this@LoginActivity, JoinActivity::class.java)
 
-    // TODO. 서버 이메일 전달해서 가입되어있는 사용자인지 확인하기
-    UserApiClient.instance.me { user, error ->
-        userEmail = user?.kakaoAccount?.email
-        Log.d("isJoinedMember", "userEmail = $userEmail , paramEmail = $email")
-        Log.d("isJoinedMember", "${userEmail == email}")
+        intent.putExtra("email", userAccount.email)     // 이메일
+        intent.putExtra("userNum", tokenInfo.id.toString()) // 회원번호
+
+        // 닉네임
+        userAccount.profile?.nickname?.let { nickname ->
+            intent.putExtra("nickname", nickname)
+        }
+
+        // 프로필 사진
+        userAccount.profile?.profileImageUrl?.let { profileImageUrl ->
+            intent.putExtra("profileImageUrl", profileImageUrl)
+        }
+
+        startActivity(intent)
     }
 
-    return if(userEmail != null) userEmail == email else false
-}*/
+    private fun startMain() {
+        startActivity(
+            Intent(
+                this@LoginActivity,
+                MainActivity::class.java
+            )
+        )
+        finish()
+    }
 }

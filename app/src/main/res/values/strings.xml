@@ -23,6 +23,7 @@
     <string name="join_nickname_hint">닉네임을 입력해주세요.</string>
     <string name="join_nick_error">이미 사용중인 닉네임입니다.</string>
     <string name="join_submit">완료</string>
+    <string name="join_nick_description">(최대 8글자, 특수문자를 사용할 수 없습니다)</string>
 
     <!-- bottom navigation -->
     <string name="navi_home">홈</string>

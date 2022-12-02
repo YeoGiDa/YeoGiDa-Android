@@ -19,10 +19,19 @@
         android:id="@+id/navigation_home"
         android:name="com.starters.yeogida.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_mypage"
+            app:destination="@id/navigation_mypage"
+            tools:layout="@layout/fragment_mypage" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_follow"
         android:name="com.starters.yeogida.presentation.follow.FollowHomeFragment"
         android:label="FollowHomeFragment"
         tools:layout="@layout/fragment_follow_home" />
+    <fragment
+        android:id="@+id/navigation_mypage"
+        android:name="com.starters.yeogida.presentation.around.MypageFragment"
+        android:label="MypageFragment" />
 </navigation>

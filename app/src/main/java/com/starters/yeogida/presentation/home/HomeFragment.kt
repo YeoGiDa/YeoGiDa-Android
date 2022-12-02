@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.BestTravelerData
 import com.starters.yeogida.data.local.TripData
@@ -25,6 +26,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.ivSetting.setOnClickListener {
+            findNavController().navigate(R.id.action_home_to_mypage)
+        }
         initAdapter()
     }
 

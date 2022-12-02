@@ -1,19 +1,20 @@
 package com.starters.yeogida.presentation.follow
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.DeleteDialog
 import com.starters.yeogida.databinding.ItemFollowBinding
+import com.starters.yeogida.presentation.common.CustomDialog
 
-class FollowAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FollowAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val items = mutableListOf<User>()
-    private lateinit var dlg: DeleteDialog
+    private lateinit var dlg: CustomDialog
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = ItemFollowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        dlg = DeleteDialog(parent.context)
+        dlg = CustomDialog(parent.context)
 
         return FollowItemViewHolder(binding)
     }
@@ -34,8 +35,16 @@ class FollowAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    private fun openDialog() {
-        dlg.start()
+    fun openDialog(context: Context) {
+        val dialog = CustomDialog(context)
+        dialog.setTitle("정말 삭제하시겠습니까?")
+        dialog.setNegativeBtn("취소") {
+            dialog.dismissDialog()
+        }
+        dialog.setPositiveBtn("삭제") {
+            dialog.dismissDialog()
+        }
+        dialog.showDialog()
     }
 
     inner class FollowItemViewHolder(private val binding: ItemFollowBinding) :
@@ -45,7 +54,7 @@ class FollowAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.imageUrl = user.userProfileImageUrl
 
             binding.btnFollowDelete.setOnClickListener {
-                openDialog()
+                openDialog(itemView.context)
             }
 
             binding.executePendingBindings()

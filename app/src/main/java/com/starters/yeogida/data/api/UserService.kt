@@ -24,4 +24,9 @@ interface UserService {
     suspend fun validateToken(
         @Body tokenData: TokenData
     ): Response<BaseResponse<ValidateTokenResponseData>>
+
+    @DELETE("members/delete")
+    suspend fun withDrawUser(
+        @Header("Authorization") accessToken: String
+    ): Response<BaseResponse<Any>>
 }

@@ -41,7 +41,6 @@ class JoinActivity : AppCompatActivity() {
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val joinViewModel: JoinViewModel by viewModels()
 
-
     private val imageResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -254,7 +253,7 @@ class JoinActivity : AppCompatActivity() {
                 setSelection(length())  // 커서 끝으로
             }
 
-            keyboardShow()  // 키보드도 올라오게
+            showKeyboard()  // 키보드도 올라오게
         }
     }
 
@@ -289,7 +288,7 @@ class JoinActivity : AppCompatActivity() {
         binding.etNick.filters = arrayOf(filterAlphaNumSpace, lengthFilter)
     }
 
-    private fun keyboardShow() {
+    private fun showKeyboard() {
         WindowInsetsControllerCompat(window, window.decorView).show(WindowInsetsCompat.Type.ime())
     }
 }

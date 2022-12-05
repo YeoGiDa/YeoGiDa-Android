@@ -63,11 +63,10 @@ class SplashViewModel : ViewModel() {
                             dataStore.saveIsLogin(false)
                             _isLogin.postValue(dataStore.userIsLogin.first())
                             Log.e("SplashViewModel/403", "403")
-                            // dataStore.saveIsLogin(false)
                         }
                         else -> {}
                     }
-                }
+                }.join()
 
             } else {
             }

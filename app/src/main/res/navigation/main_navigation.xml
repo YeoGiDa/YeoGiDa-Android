@@ -32,6 +32,6 @@
         tools:layout="@layout/fragment_follow_home" />
     <fragment
         android:id="@+id/navigation_mypage"
-        android:name="com.starters.yeogida.presentation.around.MypageFragment"
+        android:name="com.starters.yeogida.presentation.around.MyPageFragment"
         android:label="MypageFragment" />
 </navigation>

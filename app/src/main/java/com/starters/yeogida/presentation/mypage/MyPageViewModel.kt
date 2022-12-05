@@ -7,11 +7,11 @@ class MyPageViewModel : ViewModel() {
     val logOutEvent = SingleLiveEvent<Any>()
     val withDrawDialogEvent = SingleLiveEvent<Any>()
 
-    fun userLogout() {
+    fun logoutUser() {
         logOutEvent.call()
     }
 
-    fun userWithDrawDialog() {
+    fun showWithDrawDialog() {
         withDrawDialogEvent.call()
     }
 }

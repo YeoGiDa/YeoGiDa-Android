@@ -1,4 +1,4 @@
-package com.starters.yeogida.presentation.mypage
+package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle

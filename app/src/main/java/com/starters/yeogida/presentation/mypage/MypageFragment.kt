@@ -16,7 +16,6 @@ import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.databinding.FragmentMypageBinding
 import com.starters.yeogida.network.ApiClient
 import com.starters.yeogida.presentation.common.CustomDialog
-import com.starters.yeogida.presentation.mypage.MyPageViewModel
 import com.starters.yeogida.presentation.user.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +35,8 @@ class MyPageFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMypageBinding.inflate(inflater, container, false)

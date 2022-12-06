@@ -31,8 +31,6 @@ w
 Gapp/src/main/java/com/starters/yeogida/presentation/home/TripAdapter.kt,d/3/d3509a6ea9f112b1c7de1a429b57fa261f860075
 x
 Happ/src/main/java/com/starters/yeogida/presentation/home/HomeFragment.kt,f/a/faddee5decc2c2b7da9404789b15bfc21d8b5ea7
-y
-Iapp/src/main/java/com/starters/yeogida/presentation/trip/RegionAdapter.kt,6/a/6abd87df1dd2c71d9e2bbdccd623bcba69dd414c
 @
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 z

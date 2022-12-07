@@ -64,6 +64,7 @@
     <string name="mypage_like">좋아요</string>
     <string name="mypage_mytrip">나의 여행지</string>
     <string name="mypage_mycomment">내가 댓글 단 장소</string>
+    <string name="mypage_alarm">알림</string>
     <string name="mypage_account">내 정보 변경</string>
     <string name="mypage_notice">공지사항</string>
     <string name="mypage_center">고객센터</string>
@@ -84,4 +85,7 @@
 
     <!-- Bottom Sheet -->
     <string name="bottom_sheet_region">지역</string>
+
+    <!-- Alarm Fragment -->
+    <string name="alarm_title">알림</string>
 </resources>

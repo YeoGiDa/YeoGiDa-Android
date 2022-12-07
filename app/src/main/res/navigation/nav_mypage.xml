@@ -12,9 +12,9 @@
         tools:layout="@layout/fragment_alarm" />
     <fragment
         android:id="@+id/navigation_mypage"
-        android:name="com.starters.yeogida.presentation.around.MyPageFragment"
+        android:name="com.starters.yeogida.presentation.mypage.MyPageFragment"
         android:label="MyPageFragment"
-        tools:layout="@layout/fragment_mypage">
+        tools:layout="@layout/fragment_my_page">
         <action
             android:id="@+id/action_mypage_to_alarm"
             app:destination="@id/navigation_alarm" />

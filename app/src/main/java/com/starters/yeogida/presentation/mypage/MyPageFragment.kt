@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.kakao.sdk.user.UserApiClient
+import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.api.UserService
 import com.starters.yeogida.data.remote.common.TokenData
-import com.starters.yeogida.databinding.FragmentMypageBinding
+import com.starters.yeogida.databinding.FragmentMyPageBinding
 import com.starters.yeogida.network.ApiClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.mypage.MyPageViewModel
 import com.starters.yeogida.presentation.user.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +28,7 @@ import kotlinx.coroutines.withContext
 
 class MyPageFragment : Fragment() {
 
-    private lateinit var binding: FragmentMypageBinding
+    private lateinit var binding: FragmentMyPageBinding
     private val viewModel: MyPageViewModel by viewModels()
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val userService: UserService = ApiClient.userService
@@ -35,10 +38,11 @@ class MyPageFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMypageBinding.inflate(inflater, container, false)
+        binding = FragmentMyPageBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -47,8 +51,17 @@ class MyPageFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        initNavigation()
         setLogout()
         setWithDrawDialog()
+    }
+
+    private fun initNavigation() {
+        with(binding) {
+            layoutMypageAlarm.setOnClickListener {
+                findNavController().navigate(R.id.action_mypage_to_alarm)
+            }
+        }
     }
 
     private fun setWithDrawDialog() {

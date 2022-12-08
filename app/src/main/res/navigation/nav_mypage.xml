@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_mypage"
+    app:startDestination="@id/navigation_mypage">
+
+    <fragment
+        android:id="@+id/navigation_alarm"
+        android:name="com.starters.yeogida.presentation.mypage.AlarmFragment"
+        android:label="fragment_alarm"
+        tools:layout="@layout/fragment_alarm" />
+    <fragment
+        android:id="@+id/navigation_mypage"
+        android:name="com.starters.yeogida.presentation.mypage.MyPageFragment"
+        android:label="MyPageFragment"
+        tools:layout="@layout/fragment_my_page">
+        <action
+            android:id="@+id/action_mypage_to_alarm"
+            app:destination="@id/navigation_alarm" />
+    </fragment>
+</navigation>

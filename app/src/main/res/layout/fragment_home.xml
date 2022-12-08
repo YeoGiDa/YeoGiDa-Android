@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.home.HomeFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:onClick="@{view::moveToMyPage}"
             android:padding="4dp"
             android:src="@drawable/ic_setting"
             app:layout_constraintBottom_toBottomOf="@+id/tv_home_title"
@@ -89,8 +93,8 @@
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
                     android:padding="4dp"
-                    android:textSize="12sp"
                     android:text="@string/home_more_text"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_traveler_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_traveler_title"
@@ -130,8 +134,8 @@
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
                     android:padding="4dp"
-                    android:textSize="12sp"
                     android:text="@string/home_more_text"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_monthly_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_monthly_trip" />
@@ -172,8 +176,8 @@
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
                     android:padding="4dp"
-                    android:textSize="12sp"
                     android:text="@string/home_more_text"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_recent_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_recent_trip" />

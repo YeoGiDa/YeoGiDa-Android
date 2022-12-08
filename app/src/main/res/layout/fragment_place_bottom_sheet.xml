@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.around.PlaceBottomSheetFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_place_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_fill_white_20"
+            android:maxHeight="500dp"
+            app:behavior_draggable="true"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="110dp"
+            app:layout_behavior="@string/bottom_sheet_behavior">
+
+            <TextView
+                android:id="@+id/tv_place_bottom_sheet_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/noto_sans_bold"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="장소이름최대열글자지" />
+
+            <TextView
+                android:id="@+id/tv_place_bottom_sheet_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/tv_place_bottom_sheet_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_place_bottom_sheet_name"
+                tools:text="서울시 땡땡구 땡땡동 120" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_place_bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="12dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_place_bottom_sheet_address"
+                app:layout_goneMarginTop="12dp"
+                app:spanCount="2"
+                tools:listitem="@layout/item_bottom_sheet_place">
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

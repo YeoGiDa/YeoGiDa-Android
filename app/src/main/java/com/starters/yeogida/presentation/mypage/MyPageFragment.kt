@@ -18,6 +18,7 @@ import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.databinding.FragmentMyPageBinding
 import com.starters.yeogida.network.ApiClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.mypage.MyPageViewModel
 import com.starters.yeogida.presentation.user.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -88,7 +89,7 @@ class MyPageFragment : Fragment() {
     }
 
     private suspend fun withDrawUser(userAccessToken: String, userRefreshToken: String) {
-        val withDrawResponse = userService.withDrawUser("Bearer $userAccessToken")
+        val withDrawResponse = userService.withDrawUser(dataStore.userBearerToken.first())
         Log.e("withDrawUser", "$withDrawResponse")
 
         when (withDrawResponse.code()) {
@@ -96,7 +97,8 @@ class MyPageFragment : Fragment() {
                 Log.e("withDrawUser", "code : 200, 회원 탈퇴 성공")
 
                 // DataStore 값 지우기
-                removeUserPref()
+                dataStore.saveIsLogin(false)
+                dataStore.removeUserToken()
 
                 // 카카오 계정 연결 끊기
                 UserApiClient.instance.unlink { error ->
@@ -154,12 +156,15 @@ class MyPageFragment : Fragment() {
                 val newAccessToken = tokenResponse.body()?.data?.newAccessToken.toString()
                 val refreshToken = tokenResponse.body()?.data?.refreshToken.toString()
 
+                dataStore.saveUserToken(newAccessToken, refreshToken)
                 withDrawUser(newAccessToken, refreshToken)
             }
 
             403 -> { // Access, Refresh 둘 다 만료 or 비정상적인 형식의 토큰
                 Log.e("MyPage/TokenValidation", "403")
-                removeUserPref()
+                dataStore.saveIsLogin(false)
+                dataStore.removeUserToken()
+
                 withContext(Dispatchers.Main) {
                     moveToLogin()
                     Toast.makeText(
@@ -171,7 +176,7 @@ class MyPageFragment : Fragment() {
             }
 
             else -> {
-                Log.e("MyPage/TokenValidation", "${tokenResponse.code()}")
+                Log.e("MyPage/TokenValidation", "$tokenResponse")
             }
         }
     }
@@ -186,7 +191,8 @@ class MyPageFragment : Fragment() {
                     Toast.makeText(requireContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.IO).launch {
                         // DataStore 값 지우기
-                        removeUserPref()
+                        dataStore.saveIsLogin(false)
+                        dataStore.removeUserToken()
                     }
 
                     // 로그인 화면으로
@@ -201,11 +207,5 @@ class MyPageFragment : Fragment() {
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-    }
-
-    private suspend fun removeUserPref() {
-        dataStore.saveRefreshToken("")
-        dataStore.saveAccessToken("")
-        dataStore.saveIsLogin(false)
     }
 }

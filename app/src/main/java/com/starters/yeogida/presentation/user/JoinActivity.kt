@@ -1,55 +1,80 @@
 package com.starters.yeogida.presentation.user
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.provider.Settings
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.user.UserApiClient
-import com.starters.yeogida.GlideApp
-import com.starters.yeogida.MainActivity
-import com.starters.yeogida.R
-import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.*
 import com.starters.yeogida.data.remote.request.LoginRequestData
-import com.starters.yeogida.data.remote.request.SignUpRequestData
 import com.starters.yeogida.databinding.ActivityJoinBinding
 import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
+import java.io.IOException
+import java.io.OutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.regex.Pattern
 
+
 class JoinActivity : AppCompatActivity() {
+    private val REQUEST_STORAGE = 1000
 
     private lateinit var binding: ActivityJoinBinding
+
+    private lateinit var userEmail: String
+    private lateinit var userNum: String
+    private var userNickname: String? = null
+    private var userProfileImageUrl: String? = null
+
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val joinViewModel: JoinViewModel by viewModels()
+
+    private var imageFile: File? = null
 
     private val imageResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-
             val imageUri = result.data?.data
             applicationContext?.let { context ->
                 if (imageUri != null) {
-                    // val ImageFile = UriUtil.toFile(context, imageUri)
+                    imageFile = UriUtil.toFile(context, imageUri)
                 }
             }
 
@@ -83,118 +108,196 @@ class JoinActivity : AppCompatActivity() {
         binding.viewModel = joinViewModel
         binding.lifecycleOwner = this
 
+        initIntent()
         setNicknameFilter()
         setTextChangedListener()
         setNickname()
         setProfileImage()
         setOnBackPressed()
         setSubmitButtonListener()
+        setProfileImageListener()
+    }
 
-        joinViewModel.startGalleryEvent.observe(this) {
-            Log.i("BUTTON", "initAdd")
+    private fun initIntent() {
+        userEmail = intent.getStringExtra("email")?.let { it }.toString()
+        userNum = intent.getStringExtra("userNum")?.let { it }.toString()
+        userNickname = intent.getStringExtra("nickname")?.let { it }
+        userProfileImageUrl = intent.getStringExtra("profileImageUrl")?.let { it }
 
-            when {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED -> {
+        Log.e("userNickname", "Null ? ${userNickname.isNullOrBlank()}")
+        Log.e("profileImageUrl", "Null ? ${userProfileImageUrl.isNullOrBlank()}")
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_STORAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     navigatePhotos()
-                }
-                shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE) -> {
-                    showPermissionContextPopup()
-                    Log.i("BUTTON", "showpermission")
-                }
-                else -> {
-                    requestPermissions(
-                        arrayOf(READ_EXTERNAL_STORAGE),
-                        1000
-                    )
-                    Log.i("BUTTON", "else")
+                } else {
+                    Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
+            else -> {
+                if (shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE)) {
+                    showPermissionContextPopup()
+                } else {
+                    showSettingDialog()
+                }
+            }
         }
     }
 
-    private fun showPermissionContextPopup() {
-        AlertDialog.Builder(this)
-            .setTitle("권한이 필요합니다.")
-            .setMessage("앱에서 사진을 불러오기 위해 권한이 필요합니다.")
-            .setPositiveButton("동의") { _, _ ->
+    private fun setProfileImageListener() {
+        joinViewModel.startGalleryEvent.observe(this) {
+            Log.i("BUTTON", "initAdd")
+
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                navigatePhotos()
+            } else {
                 requestPermissions(
-                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                    101
+                    arrayOf(READ_EXTERNAL_STORAGE),
+                    0
                 )
+                Log.i("BUTTON", "else")
             }
-            .setNegativeButton("취소") { _, _ -> }
-            .create()
-            .show()
+        }
+    }
+
+    private fun showSettingDialog() {
+        AlertDialog.Builder(this).apply {
+            setMessage("사진을 가져오려면 권한을 허용해주세요.")
+            setPositiveButton("설정으로 이동") { _, _ ->
+                Toast.makeText(
+                    this@JoinActivity,
+                    "권한 허용을 위해 설정으로 이동합니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent =
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID))
+                startActivity(intent)
+            }
+            create()
+            show()
+        }
+    }
+
+
+    private fun showPermissionContextPopup() {
+        AlertDialog.Builder(this).apply {
+            setTitle("권한이 필요합니다.")
+            setMessage("앱에서 사진을 불러오기 위해 권한이 필요합니다.")
+            setPositiveButton("동의") { _, _ ->
+                requestPermissions(this@JoinActivity, arrayOf(READ_EXTERNAL_STORAGE), 0)
+                setNegativeButton("취소") { _, _ -> }
+                create()
+                show()
+            }
+        }
     }
 
     private fun navigatePhotos() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         imageResult.launch(intent)
-        // startActivityForResult(intent, REQ_GALLERY)
     }
 
     private fun setSubmitButtonListener() {
         binding.btnJoinSubmit.setOnClickListener {
-            val email = intent.getStringExtra("email")?.let { it }.toString()
-            val userNum = intent.getStringExtra("userNum")?.let { it }.toString()
-            val profileImageUrl = intent.getStringExtra("profileImageUrl")?.let { it }.toString()
             val nickname = binding.etNick.text.toString()
+
+            val requestEmail = userEmail.toRequestBody("text/plain".toMediaTypeOrNull())
+            val requestUserNum = userNum.toRequestBody("text/plain".toMediaTypeOrNull())
+            val requestNickname = nickname.toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val partMap = hashMapOf<String, RequestBody>()
+
+            partMap["email"] = requestEmail
+            partMap["kakaoId"] = requestUserNum
+            partMap["nickname"] = requestNickname
+
+            val requestFile = imageFile?.asRequestBody("image/*".toMediaTypeOrNull())
+            val partImg = requestFile?.let {
+                MultipartBody.Part.createFormData("imgUrl", imageFile?.name, it)
+            }
+
+            Log.e("requestFile", "Null ? ${requestFile == null}")
+            Log.e("partImg", "Null ? ${partImg == null}")
 
             val userService = ApiClient.userService
 
+            // TODO. API 통신 ProgressBar
             // 회원가입
             CoroutineScope(Dispatchers.IO).launch {
                 val signUpResponse = userService.addUser(
-                    SignUpRequestData(
-                        email,
-                        userNum,
-                        nickname,
-                        profileImageUrl
-                    )
+                    partImg,
+                    partMap
                 )
+
                 Log.e("SignUpResponseCode", signUpResponse.code().toString())
                 when (signUpResponse.code()) {
                     201 -> {
-                        Log.d("Join/signUpResponseCode", "201")
                         // 로그인 실행
                         val loginResponse = userService.postLogin(
                             LoginRequestData(
-                                email,
+                                userEmail,
                                 userNum
                             )
                         )
 
                         Log.d("loginResponse", "$loginResponse")
 
-                        if (loginResponse.isSuccessful) {
-                            Log.e("loginResponse", "$loginResponse")
-                            dataStore.saveAccessToken(loginResponse.body()!!.data!!.accessToken)
-                            dataStore.saveRefreshToken(loginResponse.body()!!.data!!.refreshToken)
-                            dataStore.saveIsLogin(true)
+                        when (loginResponse.code()) {
+                            200 -> {
+                                val accessToken = loginResponse.body()?.data?.accessToken
+                                val refreshToken = loginResponse.body()?.data?.refreshToken
 
-                            withContext(Dispatchers.Main) {
-                                Log.e("Join/userAccessToken", dataStore.userAccessToken.first())
-                                Log.e("Join/userRefreshToken", dataStore.userRefreshToken.first())
-                                startMain()
+                                dataStore.saveIsLogin(true)
+                                dataStore.saveUserToken(accessToken, refreshToken)
+
+                                withContext(Dispatchers.Main) {
+                                    Log.e(
+                                        "SignUp/userAccessToken",
+                                        dataStore.userAccessToken.first()
+                                    )
+                                    Log.e(
+                                        "SignUp/userRefreshToken",
+                                        dataStore.userRefreshToken.first()
+                                    )
+                                    startMain()
+                                }
                             }
-                        } else {
-                            Log.e("loginResponse", "$loginResponse")
+                            else -> {
+                                Log.e("loginResponse/Error", loginResponse.message())
+                            }
                         }
                     }
-                    400 -> { // 닉네임 중복
+                    400 -> {
                         Log.d("Join/signUpResponseCode", "400")
-                        withContext(Dispatchers.Main) {
-                            with(binding) {
-                                tvWarnNickDescription.visibility = View.VISIBLE  // 중복된다는 경고 문구 보이기.
-                                etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
-                            }
-                        }
 
+                        // 닉네임 중복
+                        if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
+                            withContext(Dispatchers.Main) {
+                                with(binding) {
+                                    tvWarnNickDescription.visibility =
+                                        View.VISIBLE  // 중복된다는 경고 문구 보이기.
+                                    etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
+                                }
+                            }
+                        } else {
+                            Log.e("signUpResponse", "$signUpResponse")
+                        }
                     }
                     else -> {
                         Log.e("signUpResponse", "회원가입 실패")
@@ -245,7 +348,7 @@ class JoinActivity : AppCompatActivity() {
     }
 
     private fun setNickname() {
-        intent.getStringExtra("nickname")?.let {
+        userNickname?.let {
             Log.d("JoinActivity", "닉네임 : $it")
             with(binding.etNick) {
                 requestFocus()  // Focusing 하기
@@ -258,14 +361,105 @@ class JoinActivity : AppCompatActivity() {
     }
 
     private fun setProfileImage() {
-        intent.getStringExtra("profileImageUrl")?.let { // 프로필 이미지 URL
+        userProfileImageUrl?.let { // 프로필 이미지 URL
             Log.d("JoinActivity", "사진 url : $it")
-            GlideApp.with(this)
-                .load(it)
-                .circleCrop()
-                .into(binding.ivProfile)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val bitmap = convertUrlToBitmap(it)  // imageURL -> Bitmap
+                val profileImageUri = convertBitmapToUri(bitmap, userNum) // Bitmap -> Uri
+                Log.e("profileImageURI", profileImageUri.toString())
+
+                withContext(Dispatchers.Main) {
+                    GlideApp.with(binding.ivProfile)
+                        .load(bitmap)
+                        .circleCrop()
+                        .into(binding.ivProfile)
+                }
+
+                profileImageUri?.let {
+                    imageFile = convertUriToFile(profileImageUri)
+                    contentResolver.delete(profileImageUri, null, null)
+                }
+            }
         }
     }
+
+    private fun convertBitmapToUri(
+        bitmap: Bitmap?,
+        fileName: String
+    ): Uri? {
+        //Generating a file name
+        val filename = "${fileName}.jpg"
+
+        //Output stream
+        var fos: OutputStream? = null
+
+        var imageUri: Uri? = null
+
+        //getting the contentResolver
+        this.contentResolver?.also { resolver ->
+
+            //Content resolver will process the contentvalues
+            val contentValues = ContentValues().apply {
+
+                //putting file information in content values
+                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+            }
+
+            //Inserting the contentValues to contentResolver and getting the Uri
+            imageUri =
+                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+            //Opening an outputstream with the Uri that we got
+            fos = imageUri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use {
+            //Finally writing the bitmap to the output stream that we opened
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
+
+        return imageUri
+    }
+
+    private fun convertUrlToBitmap(imageUrl: String): Bitmap? {
+        var bitmap: Bitmap? = null
+        val connection: HttpURLConnection?
+
+        try {
+            val url = URL(imageUrl)
+            connection = url.openConnection() as HttpURLConnection
+            connection.apply {
+                requestMethod = "GET"
+                requestMethod = "GET" // request 방식 설정
+                connectTimeout = 10000 // 10초의 타임아웃
+                doOutput = true // OutPutStream으로 데이터를 넘겨주겠다고 설정
+                doInput = true // InputStream으로 데이터를 읽겠다는 설정
+                useCaches = true // 캐싱 여부
+                connect()
+            }
+
+            val resCode = connection.responseCode // 연결 상태 확인
+
+            if (resCode == HttpURLConnection.HTTP_OK) { // 200일때 bitmap으로 변경
+                val input = connection.inputStream
+                bitmap =
+                    BitmapFactory.decodeStream(input) // BitmapFactory의 메소드를 통해 InputStream으로부터 Bitmap을 만들어 준다.
+                connection.disconnect()
+            }
+
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return bitmap
+    }
+
+    private fun convertUriToFile(uri: Uri) = UriUtil.toFile(this, uri)
 
     private fun setNicknameFilter() {
         /** 문자열필터(EditText Filter) */

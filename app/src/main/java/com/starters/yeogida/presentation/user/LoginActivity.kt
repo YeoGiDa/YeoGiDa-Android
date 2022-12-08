@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.sdk.user.model.AccessTokenInfo
-import com.kakao.sdk.user.model.Account
 import com.starters.yeogida.MainActivity
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
@@ -24,6 +22,7 @@ import kotlinx.coroutines.withContext
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
+    private val userService = ApiClient.userService
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -68,46 +67,13 @@ class LoginActivity : AppCompatActivity() {
                         UserApiClient.instance.me { user, error ->
                             user?.kakaoAccount?.let { userAccount ->
 
-                                val userService = ApiClient.userService
+                                val email = userAccount.email.toString()
+                                val userNum = tokenInfo.id.toString()
+                                val nickname = userAccount.profile?.nickname
+                                val profileImageUrl = userAccount.profile?.profileImageUrl
 
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    Log.d("카카오 로그인", "email = ${userAccount.email}")
-                                    Log.d("카카오 로그인", "회원번호 = ${tokenInfo.id}")
-
-                                    val loginResponse = userService.postLogin(
-                                        LoginRequestData(
-                                            userAccount.email.toString(),
-                                            tokenInfo.id.toString()
-                                        )
-                                    )
-                                    Log.d("loginResponse", "$loginResponse")
-
-                                    if (loginResponse.isSuccessful) {
-                                        Log.d("loginResponse", "$loginResponse")
-                                        dataStore.saveAccessToken(loginResponse.body()!!.data!!.accessToken)
-                                        dataStore.saveRefreshToken(loginResponse.body()!!.data!!.refreshToken)
-                                        dataStore.saveIsLogin(true)
-
-                                        withContext(Dispatchers.Main) {
-                                            Log.e(
-                                                "Login/userAccessToken",
-                                                dataStore.userAccessToken.first()
-                                            )
-                                            Log.e(
-                                                "Login/userRefreshToken",
-                                                dataStore.userRefreshToken.first()
-                                            )
-                                            startMain()
-                                        }
-
-                                    } else if (loginResponse.code() == 404) { // 회원이 아닐 때
-                                        Log.e("loginResponse", "$loginResponse")
-                                        withContext(Dispatchers.Main) {
-                                            startJoin(userAccount, tokenInfo)
-                                        }
-                                    } else { // 서버 에러
-                                        Log.e("loginResponse", "$loginResponse")
-                                    }
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    postLogin(email, userNum, nickname, profileImageUrl)
                                 }
                             }
                         }
@@ -117,26 +83,72 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun startJoin(
-        userAccount: Account,
-        tokenInfo: AccessTokenInfo
+    private suspend fun postLogin(
+        email: String,
+        userNum: String,
+        nickname: String?,
+        profileImageUrl: String?
     ) {
-        val intent = Intent(this@LoginActivity, JoinActivity::class.java)
+        Log.d("카카오 로그인", "email = $email")
+        Log.d("카카오 로그인", "회원번호 = $userNum")
 
-        intent.putExtra("email", userAccount.email)     // 이메일
-        intent.putExtra("userNum", tokenInfo.id.toString()) // 회원번호
+        val loginResponse = userService.postLogin(
+            LoginRequestData(
+                email,
+                userNum
+            )
+        )
 
-        // 닉네임
-        userAccount.profile?.nickname?.let { nickname ->
-            intent.putExtra("nickname", nickname)
+        Log.d("loginResponse", "$loginResponse")
+
+        when (loginResponse.code()) {
+            200 -> {
+                val accessToken = loginResponse.body()?.data?.accessToken
+                val refreshToken = loginResponse.body()?.data?.refreshToken
+
+                dataStore.saveIsLogin(true)
+                dataStore.saveUserToken(accessToken, refreshToken)
+
+                Log.e("Login/userAccessToken", dataStore.userAccessToken.first())
+                Log.e("Login/userRefreshToken", dataStore.userRefreshToken.first())
+
+                withContext(Dispatchers.Main) {
+                    startMain()
+                }
+            }
+            404 -> { // 회원이 아닐 때
+                Log.e("loginResponse", "$loginResponse")
+
+                withContext(Dispatchers.Main) {
+                    startJoin(email, userNum, nickname, profileImageUrl)
+                }
+            }
+            else -> {
+                Log.e("loginResponse/Error", loginResponse.message())
+            }
         }
+    }
 
-        // 프로필 사진
-        userAccount.profile?.profileImageUrl?.let { profileImageUrl ->
-            intent.putExtra("profileImageUrl", profileImageUrl)
+    private fun startJoin(
+        email: String,
+        userNum: String,
+        nickname: String?,
+        profileImageUrl: String?
+    ) {
+        val intent = Intent(this@LoginActivity, JoinActivity::class.java).apply {
+            putExtra("email", email) // 이메일
+            putExtra("userNum", userNum) // 회원번호
+
+            nickname?.let {
+                putExtra("nickname", it)  // 닉네임
+            }
+
+            profileImageUrl?.let {
+                putExtra("profileImageUrl", it)    // 프로필 이미지 URL
+            }
+
+            startActivity(this)
         }
-
-        startActivity(intent)
     }
 
     private fun startMain() {

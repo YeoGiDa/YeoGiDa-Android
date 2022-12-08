@@ -2,17 +2,20 @@ package com.starters.yeogida.data.api
 
 import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.data.remote.request.LoginRequestData
-import com.starters.yeogida.data.remote.request.SignUpRequestData
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.data.remote.response.ValidateTokenResponseData
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
 interface UserService {
+    @Multipart
     @POST("members/join")
     suspend fun addUser(
-        @Body signUpRequestData: SignUpRequestData
+        @Part imgUrl: MultipartBody.Part?,
+        @PartMap memberJoinRequest: HashMap<String, RequestBody>
     ): Response<BaseResponse<SignUpResponseData>>
 
     @POST("members/login")
@@ -27,6 +30,6 @@ interface UserService {
 
     @DELETE("members/delete")
     suspend fun withDrawUser(
-        @Header("Authorization") accessToken: String
+        @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<Any>>
 }

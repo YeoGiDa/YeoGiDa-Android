@@ -145,7 +145,7 @@
             android:hint="@string/join_nickname_hint"
             android:maxLength="8"
             android:maxLines="1"
-            android:singleLine="true"
+            android:inputType="text"
             android:padding="16dp"
             android:textColor="@color/black"
             android:textCursorDrawable="@drawable/main_blue_cursor"

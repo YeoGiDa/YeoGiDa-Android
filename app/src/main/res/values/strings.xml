@@ -88,4 +88,7 @@
 
     <!-- Alarm Fragment -->
     <string name="alarm_title">알림</string>
+
+    <!-- Around Fragment -->
+    <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
 </resources>

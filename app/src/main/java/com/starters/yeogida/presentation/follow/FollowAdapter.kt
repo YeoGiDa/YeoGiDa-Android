@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.databinding.ItemFollowBinding
 import com.starters.yeogida.presentation.common.CustomDialog
 
-class FollowAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FollowAdapter(private val followList: List<User>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items = mutableListOf<User>()
+    private val items = followList
     private lateinit var dlg: CustomDialog
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -29,11 +30,6 @@ class FollowAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return items.size
     }
 
-    fun submitUserList(userList: List<User>) {
-        items.clear()
-        items.addAll(userList)
-        notifyDataSetChanged()
-    }
 
     fun openDialog(context: Context) {
         val dialog = CustomDialog(context)

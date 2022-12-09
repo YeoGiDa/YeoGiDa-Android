@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.starters.yeogida.databinding.FragmentFollowHomeBinding
 
@@ -28,18 +28,10 @@ class FollowHomeFragment : Fragment() {
     }
 
     private fun setViewPagerAdapter() {
-        val pagerAdapter = PagerFragmentStateAdapter(requireActivity())
-        pagerAdapter.addFragment(FollowerFragment())
-        pagerAdapter.addFragment(FollowingFragment())
 
-        binding.viewpagerFollow.adapter = pagerAdapter
-
-        binding.viewpagerFollow.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-            }
-        })
+        binding.viewpagerFollow.apply {
+            adapter = FollowPagerFragmentStateAdapter(context as FragmentActivity)
+        }
 
         TabLayoutMediator(binding.tablayoutFollow, binding.viewpagerFollow) { tab, position ->
             when (position) {

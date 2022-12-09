@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_add_trip"
+    app:startDestination="@id/navigation_add_trip">
+
+    <fragment
+        android:id="@+id/navigation_add_trip"
+        android:name="com.starters.yeogida.presentation.trip.AddTripFragment"
+        android:label="AddTripFragment"
+        tools:layout="@layout/fragment_add_trip">
+        <action
+            android:id="@+id/action_add_trip_to_around_place"
+            app:destination="@id/navigation_around_place" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_around_place"
+        android:name="com.starters.yeogida.presentation.around.AroundPlaceFragment"
+        android:label="AroundPlaceFragment"
+        tools:layout="@layout/fragment_around_place"/>
+</navigation>

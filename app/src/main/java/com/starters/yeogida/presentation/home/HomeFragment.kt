@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.starters.yeogida.data.local.BestTravelerData
 import com.starters.yeogida.data.local.TripData
 import com.starters.yeogida.databinding.FragmentHomeBinding
 import com.starters.yeogida.presentation.mypage.MyPageActivity
+import com.starters.yeogida.presentation.trip.AddTripActivity
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -126,6 +128,11 @@ class HomeFragment : Fragment() {
 
     fun moveToMyPage(view: View) {
         val intent = Intent(activity, MyPageActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun moveToAddTrip(view: View) {
+        val intent = Intent(activity, AddTripActivity::class.java)
         startActivity(intent)
     }
 }

@@ -4,18 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.local.TripData
-import com.starters.yeogida.databinding.ItemTripBinding
+import com.starters.yeogida.databinding.ItemHomeTripBinding
 
 class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val tripList = mutableListOf<TripData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = ItemTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TripViewHolder(binding)
+        val binding =
+            ItemHomeTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return HomeTripViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is TripViewHolder) {
+        if (holder is HomeTripViewHolder) {
             holder.onBind(tripList[position])
         }
     }
@@ -24,7 +25,8 @@ class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return tripList.size
     }
 
-    class TripViewHolder(val binding: ItemTripBinding) : RecyclerView.ViewHolder(binding.root) {
+    class HomeTripViewHolder(val binding: ItemHomeTripBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: TripData) {
             binding.trip = data
         }

@@ -56,6 +56,7 @@
     <string name="around_place_etc">기타</string>
     <string name="around_place_report">여행지 신고</string>
     <string name="around_place_top">맨 위로</string>
+    <string name="around_place_empty">아직 기록이 없어요 \n + 버튼을 눌러 기록을 추가해주세요.</string>
 
     <!-- Mypage Fragment -->
     <string name="mypage_follow">팔로우</string>
@@ -88,4 +89,7 @@
 
     <!-- Alarm Fragment -->
     <string name="alarm_title">알림</string>
+
+    <!-- Around Fragment -->
+    <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
 </resources>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAddTripBinding
 import com.starters.yeogida.util.shortToast
@@ -20,8 +21,11 @@ class AddTripFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_trip, container, false)
+
         initBottomSheet()
         checkMaxLength()
+        initNavigation()
+
         return binding.root
     }
 
@@ -45,6 +49,12 @@ class AddTripFragment : Fragment() {
                     requireContext().shortToast("최대 10글자까지 작성 가능합니다.")
                 }
             }
+        }
+    }
+
+    private fun initNavigation() {
+        binding.btnAddTripNext.setOnClickListener {
+            findNavController().navigate(R.id.action_add_trip_to_around_place)
         }
     }
 }

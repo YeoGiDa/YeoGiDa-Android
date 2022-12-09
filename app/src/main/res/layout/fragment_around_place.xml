@@ -238,6 +238,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_around_place"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="16dp"
@@ -250,6 +251,7 @@
                     tools:listitem="@layout/item_place" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:background="@drawable/rectangle_fill_gray100_17"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -289,12 +291,53 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_around_place_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/scroll_view_around_place_tag">
+
+            <ImageView
+                android:id="@+id/iv_around_place_empty"
+                android:layout_width="0dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="80dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_sad"
+                app:tint="@color/main_blue" />
+
+            <TextView
+                android:id="@+id/tv_around_place_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/around_place_empty"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/iv_around_place_empty"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_around_place_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_plus"
+            android:src="@drawable/ic_plus_blue"
+            app:tint="@null"
             app:backgroundTint="@color/white_blue"
             app:elevation="0dp"
             android:layout_margin="24dp"/>

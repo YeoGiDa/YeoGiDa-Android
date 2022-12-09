@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
@@ -25,6 +26,7 @@ class AroundPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
+        initNavigation()
     }
 
     private fun initAdapter() {
@@ -44,5 +46,11 @@ class AroundPlaceFragment : Fragment() {
             )
         )
         aroundPlaceAdapter.notifyDataSetChanged()
+    }
+
+    private fun initNavigation() {
+        binding.ivAroundPlaceMap.setOnClickListener {
+            findNavController().navigate(R.id.action_around_place_to_around_place_map)
+        }
     }
 }

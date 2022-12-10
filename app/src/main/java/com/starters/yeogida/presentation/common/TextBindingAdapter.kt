@@ -7,3 +7,8 @@ import androidx.databinding.BindingAdapter
 fun setDouble(view: TextView, value: Double) {
     view.text = value.toString()
 }
+
+@BindingAdapter("count")
+fun setInt(view: TextView, value: Int) {
+    view.text = value.toString()
+}

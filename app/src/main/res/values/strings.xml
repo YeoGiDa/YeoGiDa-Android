@@ -92,4 +92,5 @@
 
     <!-- Around Fragment -->
     <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
+    <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>
 </resources>

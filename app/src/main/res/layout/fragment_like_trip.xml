@@ -25,7 +25,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:fontFamily="@font/noto_sans_medium"
-            android:text="정렬"
+            android:text="@string/like_trip_sort"
             android:drawablePadding="4dp"
             android:textColor="@color/black"
             android:textSize="16sp"

@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.starters.yeogida.data.local.FollowUserData
 import com.starters.yeogida.databinding.ItemFollowBinding
 import com.starters.yeogida.presentation.common.CustomDialog
 
-class FollowAdapter(private val followList: List<User>) :
+class FollowAdapter(private val followUserDataList: List<FollowUserData>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items = followList
     private lateinit var dlg: CustomDialog
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -22,12 +22,12 @@ class FollowAdapter(private val followList: List<User>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FollowItemViewHolder) {
-            holder.bind(items[position])
+            holder.bind(followUserDataList[position])
         }
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return followUserDataList.size
     }
 
 
@@ -45,9 +45,8 @@ class FollowAdapter(private val followList: List<User>) :
 
     inner class FollowItemViewHolder(private val binding: ItemFollowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User) {
-            binding.user = user
-            binding.imageUrl = user.userProfileImageUrl
+        fun bind(followUserData: FollowUserData) {
+            binding.user = followUserData
 
             binding.btnFollowDelete.setOnClickListener {
                 openDialog(itemView.context)

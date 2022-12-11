@@ -1,7 +1,7 @@
 package com.starters.yeogida.presentation.common
 
 enum class RegionCategory(
-    val locName: String
+    val regionName: String
 ) {
     ALL("전체"),
     SEOUL("서울"),

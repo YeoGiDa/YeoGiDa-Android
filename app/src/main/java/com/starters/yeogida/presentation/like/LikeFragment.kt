@@ -12,6 +12,7 @@ import com.starters.yeogida.presentation.common.RegionCategory
 
 class LikeFragment : Fragment() {
     private lateinit var binding: FragmentLikeBinding
+    private var regionCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,12 +26,14 @@ class LikeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        regionCount = 18    // 어떤 유저의 좋아요 한 여행지들의 지역 수
+
         binding.viewpagerLike.apply {
-            adapter = LikePagerFragmentStateAdapter(context as FragmentActivity)
+            adapter = LikePagerFragmentStateAdapter(context as FragmentActivity, regionCount)
         }
 
         TabLayoutMediator(binding.tabLike, binding.viewpagerLike) { tab, position ->
-            tab.text = RegionCategory.values()[position].locName
+            tab.text = RegionCategory.values()[position].regionName
         }.attach()
     }
 }

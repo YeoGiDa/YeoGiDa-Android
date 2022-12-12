@@ -29,6 +29,8 @@ import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.*
 import com.starters.yeogida.data.remote.request.LoginRequestData
+import com.starters.yeogida.data.remote.response.BaseResponse
+import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.databinding.ActivityJoinBinding
 import com.starters.yeogida.network.ApiClient
 import com.starters.yeogida.util.UriUtil
@@ -56,6 +58,7 @@ class JoinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJoinBinding
 
+    private val userService = ApiClient.userService
     private lateinit var userEmail: String
     private lateinit var userNum: String
     private var userNickname: String? = null
@@ -183,9 +186,6 @@ class JoinActivity : AppCompatActivity() {
         userNum = intent.getStringExtra("userNum")?.let { it }.toString()
         userNickname = intent.getStringExtra("nickname")?.let { it }
         userProfileImageUrl = intent.getStringExtra("profileImageUrl")?.let { it }
-
-        /*Log.e("userNickname", "Null ? ${userNickname.isNullOrBlank()}")
-        Log.e("profileImageUrl", "Null ? ${userProfileImageUrl.isNullOrBlank()}")*/
     }
 
     override fun onRequestPermissionsResult(
@@ -314,81 +314,78 @@ class JoinActivity : AppCompatActivity() {
             partMap["nickname"] = requestNickname
 
             val requestFile = imageFile?.asRequestBody("image/*".toMediaTypeOrNull())
-            val partImg = requestFile?.let {
-                MultipartBody.Part.createFormData("imgUrl", imageFile?.name, it)
-            }
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
 
-            Log.e("requestFile", "Null ? ${requestFile == null}")
-            Log.e("partImg", "Null ? ${partImg == null}")
-
-            val userService = ApiClient.userService
+            val partImg = MultipartBody.Part.createFormData(
+                "imgUrl", imageFile?.name ?: "", requestFile
+            )
 
             // TODO. API 통신 ProgressBar
             // 회원가입
             CoroutineScope(Dispatchers.IO).launch {
                 val signUpResponse = userService.addUser(
-                    partImg,
-                    partMap
+                    partImg, partMap
+                )
+                signUp(signUpResponse)
+            }
+        }
+    }
+
+    private suspend fun signUp(
+        signUpResponse: retrofit2.Response<BaseResponse<SignUpResponseData>>
+    ) {
+        Log.e("SignUpResponseCode", signUpResponse.code().toString())
+        when (signUpResponse.code()) {
+            201 -> {
+                // 로그인 실행
+                val loginResponse = userService.postLogin(
+                    LoginRequestData(
+                        userEmail, userNum
+                    )
                 )
 
-                Log.e("SignUpResponseCode", signUpResponse.code().toString())
-                when (signUpResponse.code()) {
-                    201 -> {
-                        // 로그인 실행
-                        val loginResponse = userService.postLogin(
-                            LoginRequestData(
-                                userEmail,
-                                userNum
+                Log.d("loginResponse", "$loginResponse")
+
+                when (loginResponse.code()) {
+                    200 -> {
+                        val accessToken = loginResponse.body()?.data?.accessToken
+                        val refreshToken = loginResponse.body()?.data?.refreshToken
+
+                        dataStore.saveIsLogin(true)
+                        dataStore.saveUserToken(accessToken, refreshToken)
+
+                        withContext(Dispatchers.Main) {
+                            Log.e(
+                                "SignUp/userAccessToken", dataStore.userAccessToken.first()
                             )
-                        )
-
-                        Log.d("loginResponse", "$loginResponse")
-
-                        when (loginResponse.code()) {
-                            200 -> {
-                                val accessToken = loginResponse.body()?.data?.accessToken
-                                val refreshToken = loginResponse.body()?.data?.refreshToken
-
-                                dataStore.saveIsLogin(true)
-                                dataStore.saveUserToken(accessToken, refreshToken)
-
-                                withContext(Dispatchers.Main) {
-                                    Log.e(
-                                        "SignUp/userAccessToken",
-                                        dataStore.userAccessToken.first()
-                                    )
-                                    Log.e(
-                                        "SignUp/userRefreshToken",
-                                        dataStore.userRefreshToken.first()
-                                    )
-                                    startMain()
-                                }
-                            }
-                            else -> {
-                                Log.e("loginResponse/Error", loginResponse.message())
-                            }
-                        }
-                    }
-                    400 -> {
-                        Log.d("Join/signUpResponseCode", "400")
-
-                        // 닉네임 중복
-                        if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
-                            withContext(Dispatchers.Main) {
-                                with(binding) {
-                                    tvWarnNickDescription.visibility =
-                                        View.VISIBLE  // 중복된다는 경고 문구 보이기.
-                                    etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
-                                }
-                            }
-                        } else {
-                            Log.e("signUpResponse", "$signUpResponse")
+                            Log.e(
+                                "SignUp/userRefreshToken", dataStore.userRefreshToken.first()
+                            )
+                            startMain()
                         }
                     }
                     else -> {
-                        Log.e("signUpResponse", "회원가입 실패")
+                        Log.e("loginResponse/Error", loginResponse.message())
                     }
                 }
+            }
+            400 -> {
+                Log.d("Join/signUpResponseCode", "400")
+
+                // 닉네임 중복
+                if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
+                    withContext(Dispatchers.Main) {
+                        with(binding) {
+                            tvWarnNickDescription.visibility = View.VISIBLE  // 중복된다는 경고 문구 보이기.
+                            etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
+                        }
+                    }
+                } else {
+                    Log.e("signUpResponse", "$signUpResponse")
+                }
+            }
+            else -> {
+                Log.e("signUpResponse", "회원가입 실패")
             }
         }
     }

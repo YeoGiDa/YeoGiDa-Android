@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
 
 class LikeTripFragment : Fragment() {
@@ -39,26 +40,30 @@ class LikeTripFragment : Fragment() {
 
         choice?.let {
             when (choice) {
-                0 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                1 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                2 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
-                3 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                4 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                5 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
-                6 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                7 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                8 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
-                9 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                10 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                11 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
-                12 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                13 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                14 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
-                15 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.all)
-                16 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.seoul)
-                17 -> binding.rvTrip.adapter = LikeTripAdapter(LikeTripLists.gyeonggi)
+                0 -> setLikeAdapter(LikeTripLists.all)
+                1 -> setLikeAdapter(LikeTripLists.seoul)
+                2 -> setLikeAdapter(LikeTripLists.gyeonggi)
+                3 -> setLikeAdapter(LikeTripLists.all)
+                4 -> setLikeAdapter(LikeTripLists.seoul)
+                5 -> setLikeAdapter(LikeTripLists.gyeonggi)
+                6 -> setLikeAdapter(LikeTripLists.all)
+                7 -> setLikeAdapter(LikeTripLists.seoul)
+                8 -> setLikeAdapter(LikeTripLists.gyeonggi)
+                9 -> setLikeAdapter(LikeTripLists.all)
+                10 -> setLikeAdapter(LikeTripLists.seoul)
+                11 -> setLikeAdapter(LikeTripLists.gyeonggi)
+                12 -> setLikeAdapter(LikeTripLists.all)
+                13 -> setLikeAdapter(LikeTripLists.seoul)
+                14 -> setLikeAdapter(LikeTripLists.gyeonggi)
+                15 -> setLikeAdapter(LikeTripLists.all)
+                16 -> setLikeAdapter(LikeTripLists.seoul)
+                17 -> setLikeAdapter(LikeTripLists.gyeonggi)
                 else -> {}
             }
         }
+    }
+
+    private fun setLikeAdapter(likeTripList: List<LikeTripData>) {
+        binding.rvTrip.adapter = LikeTripAdapter(likeTripList)
     }
 }

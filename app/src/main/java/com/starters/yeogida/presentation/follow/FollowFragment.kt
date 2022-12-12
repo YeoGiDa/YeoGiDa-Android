@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.starters.yeogida.data.local.FollowUserData
 import com.starters.yeogida.databinding.FragmentFollowBinding
 
 class FollowFragment : Fragment() {
@@ -44,11 +45,14 @@ class FollowFragment : Fragment() {
 
         choice?.let {
             when (choice) {
-                0 -> binding.rvFollow.adapter = FollowAdapter(FollowLists.follower)
-                1 -> binding.rvFollow.adapter = FollowAdapter(FollowLists.following)
+                0 -> setFollowAdapter(FollowLists.follower)
+                1 -> setFollowAdapter(FollowLists.following)
                 else -> {}
             }
         }
+    }
 
+    private fun setFollowAdapter(followUserDataList: List<FollowUserData>) {
+        binding.rvFollow.adapter = FollowAdapter(followUserDataList)
     }
 }

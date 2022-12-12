@@ -30,7 +30,7 @@ class FollowHomeFragment : Fragment() {
     private fun setViewPagerAdapter() {
 
         binding.viewpagerFollow.apply {
-            adapter = FollowPagerFragmentStateAdapter(context as FragmentActivity)
+            adapter = FollowPagerFragmentStateAdapter(context as FragmentActivity, 2)
         }
 
         TabLayoutMediator(binding.tablayoutFollow, binding.viewpagerFollow) { tab, position ->

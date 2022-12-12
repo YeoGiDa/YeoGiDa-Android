@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.around
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -62,7 +64,6 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
-        Log.d("###", "onMapReady")
         mMap = googleMap
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         updateLocation()
@@ -104,19 +105,11 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             .target(latLng)
             .zoom(15f)
             .build()
-        Log.d("###", latLng.toString())
         mMap.clear()
-        // mMap.addMarker(markerOptions)
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isMyLocationButtonEnabled = true
         mMap.setPadding(20, 200, 20, 20)
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-    }
-
-    override fun onDestroyView() {
-        // TODO: 허용을 해야 생성
-        // fusedLocationClient.removeLocationUpdates(locationCallback)
-        super.onDestroyView()
     }
 
     override fun onMarkerClick(p0: Marker): Boolean {
@@ -180,10 +173,9 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     // 권한 처리
     private val permissions = arrayOf(
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
-    private val permLocation = 99
 
     // 권한 요청 전에 검사하는 코드
     // 두 권한 중 하나라도 승인되어 있지 않으면 다시 요청
@@ -203,13 +195,11 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     private fun requestPermission() {
-        Log.d("###", "requestPermission")
-        requestPermissions(permissions, permLocation)
+        activityResultLauncher.launch(permissions)
     }
 
     // 권한이 승인되지 않으면 한 번 더 확인
     private fun confirmAgain() {
-        Log.d("###", "confirmAgain")
         AlertDialog.Builder(requireContext())
             .setTitle("권한 승인 확인")
             .setMessage("위치 관련 권한을 모두 승인하셔야 현재 위치 주변 장소를 확인할 수 있습니다. 권한 승인을 다시 하시겠습니까?")
@@ -224,26 +214,14 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     // 모두 다 승인이면 프로세스 시작, 아니면 confirmAgain 호출
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            99 -> {
-                var grantedAll = true
-                for (result in grantResults) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        grantedAll = false
-                        break
-                    }
-                }
-                if (grantedAll) {
-                    startProcess()
-                } else {
-                    confirmAgain()
-                }
-            }
+    private val contract = ActivityResultContracts.RequestMultiplePermissions()
+
+    private val activityResultLauncher = registerForActivityResult(contract) { resultMap ->
+        val isAllGranted = permissions.all { e -> resultMap[e] == true }
+        if (isAllGranted) {
+            startProcess()
+        } else {
+            confirmAgain()
         }
     }
 

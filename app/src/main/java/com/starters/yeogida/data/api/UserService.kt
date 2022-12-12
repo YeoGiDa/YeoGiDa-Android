@@ -14,7 +14,7 @@ interface UserService {
     @Multipart
     @POST("members/join")
     suspend fun addUser(
-        @Part imgUrl: MultipartBody.Part?,
+        @Part imgUrl: MultipartBody.Part,
         @PartMap memberJoinRequest: HashMap<String, RequestBody>
     ): Response<BaseResponse<SignUpResponseData>>
 

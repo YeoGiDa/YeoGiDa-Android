@@ -1,12 +1,11 @@
 package com.starters.yeogida.presentation.user
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -29,8 +28,11 @@ import androidx.databinding.DataBindingUtil
 import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.*
 import com.starters.yeogida.data.remote.request.LoginRequestData
+import com.starters.yeogida.data.remote.response.BaseResponse
+import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.databinding.ActivityJoinBinding
 import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -50,20 +52,21 @@ import java.net.URL
 import java.util.regex.Pattern
 
 class JoinActivity : AppCompatActivity() {
-    private val PERMISSION_ALBUM = 101
-    private val REQUEST_STORAGE = 1000
-    private var permissionRejectCount = 0
-
     private lateinit var binding: ActivityJoinBinding
+
+    private val joinViewModel: JoinViewModel by viewModels()
+
+    private val userService = ApiClient.userService
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private lateinit var userEmail: String
     private lateinit var userNum: String
     private var userNickname: String? = null
     private var userProfileImageUrl: String? = null
 
-    private val dataStore = YeogidaApplication.getInstance().getDataStore()
-    private val joinViewModel: JoinViewModel by viewModels()
-
+    private val PERMISSION_ALBUM = 101
+    private val REQUEST_STORAGE = 1000
+    private var permissionRejectCount = 0
     private var imageFile: File? = null
 
     private val imageResult = registerForActivityResult(
@@ -74,7 +77,8 @@ class JoinActivity : AppCompatActivity() {
 
             applicationContext?.let { context ->
                 imageUri?.let { imageUri ->
-                    getResizePicture(imageUri)
+                    imageFile = ImageUtil.getResizePicture(this, imageUri)
+                    Log.e("imageFile", "Null ? ${imageFile == null}")
                 }
             }
 
@@ -83,66 +87,6 @@ class JoinActivity : AppCompatActivity() {
                     .load(imageUri)
                     .circleCrop()
                     .into(binding.ivProfile)
-            }
-        }
-    }
-
-    /**
-     * 이미지 회전 데이터 반환
-     */
-    private fun getExifDegrees(ei: ExifInterface): Float {
-        val orientation: Int =
-            ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
-        return when (orientation) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> 90f
-            ExifInterface.ORIENTATION_ROTATE_180 -> 180f
-            ExifInterface.ORIENTATION_ROTATE_270 -> 270f
-            else -> 0f
-        }
-    }
-
-    private fun getResizePicture(imgUri: Uri) {
-
-        //1)회전할 각도 구하기
-        var degrees = 0f
-        contentResolver.openInputStream(imgUri)?.use { inputStream ->
-            degrees = getExifDegrees(ExifInterface(inputStream))
-        }
-
-        //2)Resizing 할 BitmapOption 만들기
-        val bmOptions = BitmapFactory.Options().apply {
-            // Get the dimensions of the bitmap
-            inJustDecodeBounds = true
-            contentResolver.openInputStream(imgUri)?.use { inputStream ->
-                //get img dimension
-                BitmapFactory.decodeStream(inputStream, null, this)
-            }
-
-            // Determine how much to scale down the image
-            val targetW: Int = 1000 //in pixel
-            val targetH: Int = 1000 //in pixel
-            val scaleFactor: Int = Math.min(outWidth / targetW, outHeight / targetH)
-
-            // Decode the image file into a Bitmap sized to fill the View
-            inJustDecodeBounds = false
-            inSampleSize = scaleFactor
-        }
-
-        //3) Bitmap 생성 및 셋팅 (resized + rotated)
-        contentResolver.openInputStream(imgUri)?.use { inputStream ->
-            BitmapFactory.decodeStream(inputStream, null, bmOptions)?.also { bitmap ->
-                val matrix = Matrix()
-                matrix.preRotate(degrees, 0f, 0f)
-
-                val resizedBitmap =
-                    Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
-
-                val compressedUri = UriUtil.bitmapToUri(this@JoinActivity, resizedBitmap, userNum)
-
-                compressedUri?.let { compressedUri ->
-                    imageFile = UriUtil.toFile(this@JoinActivity, compressedUri)
-                    contentResolver.delete(compressedUri, null, null)   // Uri에 해당되는 값 갤러리에서 제거.
-                }
             }
         }
     }
@@ -183,9 +127,6 @@ class JoinActivity : AppCompatActivity() {
         userNum = intent.getStringExtra("userNum")?.let { it }.toString()
         userNickname = intent.getStringExtra("nickname")?.let { it }
         userProfileImageUrl = intent.getStringExtra("profileImageUrl")?.let { it }
-
-        /*Log.e("userNickname", "Null ? ${userNickname.isNullOrBlank()}")
-        Log.e("profileImageUrl", "Null ? ${userProfileImageUrl.isNullOrBlank()}")*/
     }
 
     override fun onRequestPermissionsResult(
@@ -241,12 +182,12 @@ class JoinActivity : AppCompatActivity() {
                 }
 
                 shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE) -> {
-                    showPermissionContextPopup()
+                    showPermissionContextPopup(this)
                     Log.i("BUTTON", "showpermission")
                 }
 
                 permissionRejectCount == 2 -> {
-                    showSettingDialog()
+                    showSettingDialog(this)
                 }
 
                 else -> {
@@ -257,12 +198,12 @@ class JoinActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSettingDialog() {
-        AlertDialog.Builder(this).apply {
+    private fun showSettingDialog(context: Context) {
+        AlertDialog.Builder(context).apply {
             setMessage("사진을 가져오려면 권한을 허용해주세요.")
             setPositiveButton("설정으로 이동") { _, _ ->
                 Toast.makeText(
-                    this@JoinActivity,
+                    context,
                     "권한 허용을 위해 설정으로 이동합니다.",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -276,8 +217,8 @@ class JoinActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPermissionContextPopup() {
-        AlertDialog.Builder(this).apply {
+    private fun showPermissionContextPopup(context: Context) {
+        AlertDialog.Builder(context).apply {
             setTitle("권한이 필요합니다.")
             setMessage("앱에서 사진을 불러오기 위해 권한이 필요합니다.")
             setPositiveButton("동의") { _, _ ->
@@ -314,81 +255,78 @@ class JoinActivity : AppCompatActivity() {
             partMap["nickname"] = requestNickname
 
             val requestFile = imageFile?.asRequestBody("image/*".toMediaTypeOrNull())
-            val partImg = requestFile?.let {
-                MultipartBody.Part.createFormData("imgUrl", imageFile?.name, it)
-            }
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
 
-            Log.e("requestFile", "Null ? ${requestFile == null}")
-            Log.e("partImg", "Null ? ${partImg == null}")
-
-            val userService = ApiClient.userService
+            val partImg = MultipartBody.Part.createFormData(
+                "imgUrl", imageFile?.name ?: "", requestFile
+            )
 
             // TODO. API 통신 ProgressBar
             // 회원가입
             CoroutineScope(Dispatchers.IO).launch {
                 val signUpResponse = userService.addUser(
-                    partImg,
-                    partMap
+                    partImg, partMap
+                )
+                signUp(signUpResponse)
+            }
+        }
+    }
+
+    private suspend fun signUp(
+        signUpResponse: retrofit2.Response<BaseResponse<SignUpResponseData>>
+    ) {
+        Log.e("SignUpResponseCode", signUpResponse.code().toString())
+        when (signUpResponse.code()) {
+            201 -> {
+                // 로그인 실행
+                val loginResponse = userService.postLogin(
+                    LoginRequestData(
+                        userEmail, userNum
+                    )
                 )
 
-                Log.e("SignUpResponseCode", signUpResponse.code().toString())
-                when (signUpResponse.code()) {
-                    201 -> {
-                        // 로그인 실행
-                        val loginResponse = userService.postLogin(
-                            LoginRequestData(
-                                userEmail,
-                                userNum
+                Log.d("loginResponse", "$loginResponse")
+
+                when (loginResponse.code()) {
+                    200 -> {
+                        val accessToken = loginResponse.body()?.data?.accessToken
+                        val refreshToken = loginResponse.body()?.data?.refreshToken
+
+                        dataStore.saveIsLogin(true)
+                        dataStore.saveUserToken(accessToken, refreshToken)
+
+                        withContext(Dispatchers.Main) {
+                            Log.e(
+                                "SignUp/userAccessToken", dataStore.userAccessToken.first()
                             )
-                        )
-
-                        Log.d("loginResponse", "$loginResponse")
-
-                        when (loginResponse.code()) {
-                            200 -> {
-                                val accessToken = loginResponse.body()?.data?.accessToken
-                                val refreshToken = loginResponse.body()?.data?.refreshToken
-
-                                dataStore.saveIsLogin(true)
-                                dataStore.saveUserToken(accessToken, refreshToken)
-
-                                withContext(Dispatchers.Main) {
-                                    Log.e(
-                                        "SignUp/userAccessToken",
-                                        dataStore.userAccessToken.first()
-                                    )
-                                    Log.e(
-                                        "SignUp/userRefreshToken",
-                                        dataStore.userRefreshToken.first()
-                                    )
-                                    startMain()
-                                }
-                            }
-                            else -> {
-                                Log.e("loginResponse/Error", loginResponse.message())
-                            }
-                        }
-                    }
-                    400 -> {
-                        Log.d("Join/signUpResponseCode", "400")
-
-                        // 닉네임 중복
-                        if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
-                            withContext(Dispatchers.Main) {
-                                with(binding) {
-                                    tvWarnNickDescription.visibility =
-                                        View.VISIBLE  // 중복된다는 경고 문구 보이기.
-                                    etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
-                                }
-                            }
-                        } else {
-                            Log.e("signUpResponse", "$signUpResponse")
+                            Log.e(
+                                "SignUp/userRefreshToken", dataStore.userRefreshToken.first()
+                            )
+                            startMain()
                         }
                     }
                     else -> {
-                        Log.e("signUpResponse", "회원가입 실패")
+                        Log.e("loginResponse/Error", loginResponse.message())
                     }
                 }
+            }
+            400 -> {
+                Log.d("Join/signUpResponseCode", "400")
+
+                // 닉네임 중복
+                if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
+                    withContext(Dispatchers.Main) {
+                        with(binding) {
+                            tvWarnNickDescription.visibility = View.VISIBLE  // 중복된다는 경고 문구 보이기.
+                            etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
+                        }
+                    }
+                } else {
+                    Log.e("signUpResponse", "$signUpResponse")
+                }
+            }
+            else -> {
+                Log.e("signUpResponse", "회원가입 실패")
             }
         }
     }

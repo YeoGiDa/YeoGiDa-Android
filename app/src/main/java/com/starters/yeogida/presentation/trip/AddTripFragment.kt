@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.trip
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAddTripBinding
 import com.starters.yeogida.util.shortToast
 
+
 class AddTripFragment : Fragment() {
     private lateinit var binding: FragmentAddTripBinding
 
@@ -21,6 +23,7 @@ class AddTripFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_trip, container, false)
+        binding.view = this
 
         initBottomSheet()
         checkMaxLength()
@@ -32,7 +35,9 @@ class AddTripFragment : Fragment() {
     private fun initBottomSheet() {
         binding.tvAddTripRegion.setOnClickListener {
             // binding.tvAddTripRegion.setBackgroundResource(R.drawable.rectangle_border_main_blue_10)
-            val bottomSheetDialog = BottomSheetFragment()
+            val bottomSheetDialog = RegionBottomSheetFragment {
+                binding.tvAddTripRegion.text = it
+            }
             bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         }
     }
@@ -56,5 +61,9 @@ class AddTripFragment : Fragment() {
         binding.btnAddTripNext.setOnClickListener {
             findNavController().navigate(R.id.action_add_trip_to_around_place)
         }
+    }
+
+    fun close(view: View) {
+        (activity as AddTripActivity).finish()
     }
 }

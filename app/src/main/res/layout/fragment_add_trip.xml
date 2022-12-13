@@ -75,6 +75,7 @@
             android:fontFamily="@font/noto_sans_medium"
             android:hint="@string/add_trp_region_hint"
             android:padding="12dp"
+            android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -207,6 +208,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
+            android:onClick="@{view.setFullScreenImage}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/iv_add_trip_camera"
             app:layout_constraintDimensionRatio="1:1"
@@ -220,9 +222,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="-16dp"
             android:layout_marginTop="-16dp"
+            android:onClick="@{view.deletePhoto}"
             android:scaleType="centerInside"
             android:src="@drawable/ic_x"
-            android:onClick="@{view.deletePhoto}"
             android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/iv_add_trip_photo"
             app:layout_constraintTop_toTopOf="@+id/iv_add_trip_photo" />
@@ -234,7 +236,7 @@
             android:background="@color/gray_800"
             android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
-            android:text="대표 사진"
+            android:text="@string/add_trip_photo_title"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="gone"
@@ -258,5 +260,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_add_trip_photo_big"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:onClick="@{view.setOriginalImage}"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

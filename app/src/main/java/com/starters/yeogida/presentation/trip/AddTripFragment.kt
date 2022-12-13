@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -92,6 +94,17 @@ class AddTripFragment : Fragment() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
         startActivityForResult(intent, pickImage)
+    }
+
+    fun setFullScreenImage(view: View) {
+        binding.ivAddTripPhotoBig.visibility = View.VISIBLE
+        binding.btnAddTripNext.visibility = View.GONE
+        Glide.with(this).load(selectedPicUri).into(binding.ivAddTripPhotoBig)
+    }
+
+    fun setOriginalImage(view: View) {
+        binding.ivAddTripPhotoBig.visibility = View.GONE
+        binding.btnAddTripNext.visibility = View.VISIBLE
     }
 
     fun deletePhoto(view: View) {

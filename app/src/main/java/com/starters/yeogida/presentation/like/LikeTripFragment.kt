@@ -1,15 +1,20 @@
 package com.starters.yeogida.presentation.like
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
+import com.starters.yeogida.presentation.place.PlaceActivity
 
 class LikeTripFragment : Fragment() {
     private lateinit var binding: FragmentLikeTripBinding
+    private val viewModel: LikeTripViewModel by viewModels()
 
     companion object {
         val REGION_CATEGORY_ITEM = "region_category_item"
@@ -61,9 +66,19 @@ class LikeTripFragment : Fragment() {
                 else -> {}
             }
         }
+
+        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner) {
+            Log.e("openAroundPlaceEvent", "Event Observed.")
+            moveToAroundPlace()
+        }
+    }
+
+    private fun moveToAroundPlace() {
+        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        startActivity(intent)
     }
 
     private fun setLikeAdapter(likeTripList: List<LikeTripData>) {
-        binding.rvTrip.adapter = LikeTripAdapter(likeTripList)
+        binding.rvTrip.adapter = LikeTripAdapter(likeTripList, viewModel)
     }
 }

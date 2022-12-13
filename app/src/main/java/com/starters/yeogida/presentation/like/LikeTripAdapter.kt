@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.databinding.ItemTripBinding
 
-class LikeTripAdapter(private val likeTripList: List<LikeTripData>) :
+class LikeTripAdapter(
+    private val likeTripList: List<LikeTripData>,
+    private val viewModel: LikeTripViewModel
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = ItemTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,11 +27,11 @@ class LikeTripAdapter(private val likeTripList: List<LikeTripData>) :
         return likeTripList.size
     }
 
-
     inner class LikeTripViewHolder(private val binding: ItemTripBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(likeTrip: LikeTripData) {
             binding.likeTrip = likeTrip
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }

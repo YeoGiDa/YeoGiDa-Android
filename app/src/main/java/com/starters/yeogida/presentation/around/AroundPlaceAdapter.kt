@@ -7,7 +7,8 @@ import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
 import com.starters.yeogida.databinding.ItemPlaceBinding
 
-class AroundPlaceAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AroundPlaceAdapter(private val viewModel: AroundPlaceViewModel) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val aroundPlaceList = mutableListOf<PlaceData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -37,7 +38,10 @@ class AroundPlaceAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     inner class AroundPlaceViewHolder(val binding: ItemPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: PlaceData) {
+            binding.viewModel = viewModel
             binding.place = data
+
+            binding.executePendingBindings()
         }
     }
 }

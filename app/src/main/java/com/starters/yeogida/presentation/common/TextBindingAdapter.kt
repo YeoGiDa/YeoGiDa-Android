@@ -12,3 +12,8 @@ fun setDouble(view: TextView, value: Double) {
 fun setInt(view: TextView, value: Int) {
     view.text = value.toString()
 }
+
+@BindingAdapter("position", "size")
+fun setPhotoCounter(view: TextView, position: String, size: String) {
+    view.text = "$position / $size"
+}

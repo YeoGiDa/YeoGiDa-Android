@@ -20,6 +20,14 @@
         android:theme="@style/Theme.YeoGida"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.place.PlaceActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_native_key" />
@@ -76,10 +84,10 @@
             android:exported="true" />
         <activity
             android:name=".presentation.trip.AddTripActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".presentation.mypage.MyPageActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

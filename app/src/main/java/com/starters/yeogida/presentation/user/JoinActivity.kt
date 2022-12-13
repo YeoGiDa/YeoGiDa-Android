@@ -179,6 +179,7 @@ class JoinActivity : AppCompatActivity() {
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         withContext(Dispatchers.Main) {
                             navigatePhotos()
+                            dataStore.saveIsImgPermissionRejected(false)
                         }
                         Log.i("BUTTON", "navigate")
                     }

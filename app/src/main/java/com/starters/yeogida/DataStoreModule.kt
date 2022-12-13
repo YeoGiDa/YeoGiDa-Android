@@ -18,6 +18,8 @@ class DataStoreModule(private val context: Context) {
     private val USER_REFRESH_TOKEN_KEY = stringPreferencesKey("USER_REFRESH_TOKEN")
     private val USER_BEARER_TOKEN_KEY = stringPreferencesKey("USER_BEARER_TOKEN")
     private val USER_IS_LOGIN_KEY = booleanPreferencesKey("USER_IS_LOGIN")
+    private val IMAGE_PERMISSION_IS_REJECTED_KEY =
+        booleanPreferencesKey("IS_IMAGE_PERMISSION_REJECTED")
 
     val userAccessToken: Flow<String> = context.userDataStore.data
         .catch { exception ->
@@ -67,6 +69,18 @@ class DataStoreModule(private val context: Context) {
             userPrefs[USER_IS_LOGIN_KEY] ?: false
         }
 
+    val imagePermissionIsRejected: Flow<Boolean> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[IMAGE_PERMISSION_IS_REJECTED_KEY] ?: false
+        }
+
     private suspend fun saveAccessToken(accessToken: String) {
         context.userDataStore.edit { userPrefs ->
             userPrefs[USER_ACCESS_TOKEN_KEY] = accessToken
@@ -106,6 +120,12 @@ class DataStoreModule(private val context: Context) {
     suspend fun saveIsLogin(userIsLogin: Boolean) {
         context.userDataStore.edit { userPrefs ->
             userPrefs[USER_IS_LOGIN_KEY] = userIsLogin
+        }
+    }
+
+    suspend fun saveIsImgPermissionRejected(isRejected: Boolean) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[IMAGE_PERMISSION_IS_REJECTED_KEY] = isRejected
         }
     }
 

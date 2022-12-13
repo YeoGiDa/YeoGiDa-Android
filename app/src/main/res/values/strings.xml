@@ -82,7 +82,7 @@
     <string name="add_trip_subtitle">소제목</string>
     <string name="add_trip_subtitle_hint">여행에 대한 소제목을 입력하세요.</string>
     <string name="add_trip_photo_title">대표사진</string>
-    <string name="add_trip_nex">다음</string>
+    <string name="add_trip_confirm">완료</string>
 
     <!-- Bottom Sheet -->
     <string name="bottom_sheet_region">지역</string>

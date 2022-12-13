@@ -14,9 +14,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.RegionData
 import com.starters.yeogida.databinding.FragmentBottomSheetBinding
+import com.starters.yeogida.presentation.common.OnItemClick
 
-
-class BottomSheetFragment : BottomSheetDialogFragment() {
+class RegionBottomSheetFragment(val itemClick: (String) -> Unit) :
+    BottomSheetDialogFragment(),
+    OnItemClick {
     private lateinit var binding: FragmentBottomSheetBinding
 
     override fun onCreateView(
@@ -24,7 +26,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_bottom_sheet, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_bottom_sheet, container, false)
 
         initAdapter()
 
@@ -32,7 +35,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun initAdapter() {
-        val regionAdapter = RegionAdapter()
+        val regionAdapter = RegionAdapter(this)
         binding.rvRegion.adapter = regionAdapter
         regionAdapter.regionList.addAll(
             listOf(
@@ -58,7 +61,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
-        val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
+        val bottomSheet =
+            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
         val behavior = BottomSheetBehavior.from(bottomSheet)
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = getBottomSheetDialogDefaultHeight()
@@ -83,5 +87,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             wm.defaultDisplay.getMetrics(displayMetrics)
             displayMetrics.heightPixels
         }
+    }
+
+    override fun onClick(value: String) {
+        itemClick(value)
+        dismiss()
     }
 }

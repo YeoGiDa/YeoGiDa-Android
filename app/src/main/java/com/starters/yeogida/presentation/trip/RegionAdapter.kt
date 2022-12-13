@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.local.RegionData
 import com.starters.yeogida.databinding.ItemRegionBinding
+import com.starters.yeogida.presentation.common.OnItemClick
 
-class RegionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RegionAdapter(private val onItemClick: OnItemClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val regionList = mutableListOf<RegionData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -17,6 +18,9 @@ class RegionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is RegionViewHolder) {
             holder.onBind(regionList[position])
+        }
+        holder.itemView.setOnClickListener {
+            onItemClick.onClick(regionList[position].name)
         }
     }
 

@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.trip.AddTripFragment" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{view::close}"
             android:padding="12dp"
             android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent"
@@ -172,6 +177,16 @@
             app:layout_constraintStart_toStartOf="@+id/et_add_trip_subtitle"
             app:layout_constraintTop_toBottomOf="@+id/et_add_trip_subtitle" />
 
+        <TextView
+            android:id="@+id/tv_add_trip_photo_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="@string/add_trip_region_star"
+            android:textColor="@color/red"
+            app:layout_constraintStart_toEndOf="@+id/tv_add_trip_photo_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_add_trip_photo_title" />
+
         <ImageView
             android:id="@+id/iv_add_trip_camera"
             android:layout_width="0dp"
@@ -179,6 +194,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="-12dp"
             android:background="@color/gray_200"
+            android:onClick="@{view.connectGallery}"
             android:padding="24dp"
             android:src="@drawable/ic_camera"
             app:layout_constraintDimensionRatio="1:1"
@@ -191,12 +207,39 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
-            android:padding="24dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/iv_add_trip_camera"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/iv_add_trip_camera"
             app:layout_constraintTop_toTopOf="@+id/iv_add_trip_camera"
             tools:background="@color/gray_200" />
+
+        <ImageView
+            android:id="@+id/iv_add_trip_photo_x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-16dp"
+            android:layout_marginTop="-16dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_x"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/iv_add_trip_photo"
+            app:layout_constraintTop_toTopOf="@+id/iv_add_trip_photo" />
+
+        <TextView
+            android:id="@+id/tv_add_trip_photo_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_800"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:text="대표 사진"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_add_trip_photo"
+            app:layout_constraintEnd_toEndOf="@+id/iv_add_trip_photo"
+            app:layout_constraintStart_toStartOf="@+id/iv_add_trip_photo" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_trip_next"
@@ -206,8 +249,9 @@
             android:background="@drawable/selector_btn_blue"
             android:enabled="false"
             android:fontFamily="@font/noto_sans_medium"
+            android:onClick="@{view.moveToAroundPlace}"
             android:padding="16dp"
-            android:text="@string/add_trip_nex"
+            android:text="@string/add_trip_confirm"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
@@ -13,6 +14,7 @@ import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
+    private val viewModel: AroundPlaceViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +32,7 @@ class AroundPlaceFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        val aroundPlaceAdapter = AroundPlaceAdapter()
+        val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
         binding.rvAroundPlace.adapter = aroundPlaceAdapter
         aroundPlaceAdapter.aroundPlaceList.addAll(
             listOf(
@@ -51,6 +53,10 @@ class AroundPlaceFragment : Fragment() {
     private fun initNavigation() {
         binding.ivAroundPlaceMap.setOnClickListener {
             findNavController().navigate(R.id.action_around_place_to_around_place_map)
+        }
+
+        viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
         }
     }
 }

@@ -222,6 +222,7 @@
             android:layout_marginTop="-16dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_x"
+            android:onClick="@{view.deletePhoto}"
             android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/iv_add_trip_photo"
             app:layout_constraintTop_toTopOf="@+id/iv_add_trip_photo" />

@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.trip
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,6 +8,8 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,7 +21,6 @@ import com.starters.yeogida.util.shortToast
 
 class AddTripFragment : Fragment() {
     private lateinit var binding: FragmentAddTripBinding
-    private val pickImage = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,8 +31,7 @@ class AddTripFragment : Fragment() {
         binding.view = this
 
         initBottomSheet()
-        checkMaxLength()
-        activeConfirmButton()
+        initEditText()
 
         return binding.root
     }
@@ -46,19 +47,20 @@ class AddTripFragment : Fragment() {
         }
     }
 
-    private fun checkMaxLength() {
+    // edit text에 사용되는 함수 연결
+    private fun initEditText() {
         with(binding) {
-            etAddTripName.addTextChangedListener {
-                activeConfirmButton()
-                if (etAddTripName.text.length == 10) {
-                    requireContext().shortToast("최대 10글자까지 작성 가능합니다.")
-                }
-            }
-            etAddTripSubtitle.addTextChangedListener {
-                activeConfirmButton()
-                if (etAddTripSubtitle.text.length == 10) {
-                    requireContext().shortToast("최대 10글자까지 작성 가능합니다.")
-                }
+            checkActiveAndLength(etAddTripSubtitle)
+            checkActiveAndLength(etAddTripName)
+        }
+    }
+
+    // 완료 버튼 활성화 및 최대 글자수 확인
+    private fun checkActiveAndLength(et: EditText) {
+        et.addTextChangedListener {
+            activeConfirmButton()
+            if (et.text.length == 10) {
+                requireContext().shortToast("최대 10글자까지 작성 가능합니다.")
             }
         }
     }
@@ -70,48 +72,60 @@ class AddTripFragment : Fragment() {
         }
     }
 
-    var selectedPicUri: Uri? = null
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == pickImage) {
-            data?.let {
-                selectedPicUri = it.data!!
-                binding.ivAddTripPhoto.visibility = View.VISIBLE
-                binding.ivAddTripPhotoX.visibility = View.VISIBLE
-                binding.tvAddTripPhotoDescription.visibility = View.VISIBLE
-                Glide.with(this).load(selectedPicUri).into(binding.ivAddTripPhoto)
-                activeConfirmButton()
-            }
+    // 이미지 확대 관련 visibility
+    private fun setImageVisibility(bigVisibility: Int, btnVisibility: Int) {
+        with(binding) {
+            ivAddTripPhotoBig.visibility = bigVisibility
+            btnAddTripNext.visibility = btnVisibility
         }
     }
+
+    // 사진 추가, 삭제 관련 visibility
+    private fun setPhotoVisibility(v1: Int, v2: Int, v3: Int) {
+        with(binding) {
+            ivAddTripPhoto.visibility = v1
+            ivAddTripPhotoX.visibility = v2
+            tvAddTripPhotoDescription.visibility = v3
+        }
+        activeConfirmButton()
+    }
+
+    private var selectedPicUri: Uri? = null
+    private val imageResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let {
+                    selectedPicUri = it.data!!
+                    with(binding) {
+                        setPhotoVisibility(View.VISIBLE, View.VISIBLE, View.VISIBLE)
+                        Glide.with(requireContext()).load(selectedPicUri).into(ivAddTripPhoto)
+                    }
+                }
+            }
+        }
 
     fun moveToAroundPlace(view: View) {
         findNavController().navigate(R.id.action_add_trip_to_around_place)
     }
 
+    // 갤러리 창 연결
     fun connectGallery(view: View) {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
-        startActivityForResult(intent, pickImage)
+        imageResult.launch(intent)
     }
 
     fun setFullScreenImage(view: View) {
-        binding.ivAddTripPhotoBig.visibility = View.VISIBLE
-        binding.btnAddTripNext.visibility = View.GONE
+        setImageVisibility(View.VISIBLE, View.GONE)
         Glide.with(this).load(selectedPicUri).into(binding.ivAddTripPhotoBig)
     }
 
     fun setOriginalImage(view: View) {
-        binding.ivAddTripPhotoBig.visibility = View.GONE
-        binding.btnAddTripNext.visibility = View.VISIBLE
+        setImageVisibility(View.GONE, View.VISIBLE)
     }
 
     fun deletePhoto(view: View) {
-        binding.ivAddTripPhoto.visibility = View.GONE
-        binding.ivAddTripPhotoX.visibility = View.GONE
-        binding.tvAddTripPhotoDescription.visibility = View.GONE
-        activeConfirmButton()
+        setPhotoVisibility(View.GONE, View.GONE, View.GONE)
     }
 
     fun close(view: View) {

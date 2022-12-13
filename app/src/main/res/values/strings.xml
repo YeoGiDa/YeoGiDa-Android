@@ -96,4 +96,5 @@
     <!-- Like Fragment -->
     <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>
     <string name="like_trip_sort">정렬</string>
+    <string name="place_detail_comment_hint">댓글을 입력하세요</string>
 </resources>

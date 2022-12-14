@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceMapBinding
 
 class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -24,7 +27,8 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAroundPlaceMapBinding.inflate(inflater, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_around_place_map, container, false)
+        binding.view = this
 
         mView = binding.mapViewAroundPlace
         mView.onCreate(savedInstanceState)
@@ -80,5 +84,9 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     override fun onDestroy() {
         mView.onDestroy()
         super.onDestroy()
+    }
+
+    fun close(view: View) {
+        findNavController().navigateUp()
     }
 }

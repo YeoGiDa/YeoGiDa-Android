@@ -3,11 +3,11 @@ package com.starters.yeogida.presentation.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.data.local.TripData
+import com.starters.yeogida.data.remote.response.TripListData
 import com.starters.yeogida.databinding.ItemHomeTripBinding
 
 class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    val tripList = mutableListOf<TripData>()
+    val tripList = mutableListOf<TripListData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding =
@@ -27,7 +27,7 @@ class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class HomeTripViewHolder(val binding: ItemHomeTripBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(data: TripData) {
+        fun onBind(data: TripListData) {
             binding.trip = data
         }
     }

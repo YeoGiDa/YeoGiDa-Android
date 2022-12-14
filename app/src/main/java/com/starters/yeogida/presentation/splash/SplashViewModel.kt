@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.common.TokenData
-import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.network.YeogidaClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,7 +21,7 @@ class SplashViewModel : ViewModel() {
     private val _isLogin = MutableLiveData<Boolean>()
     val isLogin: LiveData<Boolean> = _isLogin
 
-    private val userService = ApiClient.userService
+    private val userService = YeogidaClient.userService
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private var userAccessToken: String = ""

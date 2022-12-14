@@ -2,18 +2,17 @@ package com.starters.yeogida.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.starters.yeogida.R
-import com.starters.yeogida.data.local.BestTravelerData
-import com.starters.yeogida.data.local.TripData
 import com.starters.yeogida.databinding.FragmentHomeBinding
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
+import com.starters.yeogida.util.customEnqueue
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -30,100 +29,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.view = this
-        initAdapter()
+        initNetwork()
     }
 
-    private fun initAdapter() {
-        val bestTravelerAdapter = BestTravelerAdapter()
+    private fun initNetwork() {
         val bestTripAdapter = TripAdapter()
-        val recentTripAdapter = TripAdapter()
-
-        binding.rvBestTraveler.adapter = bestTravelerAdapter
         binding.rvBestMonthlyTrip.adapter = bestTripAdapter
-        binding.rvRecentTrip.adapter = recentTripAdapter
 
-        bestTravelerAdapter.bestTravelerList.addAll(
-            listOf(
-                BestTravelerData(
-                    "https://image.bugsm.co.kr/album/images/500/204708/20470857.jpg",
-                    "하현상",
-                    "999+"
-                ),
-                BestTravelerData("https://image.yes24.com/goods/96827725/XL", "호피폴라", "129"),
-                BestTravelerData(
-                    "https://cdn.pixabay.com/photo/2017/08/06/12/06/people-2591874_1280.jpg",
-                    "여행왕",
-                    "20"
-                ),
-                BestTravelerData(
-                    "https://cdn.pixabay.com/photo/2017/06/05/11/01/airport-2373727_1280.jpg",
-                    "뱅기",
-                    "14"
-                ),
-                BestTravelerData(
-                    "https://cdn.pixabay.com/photo/2016/11/22/22/21/adventure-1850912_1280.jpg",
-                    "레모나",
-                    "2"
-                )
-            )
-        )
-        bestTripAdapter.tripList.addAll(
-            listOf(
-                TripData(
-                    "https://cdn.pixabay.com/photo/2017/08/31/09/26/korea-2699930_1280.jpg",
-                    "담양",
-                    "설렁탕탕구리"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2020/05/05/07/52/republic-of-korea-5131925_1280.jpg",
-                    "제주도",
-                    "닉넴"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2022/08/05/05/59/korea-7366036_1280.jpg",
-                    "서울",
-                    "텀플러러버"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2020/11/24/02/13/gyeongbok-palace-5771324_1280.jpg",
-                    "서울",
-                    "한복좋아"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2016/08/23/09/38/pohang-1613923_1280.jpg",
-                    "포항",
-                    "포항항"
-                )
-            )
-        )
-        recentTripAdapter.tripList.addAll(
-            listOf(
-                TripData(
-                    "https://cdn.pixabay.com/photo/2016/08/19/04/59/the-bulguksa-temple-1604556_1280.jpg",
-                    "경주",
-                    "귤귤"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2020/05/24/11/56/to-5213925_1280.jpg",
-                    "경주",
-                    "포항항"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2020/03/19/07/37/suwon-4946628_1280.jpg",
-                    "수원",
-                    "비타민C"
-                ),
-                TripData(
-                    "https://cdn.pixabay.com/photo/2017/04/03/11/14/gangneung-2198025_1280.jpg",
-                    "강릉",
-                    "지브리짱"
-                )
-            )
+        YeogidaClient.homeService.getMonthlyBest().customEnqueue(
+            onSuccess = {
+                it.data?.let { it1 -> bestTripAdapter.tripList.addAll(it1.tripList) }
+                bestTripAdapter.notifyDataSetChanged()
+            }
         )
 
-        bestTravelerAdapter.notifyDataSetChanged()
-        bestTripAdapter.notifyDataSetChanged()
-        recentTripAdapter.notifyDataSetChanged()
+        val bestTravelerAdapter = BestTravelerAdapter()
+        binding.rvBestTraveler.adapter = bestTravelerAdapter
+        YeogidaClient.homeService.getBestTraveler().customEnqueue(
+            onSuccess = {
+                it.data?.let { it1 -> bestTravelerAdapter.bestTravelerList.addAll(it1.memberList) }
+                bestTravelerAdapter.notifyDataSetChanged()
+            }
+        )
     }
 
     fun moveToMyPage(view: View) {

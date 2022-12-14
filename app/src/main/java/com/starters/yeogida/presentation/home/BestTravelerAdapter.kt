@@ -3,7 +3,7 @@ package com.starters.yeogida.presentation.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.data.local.BestTravelerData
+import com.starters.yeogida.data.remote.response.BestTravelerData
 import com.starters.yeogida.databinding.ItemBestTravelerBinding
 
 class BestTravelerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

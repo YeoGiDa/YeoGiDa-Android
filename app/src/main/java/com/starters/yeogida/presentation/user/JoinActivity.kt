@@ -31,7 +31,7 @@ import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.databinding.ActivityJoinBinding
-import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.shortToast
@@ -56,7 +56,7 @@ class JoinActivity : AppCompatActivity() {
 
     private val joinViewModel: JoinViewModel by viewModels()
 
-    private val userService = ApiClient.userService
+    private val userService = YeogidaClient.userService
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private lateinit var userEmail: String

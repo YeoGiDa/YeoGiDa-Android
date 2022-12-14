@@ -7,9 +7,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface ApiClient {
+interface YeogidaClient {
     companion object {
-        private const val BASE_URL = "http://192.168.0.15:8080/api/v1/"
+        private const val BASE_URL = "http://192.168.0.115:8080/api/v1/"
 
         val userService: UserService by lazy {
             retrofit.create(UserService::class.java)

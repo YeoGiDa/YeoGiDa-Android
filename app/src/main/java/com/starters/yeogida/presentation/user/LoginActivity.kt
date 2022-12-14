@@ -12,7 +12,7 @@ import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.databinding.ActivityLoginBinding
-import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.network.YeogidaClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
-    private val userService = ApiClient.userService
+    private val userService = YeogidaClient.userService
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {

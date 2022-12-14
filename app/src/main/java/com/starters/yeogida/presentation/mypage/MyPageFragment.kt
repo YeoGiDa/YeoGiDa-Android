@@ -16,9 +16,8 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.api.UserService
 import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.databinding.FragmentMyPageBinding
-import com.starters.yeogida.network.ApiClient
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
-import com.starters.yeogida.presentation.mypage.MyPageViewModel
 import com.starters.yeogida.presentation.user.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,7 @@ class MyPageFragment : Fragment() {
     private lateinit var binding: FragmentMyPageBinding
     private val viewModel: MyPageViewModel by viewModels()
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
-    private val userService: UserService = ApiClient.userService
+    private val userService: UserService = YeogidaClient.userService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.data.local.CommentData
 import com.starters.yeogida.data.local.PlaceDetailData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
+import com.starters.yeogida.util.shortToast
 
 class PlaceDetailFragment : Fragment() {
     private lateinit var binding: FragmentPlaceDetailBinding
@@ -29,9 +32,11 @@ class PlaceDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.btnCommentSubmit.isEnabled = false
         initPlaceData()
         setToolbar()
         setComment()
+        checkActiveAndLength()
     }
 
     private fun initPlaceData() {
@@ -177,5 +182,19 @@ class PlaceDetailFragment : Fragment() {
         with(binding.rvPlaceDetailComment) {
             adapter = CommentAdapter(commentsList)
         }
+    }
+
+    // 보내기 버튼 활성화 및 최대 글자수 확인
+    private fun checkActiveAndLength() {
+        binding.etPlaceDetailComment.addTextChangedListener {
+            activeConfirmButton()
+            if (binding.etPlaceDetailComment.text.length == 200) {
+                requireContext().shortToast("최대 200자까지 작성 가능합니다.")
+            }
+        }
+    }
+
+    private fun activeConfirmButton() {
+        binding.btnCommentSubmit.isEnabled = !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim().isNotEmpty()
     }
 }

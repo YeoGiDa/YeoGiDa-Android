@@ -7,7 +7,7 @@
 
         <variable
             name="trip"
-            type="com.starters.yeogida.data.local.TripData" />
+            type="com.starters.yeogida.data.remote.response.TripListData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_best_trip_thumbnail"
-            imageUrl="@{trip.imageUrl}"
+            imageUrl="@{trip.imgUrl}"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:scaleType="centerCrop"
@@ -39,7 +39,7 @@
             android:maxLines="1"
             android:paddingStart="2dp"
             android:paddingEnd="3dp"
-            android:text="@{trip.name}"
+            android:text="@{trip.title}"
             android:textColor="@color/black_blue"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +55,7 @@
             android:layout_marginTop="4dp"
             android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
-            android:text="@{trip.nickName}"
+            android:text="@{trip.nickname}"
             android:textColor="@color/gray_500"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

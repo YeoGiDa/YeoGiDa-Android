@@ -37,8 +37,8 @@ class HomeFragment : Fragment() {
         binding.rvBestMonthlyTrip.adapter = bestTripAdapter
 
         YeogidaClient.homeService.getMonthlyBest().customEnqueue(
-            onSuccess = {
-                it.data?.let { it1 -> bestTripAdapter.tripList.addAll(it1.tripList) }
+            onSuccess = { responseData ->
+                responseData.data?.let { data -> bestTripAdapter.tripList.addAll(data.tripList) }
                 bestTripAdapter.notifyDataSetChanged()
             }
         )
@@ -46,8 +46,8 @@ class HomeFragment : Fragment() {
         val bestTravelerAdapter = BestTravelerAdapter()
         binding.rvBestTraveler.adapter = bestTravelerAdapter
         YeogidaClient.homeService.getBestTraveler().customEnqueue(
-            onSuccess = {
-                it.data?.let { it1 -> bestTravelerAdapter.bestTravelerList.addAll(it1.memberList) }
+            onSuccess = { responseData ->
+                responseData.data?.let { data -> bestTravelerAdapter.bestTravelerList.addAll(data.memberList) }
                 bestTravelerAdapter.notifyDataSetChanged()
             }
         )

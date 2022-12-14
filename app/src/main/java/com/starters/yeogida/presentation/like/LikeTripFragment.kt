@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
+import com.starters.yeogida.presentation.around.TripSortBottomSheetFragment
 import com.starters.yeogida.presentation.place.PlaceActivity
 
 class LikeTripFragment : Fragment() {
@@ -42,6 +43,17 @@ class LikeTripFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         val choice = arguments?.getInt(REGION_CATEGORY_ITEM)
+        initAdapter(choice)
+        initBottomSheet()
+
+        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner) {
+            Log.e("openAroundPlaceEvent", "Event Observed.")
+            moveToAroundPlace()
+        }
+
+    }
+
+    private fun initAdapter(choice: Int?) {
 
         choice?.let {
             when (choice) {
@@ -66,10 +78,16 @@ class LikeTripFragment : Fragment() {
                 else -> {}
             }
         }
+    }
 
-        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner) {
-            Log.e("openAroundPlaceEvent", "Event Observed.")
-            moveToAroundPlace()
+    private fun initBottomSheet() {
+        binding.btnLikeTripSort.text = "최신순"
+
+        binding.btnLikeTripSort.setOnClickListener {
+            val bottomSheetDialog = TripSortBottomSheetFragment {
+                binding.btnLikeTripSort.text = it
+            }
+            bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         }
     }
 

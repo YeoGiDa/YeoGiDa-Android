@@ -39,12 +39,12 @@ interface YeogidaClient {
         }
 
         // HJ
-        private fun <T> provideService(clazz: Class<T>): T = Retrofit.Builder()
+        private fun <T> provideService(service: Class<T>): T = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(provideHttpLoggingClient())
             .build()
-            .create(clazz)
+            .create(service)
 
         private fun provideHttpLoggingClient(): OkHttpClient =
             HttpLoggingInterceptor().apply {

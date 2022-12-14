@@ -108,6 +108,7 @@ class AddTripFragment : Fragment() {
     fun moveToAroundPlace(view: View) {
         val intent = Intent(activity, PlaceActivity::class.java)
         startActivity(intent)
+        (activity as AddTripActivity).finish()
     }
 
     // 갤러리 창 연결

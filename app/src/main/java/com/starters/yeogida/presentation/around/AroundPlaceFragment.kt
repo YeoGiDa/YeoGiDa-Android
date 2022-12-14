@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
+import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.trip.AddTripActivity
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
@@ -59,5 +61,9 @@ class AroundPlaceFragment : Fragment() {
 
     fun moveToPlaceMap(view: View) {
         findNavController().navigate(R.id.action_aroundPlace_to_placeMap)
+    }
+
+    fun close(view: View) {
+        (activity as PlaceActivity).finish()
     }
 }

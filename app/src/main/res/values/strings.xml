@@ -99,4 +99,8 @@
     <string name="place_detail_comment_hint">댓글을 입력하세요</string>
     <string name="around_place_description">장소 둘러보기</string>
     <string name="bottom_sheet_sort_title">정렬 기준</string>
+
+    <!-- Comment -->
+    <string name="comment_report">신고</string>
+    <string name="comment_delete">삭제</string>
 </resources>

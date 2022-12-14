@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.around.AroundPlaceFragment" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -120,6 +124,7 @@
 
 
                 <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tb_around_place"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/white"
@@ -129,15 +134,17 @@
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back">
 
-                    <ImageView
-                        android:id="@+id/iv_around_place_map"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="4dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_map" />
-                </androidx.appcompat.widget.Toolbar>
+                <ImageView
+                    android:id="@+id/iv_around_place_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="4dp"
+                    android:onClick="@{view::moveToPlaceMap}"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_map" />
+
+            </androidx.appcompat.widget.Toolbar>
 
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -145,6 +152,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView_around_place"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -315,10 +323,8 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toTopOf="@+id/layout_around_place_top"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/scroll_view_around_place_tag"
-                    app:layout_constraintVertical_bias="0.0"
                     tools:listitem="@layout/item_place" />
 
                 <LinearLayout
@@ -328,12 +334,12 @@
                     android:layout_gravity="bottom|center"
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_gray100_17"
+                    android:onClick="@{view::moveToTop}"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingTop="8dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
@@ -346,7 +352,7 @@
                         android:gravity="center"
                         android:text="@string/around_place_top"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -402,7 +408,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_around_place_add"

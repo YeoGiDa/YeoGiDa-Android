@@ -2,16 +2,13 @@ package com.starters.yeogida.util
 
 import android.text.TextUtils
 import android.util.Log
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import com.starters.yeogida.data.remote.response.BaseResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 fun <ResponseType> Call<ResponseType>.customEnqueue(
-    onSuccess: ((Response<ResponseType>)) -> Unit,
-    onError: (BaseResponse<ResponseType>) -> Unit,
+    onSuccess: (ResponseType) -> Unit,
+    onError: (Response<ResponseType>) -> Unit = {},
     onFail: () -> Unit = {}
 ) {
     this.enqueue(object : Callback<ResponseType> {
@@ -23,19 +20,12 @@ fun <ResponseType> Call<ResponseType>.customEnqueue(
         }
 
         override fun onResponse(call: Call<ResponseType>, response: Response<ResponseType>) {
-            if (response.isSuccessful) {
-                onSuccess.invoke(response)
-                return
-            }
-            val errorBody = response.errorBody()?.string() ?: return
-            val errorResponse = createResponseErrorBody(errorBody)
-            onError.invoke(errorResponse)
-        }
+            response.body()?.let {
+                onSuccess(it)
+            } ?: onError(response)
 
-        private fun createResponseErrorBody(errorBody: String): BaseResponse<ResponseType> {
-            val gson = GsonBuilder().create()
-            val responseType = object : TypeToken<BaseResponse<ResponseType>>() {}.type
-            return gson.fromJson(errorBody, responseType)
+            Log.d("network", response.message())
+            Log.d("network", response.code().toString())
         }
     })
 }

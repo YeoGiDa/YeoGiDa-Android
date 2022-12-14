@@ -66,7 +66,7 @@ class JoinActivity : AppCompatActivity() {
 
     private val PERMISSION_ALBUM = 101
     private val REQUEST_STORAGE = 1000
-    private var permissionRejectCount = 0
+
     private var imageFile: File? = null
 
     private val imageResult = registerForActivityResult(
@@ -143,9 +143,6 @@ class JoinActivity : AppCompatActivity() {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
-                    if (permissionRejectCount == 0) {
-                        permissionRejectCount++
-                    }
                 } else {
 
                 }
@@ -156,8 +153,8 @@ class JoinActivity : AppCompatActivity() {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
-                    if (permissionRejectCount == 1) {
-                        permissionRejectCount++
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveIsImgPermissionRejected(true)
                     }
                 }
             }
@@ -172,29 +169,44 @@ class JoinActivity : AppCompatActivity() {
         joinViewModel.startGalleryEvent.observe(this) {
             Log.i("BUTTON", "initAdd")
 
-            when {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    READ_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    navigatePhotos()
-                    Log.i("BUTTON", "navigate")
-                }
+            CoroutineScope(Dispatchers.IO).launch {
+                val isRejected = dataStore.imagePermissionIsRejected.first()
 
-                shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE) -> {
-                    showPermissionContextPopup(this)
-                    Log.i("BUTTON", "showpermission")
-                }
+                when {
+                    ContextCompat.checkSelfPermission(
+                        this@JoinActivity,
+                        READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        withContext(Dispatchers.Main) {
+                            navigatePhotos()
+                            dataStore.saveIsImgPermissionRejected(false)
+                        }
+                        Log.i("BUTTON", "navigate")
+                    }
 
-                permissionRejectCount == 2 -> {
-                    showSettingDialog(this)
-                }
+                    isRejected -> {
+                        withContext(Dispatchers.Main) {
+                            showSettingDialog(this@JoinActivity)
+                        }
+                    }
 
-                else -> {
-                    requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), REQUEST_STORAGE)
-                    Log.i("BUTTON", "else")
+                    shouldShowRequestPermissionRationale(READ_EXTERNAL_STORAGE) -> {
+                        withContext(Dispatchers.Main) {
+                            showPermissionContextPopup(this@JoinActivity)
+                        }
+                        Log.i("BUTTON", "showpermission")
+                    }
+
+
+                    else -> {
+                        withContext(Dispatchers.Main) {
+                            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), REQUEST_STORAGE)
+                        }
+                        Log.i("BUTTON", "else")
+                    }
                 }
             }
+
         }
     }
 

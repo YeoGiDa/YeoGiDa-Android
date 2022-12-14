@@ -5,8 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.local.CommentData
 import com.starters.yeogida.databinding.ItemCommentBinding
+import com.starters.yeogida.presentation.common.OnItemClick
+import kotlinx.android.synthetic.main.fragment_place_detail.view.*
+import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentAdapter(private val commentList: List<CommentData>) :
+class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -18,6 +21,12 @@ class CommentAdapter(private val commentList: List<CommentData>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is CommentAdapter.CommentViewHolder) {
             holder.bind(commentList[position])
+        }
+        holder.itemView.tv_item_comment_delete.setOnClickListener {
+            onItemClick.onClick("삭제")
+        }
+        holder.itemView.tv_item_comment_report.setOnClickListener {
+            onItemClick.onClick("신고")
         }
     }
 

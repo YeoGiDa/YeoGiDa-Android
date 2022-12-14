@@ -46,6 +46,7 @@
                     app:spi_dotSelectedColor="@color/white" />
 
                 <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/tb_place_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:contentInsetStartWithNavigation="4dp"
@@ -122,7 +123,7 @@
                     android:fontFamily="@font/noto_sans_medium"
                     android:text="@{place.address}"
                     android:textColor="@color/gray_400"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@id/tv_place_detail_name"
                     app:layout_constraintTop_toBottomOf="@id/tv_place_detail_name"
                     tools:text="서울특별시 종로구 어쩌구 123-456" />
@@ -141,15 +142,15 @@
 
                 <TextView
                     android:id="@+id/tv_place_detail_review"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
                     android:fontFamily="@font/noto_sans_medium"
                     android:text="@{place.reviewContent}"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_detail_tag"
+                    app:layout_constraintStart_toStartOf="@id/tv_place_detail_name"
                     app:layout_constraintTop_toBottomOf="@+id/rb_place_detail"
                     tools:text="리\n뷰\n내\n용\n입니다." />
 
@@ -180,16 +181,6 @@
                     app:layout_constraintTop_toBottomOf="@id/view_separate_1"
                     tools:text="댓글\t12" />
 
-                <View
-                    android:id="@+id/view_separate_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/gray_100"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_comment_count" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_place_detail_comment"
                     android:layout_width="match_parent"
@@ -203,7 +194,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_separate_2"
+                    app:layout_constraintTop_toBottomOf="@id/tv_comment_count"
                     tools:listitem="@layout/item_comment" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

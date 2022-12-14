@@ -1,12 +1,11 @@
 package com.starters.yeogida.presentation.place
 
-import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.data.local.CommentData
 import com.starters.yeogida.data.local.PlaceDetailData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
@@ -30,6 +29,12 @@ class PlaceDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        initPlaceData()
+        setToolbar()
+        setComment()
+    }
+
+    private fun initPlaceData() {
         binding.place = PlaceDetailData(
             "단양 여기는 어디인가",
             "충청북도 단양군 단양읍 어쩌구 저쩌구 123-456",
@@ -37,7 +42,29 @@ class PlaceDetailFragment : Fragment() {
             3.5F,
             "웅진씽크빅\n유데미 스타터스\n화이팅"
         )
+    }
 
+    private fun setToolbar() {
+        val images = mutableListOf<String>().apply {
+            add("https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg")
+            add("https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg")
+            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
+            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
+            add("https://cdn.pixabay.com/photo/2018/08/23/17/27/paragliding-3626288__480.jpg")
+        }
+
+        with(binding.viewpagerPlaceToolbar) {
+            adapter = PlaceDetailPhotoAdapter(requireContext(), images)
+            binding.indicatorPlaceDetailToolbar.attachToPager(this)
+        }
+
+        // 뒤로가기 리스너
+        binding.tbPlaceDetail.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setComment() {
         val commentsList = mutableListOf<CommentData>().apply {
             add(
                 CommentData(
@@ -149,20 +176,6 @@ class PlaceDetailFragment : Fragment() {
 
         with(binding.rvPlaceDetailComment) {
             adapter = CommentAdapter(commentsList)
-            // Divider 추가
-            addItemDecoration(DividerItemDecoration(requireContext(), HORIZONTAL))
-        }
-
-        val images = mutableListOf<String>().apply {
-            add("https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg")
-            add("https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg")
-            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
-            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
-            add("https://cdn.pixabay.com/photo/2018/08/23/17/27/paragliding-3626288__480.jpg")
-        }
-        with(binding.viewpagerPlaceToolbar) {
-            adapter = PlaceDetailPhotoAdapter(requireContext(), images)
-            binding.indicatorPlaceDetailToolbar.attachToPager(this)
         }
     }
 }

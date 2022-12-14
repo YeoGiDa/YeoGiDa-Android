@@ -11,23 +11,35 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginBottom="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/view_separate"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray_100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginTop="10dp" />
+
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_item_comment_profile"
             circleImageUrl="@{comment.profileImageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
             android:layout_marginBottom="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/tv_item_comment_content"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_separate"
             app:shapeAppearance="@style/RoundedBig"
             tools:src="@drawable/ic_place" />
 
@@ -35,13 +47,13 @@
             android:id="@+id/tv_item_comment_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@{comment.nickname}"
             android:textColor="@color/black"
-            app:layout_constraintStart_toEndOf="@id/iv_item_comment_profile"
             android:textStyle="bold"
-            android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_item_comment_profile"
+            app:layout_constraintStart_toEndOf="@id/iv_item_comment_profile"
             app:layout_constraintTop_toTopOf="@id/iv_item_comment_profile"
             tools:text="닉네임" />
 
@@ -49,21 +61,21 @@
             android:id="@+id/tv_comment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@{comment.date}"
             android:textColor="@color/gray_500"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="2022.12.13" />
 
         <TextView
             android:id="@+id/tv_item_comment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginStart="4dp"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@{comment.content}"
             android:textColor="@color/black"

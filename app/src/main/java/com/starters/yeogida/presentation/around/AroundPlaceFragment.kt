@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
@@ -74,6 +73,10 @@ class AroundPlaceFragment : Fragment() {
     }
 
     private fun initNavigation() {
+        binding.tbAroundPlace.setNavigationOnClickListener {
+            (activity as PlaceActivity).finish()
+        }
+
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
         }
@@ -94,9 +97,5 @@ class AroundPlaceFragment : Fragment() {
 
     fun moveToTop(view: View) {
         binding.scrollViewAroundPlace.smoothScrollTo(0, 0)
-    }
-
-    fun close(view: View) {
-        (activity as PlaceActivity).finish()
     }
 }

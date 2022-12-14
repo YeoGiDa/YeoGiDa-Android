@@ -15,29 +15,15 @@
         android:layout_height="match_parent"
         tools:context=".presentation.around.AroundPlaceMapFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_around_place_map_title"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_around_place_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_around_place_map_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:padding="12dp"
-                android:onClick="@{view::close}"
-                android:src="@drawable/ic_back"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_back">
 
             <TextView
                 android:id="@+id/tv_around_place_map_title"
@@ -47,13 +33,9 @@
                 android:fontFamily="@font/noto_sans_regular"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_around_place_map_back"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_around_place_map_back"
                 tools:text="단양 둘러보기" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView_around_place"
@@ -62,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_around_place_map_title" />
+            app:layout_constraintTop_toBottomOf="@id/tb_around_place_map" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

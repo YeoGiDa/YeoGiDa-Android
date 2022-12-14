@@ -33,6 +33,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         mView = binding.mapViewAroundPlace
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
+        initNavigation()
 
         return binding.root
     }
@@ -86,7 +87,9 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         super.onDestroy()
     }
 
-    fun close(view: View) {
-        findNavController().navigateUp()
+    private fun initNavigation() {
+        binding.tbAroundPlaceMap.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }

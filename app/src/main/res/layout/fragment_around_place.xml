@@ -22,20 +22,13 @@
             app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_around_place"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 app:contentInsetStart="0dp"
-                app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageView
-                    android:id="@+id/iv_around_place_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:onClick="@{view::close}"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_back" />
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:navigationIcon="@drawable/ic_back">
 
                 <TextView
                     android:id="@+id/tv_around_place_name"

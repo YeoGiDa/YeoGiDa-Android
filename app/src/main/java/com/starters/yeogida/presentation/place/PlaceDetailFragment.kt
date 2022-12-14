@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.data.local.CommentData
 import com.starters.yeogida.data.local.PlaceDetailData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
+import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.common.OnItemClick
+import com.starters.yeogida.util.shortToast
 
-class PlaceDetailFragment : Fragment() {
+class PlaceDetailFragment : Fragment(), OnItemClick {
     private lateinit var binding: FragmentPlaceDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +22,8 @@ class PlaceDetailFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPlaceDetailBinding.inflate(inflater, container, false)
@@ -29,9 +34,11 @@ class PlaceDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.btnCommentSubmit.isEnabled = false
         initPlaceData()
         setToolbar()
         setComment()
+        checkActiveAndLength()
     }
 
     private fun initPlaceData() {
@@ -80,7 +87,7 @@ class PlaceDetailFragment : Fragment() {
                     "user2",
                     "22.12.14",
                     "댓글\n" +
-                            "내용2"
+                        "내용2"
                 )
             )
             add(
@@ -89,7 +96,7 @@ class PlaceDetailFragment : Fragment() {
                     "user3",
                     "22.12.15",
                     "댓글\n" +
-                            "내용3"
+                        "내용3"
                 )
             )
             add(
@@ -106,7 +113,7 @@ class PlaceDetailFragment : Fragment() {
                     "user2",
                     "22.12.14",
                     "댓글\n" +
-                            "내용2"
+                        "내용2"
                 )
             )
             add(
@@ -115,7 +122,7 @@ class PlaceDetailFragment : Fragment() {
                     "user3",
                     "22.12.15",
                     "댓글\n" +
-                            "내용3"
+                        "내용3"
                 )
             )
             add(
@@ -132,7 +139,7 @@ class PlaceDetailFragment : Fragment() {
                     "user2",
                     "22.12.14",
                     "댓글\n" +
-                            "내용2"
+                        "내용2"
                 )
             )
             add(
@@ -141,7 +148,7 @@ class PlaceDetailFragment : Fragment() {
                     "user3",
                     "22.12.15",
                     "댓글\n" +
-                            "내용3"
+                        "내용3"
                 )
             )
             add(
@@ -158,7 +165,7 @@ class PlaceDetailFragment : Fragment() {
                     "user2",
                     "22.12.14",
                     "댓글\n" +
-                            "내용2"
+                        "내용2"
                 )
             )
             add(
@@ -167,7 +174,7 @@ class PlaceDetailFragment : Fragment() {
                     "user3",
                     "22.12.15",
                     "댓글\n" +
-                            "내용3"
+                        "내용3"
                 )
             )
         }
@@ -175,7 +182,49 @@ class PlaceDetailFragment : Fragment() {
         binding.tvCommentCount.text = "댓글\t ${commentsList.size}"
 
         with(binding.rvPlaceDetailComment) {
-            adapter = CommentAdapter(commentsList)
+            adapter = CommentAdapter(commentsList, this@PlaceDetailFragment)
+        }
+    }
+
+    // 보내기 버튼 활성화 및 최대 글자수 확인
+    private fun checkActiveAndLength() {
+        binding.etPlaceDetailComment.addTextChangedListener {
+            activeConfirmButton()
+            if (binding.etPlaceDetailComment.text.length == 200) {
+                requireContext().shortToast("최대 200자까지 작성 가능합니다.")
+            }
+        }
+    }
+
+    private fun activeConfirmButton() {
+        binding.btnCommentSubmit.isEnabled = !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim().isNotEmpty()
+    }
+
+    private fun initDeleteDialog() {
+        setCustomDialog("정말 삭제하시겠습니까?", "삭제")
+    }
+
+    private fun initReportDialog() {
+        setCustomDialog("정말 신고하시겠습니까?", "신고")
+    }
+
+    private fun setCustomDialog(title: String, positive: String) {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle(title)
+            setPositiveBtn(positive) {
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
+            }
+        }
+    }
+
+    override fun onClick(value: String) {
+        when (value) {
+            "삭제" -> initDeleteDialog()
+            "신고" -> initReportDialog()
         }
     }
 }

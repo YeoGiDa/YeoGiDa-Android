@@ -22,6 +22,7 @@ class AroundPlaceFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_around_place, container, false)
+        binding.view = this
         return binding.root
     }
 
@@ -51,12 +52,12 @@ class AroundPlaceFragment : Fragment() {
     }
 
     private fun initNavigation() {
-        binding.ivAroundPlaceMap.setOnClickListener {
-            findNavController().navigate(R.id.action_around_place_to_around_place_map)
-        }
-
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
         }
+    }
+
+    fun moveToPlaceMap(view: View) {
+        findNavController().navigate(R.id.action_aroundPlace_to_placeMap)
     }
 }

@@ -54,11 +54,11 @@
                     android:id="@+id/tb_place_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:contentInsetStart="0dp"
-                    android:elevation="0dp"
                     app:contentInsetStartWithNavigation="4dp"
                     app:layout_collapseMode="pin"
-                    app:navigationIcon="@drawable/ic_back" />
+                    app:navigationIcon="@drawable/ic_back">
+
+                </androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -67,7 +67,7 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/sv_place_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginBottom="84dp"
             android:clipToPadding="false"
             android:fillViewport="true"

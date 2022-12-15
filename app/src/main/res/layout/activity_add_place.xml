@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.place.AddPlaceActivity" />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.place.AddPlaceActivity">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_add_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_add_place"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="4dp"
+                app:navigationIcon="@drawable/ic_back"
+                app:layout_scrollFlags="scroll"
+                app:title="@string/add_place_toolbar_title" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_add_place_address_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/add_place_address_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/selector_et_blue"
+                    android:drawableEnd="@drawable/ic_search"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:hint="@string/add_place_address_hint"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:paddingEnd="20dp"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_address_title" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_address_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/add_trip_region_star"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/tv_add_place_address_title"
+                    app:layout_constraintTop_toTopOf="@+id/tv_add_place_address_title" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_tag_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/add_place_tag_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_address" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_tag_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/add_trip_region_star"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/tv_add_place_tag_title"
+                    app:layout_constraintTop_toTopOf="@+id/tv_add_place_tag_title" />
+
+                <HorizontalScrollView
+                    android:scrollbars="none"
+                    android:id="@+id/scrollview_add_place_tag"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_tag_title">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        app:chipSpacingHorizontal="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_around_place_report"
+                        app:layout_constraintEnd_toStartOf="@+id/btn_around_place_report"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/btn_around_place_report"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_food"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_food"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_restaurant"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_cafe"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_cafe"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_cafe"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_alcohol"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_alcohol"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_bar"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_tourist"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_tourist"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_place"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_shopping"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_shopping"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_shopping"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_hotel"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/around_place_hotel"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_hotel"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_around_place_etc"
+                            style="@style/Widget.MaterialComponents.Chip.MyStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="28dp"
+                            android:text="@string/around_place_etc"
+                            app:chipBackgroundColor="@color/color_chip"
+                            app:chipIcon="@drawable/ic_etc"
+                            app:chipIconSize="20dp"
+                            app:iconEndPadding="-4dp"
+                            app:iconStartPadding="4dp" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tv_add_place_rating_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/add_place_rating_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/scrollview_add_place_tag" />
+
+                <androidx.appcompat.widget.AppCompatRatingBar
+                    android:id="@+id/ratingbar_add_place"
+                    style="@style/CustomRatingBar.Indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:rating="3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_place_rating_title" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_review_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/add_place_review_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ratingbar_add_place" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_review_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="@string/add_trip_region_star"
+                    android:textColor="@color/red"
+                    app:layout_constraintStart_toEndOf="@+id/tv_add_place_review_title"
+                    app:layout_constraintTop_toTopOf="@+id/tv_add_place_review_title" />
+
+                <EditText
+                    android:id="@+id/et_add_place_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/selector_et_blue"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:gravity="top"
+                    android:textCursorDrawable="@drawable/main_blue_cursor"
+                    android:hint="@string/add_place_review_hint"
+                    android:inputType="textMultiLine"
+                    android:minHeight="170dp"
+                    android:overScrollMode="always"
+                    android:padding="12dp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:singleLine="false"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_review_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:textColor="@color/gray_700"
+                    app:layout_constraintEnd_toEndOf="@id/et_add_place_review"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_place_review"
+                    tools:text="0 / 200" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_photo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/noto_sans_bold"
+                    android:text="@string/add_place_photo_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_add_place_review" />
+
+                <TextView
+                    android:id="@+id/tv_add_place_photo_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/add_place_photo_description"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_add_place_photo_title"
+                    app:layout_constraintStart_toEndOf="@+id/tv_add_place_photo_title" />
+
+                <ImageView
+                    android:id="@+id/iv_add_place_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/gray_200"
+                    android:padding="24dp"
+                    android:src="@drawable/ic_camera"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="@id/tv_add_place_photo_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_place_photo_title" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_add_place_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_add_place_photo"
+                    app:layout_constraintStart_toEndOf="@+id/iv_add_place_photo"
+                    app:layout_constraintTop_toTopOf="@+id/iv_add_place_photo" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_place_submit"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_margin="20dp"
+            android:background="@drawable/selector_btn_blue"
+            android:enabled="false"
+            android:layout_gravity="bottom"
+            android:fontFamily="@font/noto_sans_medium"
+            android:padding="16dp"
+            android:text="@string/add_trip_confirm"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

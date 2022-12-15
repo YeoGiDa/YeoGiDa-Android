@@ -21,9 +21,22 @@
 
     <!-- Custom RatingBar -->
     <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
-        <item name="android:progressDrawable">@drawable/layer_rating_integrate</item>
-        <item name="android:minHeight">15dip</item>
+        <item name="android:progressDrawable">@drawable/layer_rating_integrate_small</item>
+        <item name="android:minHeight">14dip</item>
         <item name="android:maxHeight">47dip</item>
+    </style>
+
+    <style name="CustomRatingBar.Indicator">
+        <item name="android:progressDrawable">@drawable/layer_rating_integrate_indicator</item>
+        <item name="android:minHeight">38dip</item>
+        <item name="android:maxHeight">38dip</item>
+    </style>
+
+    <!-- Toolbar Title Style -->
+    <style name="Toolbar.AddPlace.Title" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
+        <item name="android:text">장소 추가</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <!-- CollapsingToolbar Expanded Title Style -->
@@ -59,6 +72,7 @@
         <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
     </style>
 
+    <!-- Bottom Sheet -->
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
@@ -67,5 +81,4 @@
     <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
-
 </resources>

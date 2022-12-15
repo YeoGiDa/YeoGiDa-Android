@@ -21,4 +21,11 @@ interface PlaceService {
         @Path("placeId") placeId: Long,
         @Body body: CommentRequest
     ): Call<BaseResponse<AddCommentResponse>>
+
+    // 댓글 삭제
+    @DELETE("comments/{commentId}")
+    fun deleteComment(
+        @Header("Authorization") token: String,
+        @Path("commentId") commentId: Long
+    ): Call<BaseResponse<Any>>
 }

@@ -30,6 +30,7 @@
                 app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed.Title"
                 app:contentScrim="@color/white"
                 app:expandedTitleGravity="right|bottom"
+                app:collapsedTitleGravity="left"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Trip.Title"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -129,9 +130,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/white"
-                    android:backgroundTint="@color/white"
                     android:elevation="0dp"
                     app:contentInsetStart="0dp"
+                    app:contentInsetStartWithNavigation="4dp"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back">
 

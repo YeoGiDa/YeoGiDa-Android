@@ -26,6 +26,7 @@
                 android:id="@+id/layout_collapsing_place_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:collapsedTitleGravity="left"
                 app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed.Title"
                 app:contentScrim="@color/white"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Place.Title"
@@ -53,6 +54,8 @@
                     android:id="@+id/tb_place_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:contentInsetStart="0dp"
+                    android:elevation="0dp"
                     app:contentInsetStartWithNavigation="4dp"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back" />

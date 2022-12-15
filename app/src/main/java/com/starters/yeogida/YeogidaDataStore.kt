@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
-class DataStoreModule(private val context: Context) {
+class YeogidaDataStore(private val context: Context) {
     val Context.userDataStore by preferencesDataStore(name = "user_prefs")
 
     private val USER_ACCESS_TOKEN_KEY = stringPreferencesKey("USER_ACCESS_TOKEN")
@@ -149,6 +149,14 @@ class DataStoreModule(private val context: Context) {
         saveAccessToken(accessToken ?: "")
         saveBearerToken(accessToken ?: "")
         saveRefreshToken(refreshToken ?: "")
+    }
+
+    suspend fun saveMemberId(memberId: Long?) {
+        saveMemberId(memberId ?: 0)
+    }
+
+    suspend fun removeMemberId() {
+        saveMemberId(0)
     }
 
     suspend fun removeUserToken() {

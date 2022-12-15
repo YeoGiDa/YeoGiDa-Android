@@ -22,10 +22,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Collections.addAll
+import kotlin.properties.Delegates
 
 class PlaceDetailFragment : Fragment() {
     private lateinit var binding: FragmentPlaceDetailBinding
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
+    private lateinit var token: String
+    private var memberId by Delegates.notNull<Long>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +50,19 @@ class PlaceDetailFragment : Fragment() {
 
         binding.view = this
         binding.btnCommentSubmit.isEnabled = false
+
+        initAuthorization()
         initPlaceData()
         setToolbar()
         initCommentNetwork()
         checkActiveAndLength()
+    }
+
+    private fun initAuthorization() {
+        CoroutineScope(Dispatchers.IO).launch {
+            token = dataStore.userBearerToken.first()
+            memberId = dataStore.memberId.first()
+        }
     }
 
     private fun initPlaceData() {
@@ -98,31 +111,32 @@ class PlaceDetailFragment : Fragment() {
             .isNotEmpty()
     }
 
+    // 댓글 조회 api
     private fun initCommentNetwork() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val memberId: Long = dataStore.memberId.first()
-
-            YeogidaClient.placeService.getAscComments(
-                2
-            ).customEnqueue(
-                onSuccess = { responseData ->
-                    if (responseData.code == 200) {
-                        val commentsList = mutableListOf<CommentData>().apply {
-                            responseData.data?.let { it1 -> addAll(it1.commentList) }
-                        }
-
-                        with(binding.rvPlaceDetailComment) {
-                            adapter = CommentAdapter(commentsList, memberId) { commentAttribute: String, commentId: Long ->
-                                initAttributeDialog(commentAttribute, commentId)
-                            }
-                        }
-                        binding.tvCommentCount.text = "댓글\t ${responseData.data?.commentCounts}"
+        YeogidaClient.placeService.getAscComments(
+            2
+        ).customEnqueue(
+            onSuccess = { responseData ->
+                if (responseData.code == 200) {
+                    val commentsList = mutableListOf<CommentData>().apply {
+                        responseData.data?.let { data -> addAll(data.commentList) }
                     }
+
+                    with(binding.rvPlaceDetailComment) {
+                        adapter = CommentAdapter(
+                            commentsList,
+                            memberId
+                        ) { commentAttribute: String, commentId: Long ->
+                            initAttributeDialog(commentAttribute, commentId)
+                        }
+                    }
+                    binding.tvCommentCount.text = "댓글 ${responseData.data?.commentCounts}"
                 }
-            )
-        }
+            }
+        )
     }
 
+    // 속성에 따른 다이알로그
     private fun initAttributeDialog(commentAttribute: String, commentId: Long) {
         when (commentAttribute) {
             "삭제" -> initDeleteDialog(commentId)
@@ -156,22 +170,21 @@ class PlaceDetailFragment : Fragment() {
         }
     }
 
-    private fun initDeleteCommentNetwork(l: Long) {
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.placeService.deleteComment(
-                dataStore.userBearerToken.first(),
-                l
-            ).customEnqueue(
-                onSuccess = {
-                    if (it.code == 200) {
-                        requireContext().shortToast("댓글을 삭제했습니다.")
-                        initCommentNetwork()
-                    } else {
-                        requireContext().shortToast("댓글 삭제에 실패했습니다.")
-                    }
+    // 댓글 삭제 api
+    private fun initDeleteCommentNetwork(commentId: Long) {
+        YeogidaClient.placeService.deleteComment(
+            token,
+            commentId
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    requireContext().shortToast("댓글을 삭제했습니다.")
+                    initCommentNetwork()
+                } else {
+                    requireContext().shortToast("댓글 삭제에 실패했습니다.")
                 }
-            )
-        }
+            }
+        )
     }
 
     private fun softKeyboardHide() {
@@ -179,25 +192,24 @@ class PlaceDetailFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
+    // 댓글 추가 api
     fun sendComment(view: View) {
         val commentRequest = CommentRequest(
             binding.etPlaceDetailComment.text.toString()
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.placeService.postComment(
-                dataStore.userBearerToken.first(),
-                2,
-                commentRequest
-            ).customEnqueue(
-                onSuccess = {
-                    if (it.code == 201) {
-                        initCommentNetwork()
-                        binding.etPlaceDetailComment.text.clear()
-                        softKeyboardHide()
-                    }
+        YeogidaClient.placeService.postComment(
+            token,
+            2,
+            commentRequest
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 201) {
+                    initCommentNetwork()
+                    binding.etPlaceDetailComment.text.clear()
+                    softKeyboardHide()
                 }
-            )
-        }
+            }
+        )
     }
 }

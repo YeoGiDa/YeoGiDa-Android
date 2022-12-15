@@ -45,6 +45,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -284,7 +285,7 @@ class JoinActivity : AppCompatActivity() {
     }
 
     private suspend fun signUp(
-        signUpResponse: retrofit2.Response<BaseResponse<SignUpResponseData>>
+        signUpResponse: Response<BaseResponse<SignUpResponseData>>
     ) {
         Log.e("SignUpResponseCode", signUpResponse.code().toString())
         when (signUpResponse.code()) {
@@ -306,9 +307,7 @@ class JoinActivity : AppCompatActivity() {
 
                         dataStore.saveIsLogin(true)
                         dataStore.saveUserToken(accessToken, refreshToken)
-                        if (memberId != null) {
-                            dataStore.saveMemberId(memberId)
-                        }
+                        dataStore.saveMemberId(memberId)
 
                         withContext(Dispatchers.Main) {
                             Log.e(
@@ -318,7 +317,7 @@ class JoinActivity : AppCompatActivity() {
                                 "SignUp/userRefreshToken", dataStore.userRefreshToken.first()
                             )
                             Log.e(
-                                "SignUp", dataStore.memberId.first().toString()
+                                "SignUp/memberId", dataStore.memberId.first().toString()
                             )
                             startMain()
                         }

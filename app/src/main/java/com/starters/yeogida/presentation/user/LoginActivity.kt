@@ -105,12 +105,15 @@ class LoginActivity : AppCompatActivity() {
             200 -> {
                 val accessToken = loginResponse.body()?.data?.accessToken
                 val refreshToken = loginResponse.body()?.data?.refreshToken
+                val memberId = loginResponse.body()?.data?.memberId
 
                 dataStore.saveIsLogin(true)
                 dataStore.saveUserToken(accessToken, refreshToken)
+                dataStore.saveMemberId(memberId)
 
                 Log.e("Login/userAccessToken", dataStore.userAccessToken.first())
                 Log.e("Login/userRefreshToken", dataStore.userRefreshToken.first())
+                Log.e("Login/userMemberId", dataStore.memberId.first().toString())
 
                 withContext(Dispatchers.Main) {
                     startMain()
@@ -135,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
         nickname: String?,
         profileImageUrl: String?
     ) {
-        val intent = Intent(this@LoginActivity, JoinActivity::class.java).apply {
+        Intent(this@LoginActivity, JoinActivity::class.java).apply {
             putExtra("email", email) // 이메일
             putExtra("userNum", userNum) // 회원번호
 

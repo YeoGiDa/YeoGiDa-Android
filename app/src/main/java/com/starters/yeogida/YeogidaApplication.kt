@@ -5,7 +5,7 @@ import com.kakao.sdk.common.KakaoSdk
 
 class YeogidaApplication : Application() {
 
-    private lateinit var dataStore : DataStoreModule
+    private lateinit var dataStore: YeogidaDataStore
 
     companion object {
          private lateinit var yeogidaApplication: YeogidaApplication
@@ -16,8 +16,8 @@ class YeogidaApplication : Application() {
         super.onCreate()
         yeogidaApplication = this
         KakaoSdk.init(this, getString(R.string.kakao_native_key))
-        dataStore = DataStoreModule(this)
+        dataStore = YeogidaDataStore(this)
     }
 
-    fun getDataStore() : DataStoreModule = dataStore
+    fun getDataStore(): YeogidaDataStore = dataStore
 }

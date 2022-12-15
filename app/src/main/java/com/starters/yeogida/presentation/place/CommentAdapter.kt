@@ -1,7 +1,6 @@
 package com.starters.yeogida.presentation.place
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.CommentData
@@ -23,21 +22,10 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
             holder.bind(commentList[position])
         }
 
-        val deleteText = holder.itemView.tv_item_comment_delete
-        val reportText = holder.itemView.tv_item_comment_report
-
-        if (commentList[position].memberId == memberId) {
-            deleteText.visibility = View.VISIBLE
-            reportText.visibility = View.INVISIBLE
-        } else {
-            deleteText.visibility = View.INVISIBLE
-            reportText.visibility = View.VISIBLE
-        }
-
-        deleteText.setOnClickListener {
+        holder.itemView.tv_item_comment_delete.setOnClickListener {
             onItemClick.onClick("삭제")
         }
-        reportText.setOnClickListener {
+        holder.itemView.tv_item_comment_report.setOnClickListener {
             onItemClick.onClick("신고")
         }
     }

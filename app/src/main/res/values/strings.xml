@@ -37,8 +37,6 @@
     <string name="follow_search_hint">검색</string>
     <string name="follow_item_delete">삭제</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- Home Fragment -->
     <string name="home_title">여기다</string>
     <string name="home_best_traveler_title">Best Traveler</string>
@@ -61,7 +59,6 @@
     <string name="around_place_top">맨 위로</string>
     <string name="around_place_empty">아직 기록이 없어요 \n + 버튼을 눌러 기록을 추가해주세요.</string>
     <string name="around_place_description">장소 둘러보기</string>
-
 
     <!-- Mypage Fragment -->
     <string name="mypage_follow">팔로우</string>
@@ -110,4 +107,15 @@
     <!-- Comment -->
     <string name="comment_report">신고</string>
     <string name="comment_delete">삭제</string>
+
+    <!-- Add Place -->
+    <string name="add_place_toolbar_title">장소 추가</string>
+    <string name="add_place_address_title">주소</string>
+    <string name="add_place_address_hint">주소를 입력해주세요</string>
+    <string name="add_place_tag_title">장소 태그</string>
+    <string name="add_place_rating_title">장소를 평가해주세요</string>
+    <string name="add_place_review_title">장소 리뷰</string>
+    <string name="add_place_review_hint">리뷰를 작성해주세요.</string>
+    <string name="add_place_photo_title">장소 사진 추가</string>
+    <string name="add_place_photo_description">(최대 10장)</string>
 </resources>

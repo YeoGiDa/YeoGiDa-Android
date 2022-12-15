@@ -23,13 +23,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.place.AddPlaceActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.common.ImageActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.place.PlaceActivity"
             android:exported="true">

@@ -1,10 +1,7 @@
 package com.starters.yeogida
 
 import android.content.Context
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,6 +17,7 @@ class DataStoreModule(private val context: Context) {
     private val USER_IS_LOGIN_KEY = booleanPreferencesKey("USER_IS_LOGIN")
     private val IMAGE_PERMISSION_IS_REJECTED_KEY =
         booleanPreferencesKey("IS_IMAGE_PERMISSION_REJECTED")
+    private val MEMBER_ID = longPreferencesKey("MEMBER_ID")
 
     val userAccessToken: Flow<String> = context.userDataStore.data
         .catch { exception ->
@@ -81,6 +79,18 @@ class DataStoreModule(private val context: Context) {
             userPrefs[IMAGE_PERMISSION_IS_REJECTED_KEY] ?: false
         }
 
+    val memberId: Flow<Long> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[MEMBER_ID] ?: 0
+        }
+
     private suspend fun saveAccessToken(accessToken: String) {
         context.userDataStore.edit { userPrefs ->
             userPrefs[USER_ACCESS_TOKEN_KEY] = accessToken
@@ -114,6 +124,12 @@ class DataStoreModule(private val context: Context) {
     private suspend fun removeBearerToken() {
         context.userDataStore.edit { userPrefs ->
             userPrefs[USER_BEARER_TOKEN_KEY] = ""
+        }
+    }
+
+    suspend fun saveMemberId(memberId: Long) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[MEMBER_ID] = memberId
         }
     }
 

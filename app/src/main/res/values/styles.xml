@@ -23,7 +23,7 @@
     <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
         <item name="android:progressDrawable">@drawable/layer_rating_integrate_small</item>
         <item name="android:minHeight">14dip</item>
-        <item name="android:maxHeight">14dip</item>
+        <item name="android:maxHeight">47dip</item>
     </style>
 
     <style name="CustomRatingBar.Indicator">

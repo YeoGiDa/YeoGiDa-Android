@@ -5,10 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.ItemCommentBinding
-import com.starters.yeogida.presentation.common.OnItemClick
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick, private val memberId: Long) :
+class CommentAdapter(private val commentList: List<CommentData>, private val memberId: Long, val itemClick: (String, Long) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -23,10 +22,10 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
         }
 
         holder.itemView.tv_item_comment_delete.setOnClickListener {
-            onItemClick.onClick("삭제")
+            itemClick("삭제", commentList[position].commentId)
         }
         holder.itemView.tv_item_comment_report.setOnClickListener {
-            onItemClick.onClick("신고")
+            itemClick("신고", commentList[position].commentId)
         }
     }
 

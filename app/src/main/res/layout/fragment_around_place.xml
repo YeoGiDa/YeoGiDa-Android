@@ -30,13 +30,15 @@
                 app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed.Title"
                 app:contentScrim="@color/white"
                 app:expandedTitleGravity="right|bottom"
-                app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Title"
+                app:collapsedTitleGravity="left"
+                app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Trip.Title"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <ImageView
                     android:id="@+id/iv_around_place_trip"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="?attr/actionBarSize"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     tools:src="@drawable/ic_app" />
@@ -128,23 +130,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/white"
-                    android:backgroundTint="@color/white"
                     android:elevation="0dp"
                     app:contentInsetStart="0dp"
+                    app:contentInsetStartWithNavigation="4dp"
                     app:layout_collapseMode="pin"
                     app:navigationIcon="@drawable/ic_back">
 
-                <ImageView
-                    android:id="@+id/iv_around_place_map"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="4dp"
-                    android:onClick="@{view::moveToPlaceMap}"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_map" />
+                    <ImageView
+                        android:id="@+id/iv_around_place_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="4dp"
+                        android:onClick="@{view::moveToPlaceMap}"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_map" />
 
-            </androidx.appcompat.widget.Toolbar>
+                </androidx.appcompat.widget.Toolbar>
 
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -352,7 +354,7 @@
                         android:gravity="center"
                         android:text="@string/around_place_top"
                         android:textColor="@color/black"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"

@@ -74,7 +74,6 @@ class MyPageFragment : Fragment() {
                     dismissDialog()
 
                     CoroutineScope(Dispatchers.IO).launch {
-
                         val userAccessToken = dataStore.userAccessToken.first()
                         val userRefreshToken = dataStore.userRefreshToken.first()
                         withDrawUser(userAccessToken, userRefreshToken)
@@ -96,8 +95,7 @@ class MyPageFragment : Fragment() {
                 Log.e("withDrawUser", "code : 200, 회원 탈퇴 성공")
 
                 // DataStore 값 지우기
-                dataStore.saveIsLogin(false)
-                dataStore.removeUserToken()
+                removeUserData()
 
                 // 카카오 계정 연결 끊기
                 UserApiClient.instance.unlink { error ->
@@ -161,8 +159,7 @@ class MyPageFragment : Fragment() {
 
             403 -> { // Access, Refresh 둘 다 만료 or 비정상적인 형식의 토큰
                 Log.e("MyPage/TokenValidation", "403")
-                dataStore.saveIsLogin(false)
-                dataStore.removeUserToken()
+                removeUserData()
 
                 withContext(Dispatchers.Main) {
                     moveToLogin()
@@ -190,8 +187,7 @@ class MyPageFragment : Fragment() {
                     Toast.makeText(requireContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.IO).launch {
                         // DataStore 값 지우기
-                        dataStore.saveIsLogin(false)
-                        dataStore.removeUserToken()
+                        removeUserData()
                     }
 
                     // 로그인 화면으로
@@ -199,6 +195,12 @@ class MyPageFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private suspend fun removeUserData() {
+        dataStore.saveIsLogin(false)
+        dataStore.removeUserToken()
+        dataStore.removeMemberId()
     }
 
     private fun moveToLogin() {

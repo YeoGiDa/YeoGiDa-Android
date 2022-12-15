@@ -71,8 +71,7 @@ class SplashViewModel : ViewModel() {
                             _isLogin.postValue(false)
 
                             Log.e("SplashViewModel/403", "403")
-                            dataStore.saveIsLogin(false)
-                            dataStore.removeUserToken()
+                            removeUserData()
                         }
 
                         404 -> {
@@ -80,8 +79,7 @@ class SplashViewModel : ViewModel() {
                             _isLogin.postValue(false)
 
                             Log.e("SplashViewModel/404", "404")
-                            dataStore.saveIsLogin(false)
-                            dataStore.removeUserToken()
+                            removeUserData()
 
                             // 다시 이메일을 사용하여 가입하려 할 때, 가입을 막거나 할 수 있을듯
 
@@ -97,5 +95,11 @@ class SplashViewModel : ViewModel() {
             }
             _isLoading.postValue(false) // 스플래시 로딩 종료
         }
+    }
+
+    private suspend fun removeUserData() {
+        dataStore.saveIsLogin(false)
+        dataStore.removeUserToken()
+        dataStore.removeMemberId()
     }
 }

@@ -8,7 +8,7 @@ import com.starters.yeogida.databinding.ItemCommentBinding
 import com.starters.yeogida.presentation.common.OnItemClick
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick) :
+class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick, private val memberId: Long) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -21,6 +21,7 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
         if (holder is CommentAdapter.CommentViewHolder) {
             holder.bind(commentList[position])
         }
+
         holder.itemView.tv_item_comment_delete.setOnClickListener {
             onItemClick.onClick("삭제")
         }
@@ -37,6 +38,7 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
         RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: CommentData) {
             binding.comment = comment
+            binding.memberId = memberId
             binding.executePendingBindings()
         }
     }

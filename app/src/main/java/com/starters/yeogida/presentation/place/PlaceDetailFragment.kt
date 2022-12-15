@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.local.PlaceDetailData
 import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
@@ -15,11 +16,16 @@ import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.OnItemClick
 import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.*
 import java.util.Collections.addAll
 
 class PlaceDetailFragment : Fragment(), OnItemClick {
     private lateinit var binding: FragmentPlaceDetailBinding
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +47,7 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         binding.btnCommentSubmit.isEnabled = false
         initPlaceData()
         setToolbar()
-        initNetwork()
+        initCommentNetwork()
         checkActiveAndLength()
     }
 
@@ -75,20 +81,25 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         }
     }
 
-    private fun initNetwork() {
-        YeogidaClient.placeService.getAscComments(
-            2
-        ).customEnqueue(
-            onSuccess = {
-                val commentsList = mutableListOf<CommentData>().apply {
-                    it.data?.let { it1 -> addAll(it1.commentList) }
+    private fun initCommentNetwork() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val memberId: Long = dataStore.memberId.first()
+
+            YeogidaClient.placeService.getAscComments(
+                2
+            ).customEnqueue(
+                onSuccess = {
+                    val commentsList = mutableListOf<CommentData>().apply {
+                        it.data?.let { it1 -> addAll(it1.commentList) }
+                    }
+
+                    with(binding.rvPlaceDetailComment) {
+                        adapter = CommentAdapter(commentsList, this@PlaceDetailFragment, memberId)
+                    }
+                    binding.tvCommentCount.text = "댓글\t ${it.data?.commentCounts}"
                 }
-                with(binding.rvPlaceDetailComment) {
-                    adapter = CommentAdapter(commentsList, this@PlaceDetailFragment)
-                }
-                binding.tvCommentCount.text = "댓글\t ${it.data?.commentCounts}"
-            }
-        )
+            )
+        }
     }
 
     // 보내기 버튼 활성화 및 최대 글자수 확인

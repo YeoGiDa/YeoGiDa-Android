@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.local.SortData
 import com.starters.yeogida.databinding.ItemSortBinding
 
-class SortAdapter(private val onItemClick: OnItemClick) :
+class SortAdapter(val itemClick: (String) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val sortList = mutableListOf<SortData>()
@@ -21,7 +21,7 @@ class SortAdapter(private val onItemClick: OnItemClick) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is SortViewHolder) holder.bind(sortList[position])
         holder.itemView.setOnClickListener {
-            onItemClick.onClick(sortList[position].sortName)
+            itemClick(sortList[position].sortName)
         }
     }
 

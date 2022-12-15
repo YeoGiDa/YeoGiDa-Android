@@ -14,11 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.RegionData
 import com.starters.yeogida.databinding.FragmentBottomSheetBinding
-import com.starters.yeogida.presentation.common.OnItemClick
 
 class RegionBottomSheetFragment(val itemClick: (String) -> Unit) :
-    BottomSheetDialogFragment(),
-    OnItemClick {
+    BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetBinding
 
     override fun onCreateView(
@@ -35,7 +33,10 @@ class RegionBottomSheetFragment(val itemClick: (String) -> Unit) :
     }
 
     private fun initAdapter() {
-        val regionAdapter = RegionAdapter(this)
+        val regionAdapter = RegionAdapter {
+            itemClick(it)
+            dismiss()
+        }
         binding.rvRegion.adapter = regionAdapter
         regionAdapter.regionList.addAll(
             listOf(
@@ -87,10 +88,5 @@ class RegionBottomSheetFragment(val itemClick: (String) -> Unit) :
             wm.defaultDisplay.getMetrics(displayMetrics)
             displayMetrics.heightPixels
         }
-    }
-
-    override fun onClick(value: String) {
-        itemClick(value)
-        dismiss()
     }
 }

@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.place
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.CommentData
@@ -8,7 +9,7 @@ import com.starters.yeogida.databinding.ItemCommentBinding
 import com.starters.yeogida.presentation.common.OnItemClick
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick) :
+class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick, private val memberId: Long) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -21,10 +22,22 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
         if (holder is CommentAdapter.CommentViewHolder) {
             holder.bind(commentList[position])
         }
-        holder.itemView.tv_item_comment_delete.setOnClickListener {
+
+        val deleteText = holder.itemView.tv_item_comment_delete
+        val reportText = holder.itemView.tv_item_comment_report
+
+        if (commentList[position].memberId == memberId) {
+            deleteText.visibility = View.VISIBLE
+            reportText.visibility = View.INVISIBLE
+        } else {
+            deleteText.visibility = View.INVISIBLE
+            reportText.visibility = View.VISIBLE
+        }
+
+        deleteText.setOnClickListener {
             onItemClick.onClick("삭제")
         }
-        holder.itemView.tv_item_comment_report.setOnClickListener {
+        reportText.setOnClickListener {
             onItemClick.onClick("신고")
         }
     }
@@ -37,6 +50,7 @@ class CommentAdapter(private val commentList: List<CommentData>, private val onI
         RecyclerView.ViewHolder(binding.root) {
         fun bind(comment: CommentData) {
             binding.comment = comment
+            binding.memberId = memberId
             binding.executePendingBindings()
         }
     }

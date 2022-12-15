@@ -1,14 +1,21 @@
 package com.starters.yeogida.presentation.place
 
+import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.local.PlaceDetailData
+import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -44,6 +51,7 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.view = this
         binding.btnCommentSubmit.isEnabled = false
         initPlaceData()
         setToolbar()
@@ -89,14 +97,16 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
                 2
             ).customEnqueue(
                 onSuccess = {
-                    val commentsList = mutableListOf<CommentData>().apply {
-                        it.data?.let { it1 -> addAll(it1.commentList) }
-                    }
+                    if (it.code == 200) {
+                        val commentsList = mutableListOf<CommentData>().apply {
+                            it.data?.let { it1 -> addAll(it1.commentList) }
+                        }
 
-                    with(binding.rvPlaceDetailComment) {
-                        adapter = CommentAdapter(commentsList, this@PlaceDetailFragment, memberId)
+                        with(binding.rvPlaceDetailComment) {
+                            adapter = CommentAdapter(commentsList, this@PlaceDetailFragment, memberId)
+                        }
+                        binding.tvCommentCount.text = "댓글\t ${it.data?.commentCounts}"
                     }
-                    binding.tvCommentCount.text = "댓글\t ${it.data?.commentCounts}"
                 }
             )
         }
@@ -143,6 +153,33 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         when (value) {
             "삭제" -> initDeleteDialog()
             "신고" -> initReportDialog()
+        }
+    }
+
+    private fun softKeyboardHide() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    fun sendComment(view: View) {
+        val commentRequest = CommentRequest(
+            binding.etPlaceDetailComment.text.toString()
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.placeService.postComment(
+                dataStore.userBearerToken.first(),
+                2,
+                commentRequest
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 201) {
+                        initCommentNetwork()
+                        binding.etPlaceDetailComment.text.clear()
+                        softKeyboardHide()
+                    }
+                }
+            )
         }
     }
 }

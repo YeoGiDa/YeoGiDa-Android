@@ -8,6 +8,7 @@
         <variable
             name="comment"
             type="com.starters.yeogida.data.remote.response.CommentData" />
+
         <variable
             name="memberId"
             type="Long" />
@@ -15,7 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="4dp">
 
         <View
@@ -35,14 +36,12 @@
             circleImageUrl="@{comment.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:padding="4dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/tv_item_comment_content"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_comment_content"
             app:layout_constraintTop_toBottomOf="@+id/view_separate"
             app:shapeAppearance="@style/RoundedBig"
             tools:src="@drawable/ic_place" />
@@ -63,14 +62,14 @@
 
         <TextView
             android:id="@+id/tv_item_comment_report"
+            memberId="@{memberId}"
+            writerId="@{comment.memberId}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/noto_sans_regular"
             android:padding="4dp"
             android:text="@string/comment_report"
-            writerId="@{comment.memberId}"
-            memberId="@{memberId}"
             android:textColor="@color/gray_500"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_item_comment_nickname"
@@ -79,15 +78,15 @@
 
         <TextView
             android:id="@+id/tv_item_comment_delete"
+            myId="@{memberId}"
+            writerId="@{comment.memberId}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/noto_sans_regular"
             android:padding="4dp"
             android:text="@string/comment_delete"
-            writerId="@{comment.memberId}"
-            myId="@{memberId}"
             android:textSize="12sp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_item_comment_nickname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_item_comment_nickname" />
@@ -96,22 +95,22 @@
             android:id="@+id/tv_item_comment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@{comment.content}"
             android:textColor="@color/black"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/iv_item_comment_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_item_comment_nickname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="댓글내용\n~~~~~~~~~~~~~~~~~~~~~~~~" />
 
         <TextView
             android:id="@+id/tv_item_comment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@{comment.createdTime}"
             android:textColor="@color/gray_400"

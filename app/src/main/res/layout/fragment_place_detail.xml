@@ -23,10 +23,14 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/layout_collapsing_place_detail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed.Title"
                 app:contentScrim="@color/white"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Place.Title"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:title="@{place.placeName}">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewpager_place_toolbar"
@@ -51,22 +55,7 @@
                     android:layout_height="wrap_content"
                     app:contentInsetStartWithNavigation="4dp"
                     app:layout_collapseMode="pin"
-                    app:navigationIcon="@drawable/ic_back">
-
-                    <TextView
-                        android:id="@+id/tb_place_detail_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/noto_sans_medium"
-                        android:maxLines="1"
-                        android:text="@{place.placeName}"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        tools:text="케이스퀘어 빌딩" />
-
-                </androidx.appcompat.widget.Toolbar>
+                    app:navigationIcon="@drawable/ic_back" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

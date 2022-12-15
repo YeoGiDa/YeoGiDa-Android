@@ -26,14 +26,20 @@
         <item name="android:maxHeight">47dip</item>
     </style>
 
-    <!-- CollapsingToolbar Expanded Style -->
-    <style name="CollapsingToolbar.Expanded.Title" parent="@android:style/TextAppearance">
+    <!-- CollapsingToolbar Expanded Title Style -->
+    <style name="CollapsingToolbar.Expanded.Trip.Title" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/white</item>
         <item name="fontFamily">@font/noto_sans_bold</item>
         <item name="android:textSize">24sp</item>
     </style>
 
-    <!-- CollapsingToolbar Collapsed Style -->
+    <style name="CollapsingToolbar.Expanded.Place.Title" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="fontFamily">@font/noto_sans_bold</item>
+        <item name="android:textSize">0.1sp</item>
+    </style>
+
+    <!-- CollapsingToolbar Collapsed Title Style -->
     <style name="CollapsingToolbar.Collapsed.Title" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">20sp</item>

@@ -8,6 +8,10 @@
         <variable
             name="place"
             type="com.starters.yeogida.data.local.PlaceDetailData" />
+
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.place.PlaceDetailFragment" />
     </data>
 
 
@@ -230,6 +234,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/selector_send_comment"
                 android:padding="8dp"
+                android:onClick="@{view::sendComment}"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_comment_submit"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -9,12 +9,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.SortData
 import com.starters.yeogida.databinding.FragmentBottomSheetSortBinding
-import com.starters.yeogida.presentation.common.OnItemClick
 import com.starters.yeogida.presentation.common.SortAdapter
 
 class TripSortBottomSheetFragment(val itemClick: (String) -> Unit) :
-    BottomSheetDialogFragment(),
-    OnItemClick {
+    BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetSortBinding
 
     override fun onCreateView(
@@ -33,7 +31,10 @@ class TripSortBottomSheetFragment(val itemClick: (String) -> Unit) :
     override fun getTheme(): Int = R.style.BottomSheetDialog
 
     private fun initAdapter() {
-        val sortAdapter = SortAdapter(this)
+        val sortAdapter = SortAdapter {
+            itemClick(it)
+            dismiss()
+        }
         binding.rvSort.adapter = sortAdapter
         sortAdapter.sortList.addAll(
             listOf(
@@ -42,10 +43,5 @@ class TripSortBottomSheetFragment(val itemClick: (String) -> Unit) :
             )
         )
         sortAdapter.notifyDataSetChanged()
-    }
-
-    override fun onClick(value: String) {
-        itemClick(value)
-        dismiss()
     }
 }

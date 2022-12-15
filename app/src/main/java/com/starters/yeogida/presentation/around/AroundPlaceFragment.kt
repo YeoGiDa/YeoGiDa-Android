@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.around
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.GlideApp
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceData
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
-import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
+import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
@@ -108,7 +110,15 @@ class AroundPlaceFragment : Fragment() {
         findNavController().navigate(R.id.action_aroundPlace_to_placeMap)
     }
 
-    fun RecyclerView.smoothSnapToPosition(position: Int, snapMode: Int = LinearSmoothScroller.SNAP_TO_START) {
+    fun moveToAddPlace(view: View) {
+        val intent = Intent(requireContext(), AddPlaceActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun RecyclerView.smoothSnapToPosition(
+        position: Int,
+        snapMode: Int = LinearSmoothScroller.SNAP_TO_START
+    ) {
         val smoothScroller = object : LinearSmoothScroller(this.context) {
             override fun getVerticalSnapPreference(): Int = snapMode
             override fun getHorizontalSnapPreference(): Int = snapMode

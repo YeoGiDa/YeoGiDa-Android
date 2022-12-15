@@ -3,10 +3,9 @@ package com.starters.yeogida.presentation.place
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.data.local.CommentData
+import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.ItemCommentBinding
 import com.starters.yeogida.presentation.common.OnItemClick
-import kotlinx.android.synthetic.main.fragment_place_detail.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 
 class CommentAdapter(private val commentList: List<CommentData>, private val onItemClick: OnItemClick) :

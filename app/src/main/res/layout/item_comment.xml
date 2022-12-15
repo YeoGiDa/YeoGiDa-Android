@@ -7,7 +7,7 @@
 
         <variable
             name="comment"
-            type="com.starters.yeogida.data.local.CommentData" />
+            type="com.starters.yeogida.data.remote.response.CommentData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_item_comment_profile"
-            circleImageUrl="@{comment.profileImageUrl}"
+            circleImageUrl="@{comment.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{comment.nickname}"
+            android:text="@{comment.nickName}"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/iv_item_comment_profile"
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{comment.date}"
+            android:text="@{comment.createdTime}"
             android:textColor="@color/gray_400"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tv_item_comment_content"

@@ -3,6 +3,7 @@ package com.starters.yeogida.data.api
 import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.data.remote.response.BaseResponse
+import com.starters.yeogida.data.remote.response.LoginResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.data.remote.response.ValidateTokenResponseData
 import okhttp3.MultipartBody
@@ -21,7 +22,7 @@ interface UserService {
     @POST("members/login")
     suspend fun postLogin(
         @Body loginRequestData: LoginRequestData
-    ): Response<BaseResponse<TokenData>>
+    ): Response<BaseResponse<LoginResponse>>
 
     @POST("token/validate")
     suspend fun validateToken(

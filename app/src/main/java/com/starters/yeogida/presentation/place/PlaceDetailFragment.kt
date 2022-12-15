@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.data.local.CommentData
 import com.starters.yeogida.data.local.PlaceDetailData
+import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.OnItemClick
+import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
+import java.util.*
+import java.util.Collections.addAll
 
 class PlaceDetailFragment : Fragment(), OnItemClick {
     private lateinit var binding: FragmentPlaceDetailBinding
@@ -37,7 +41,7 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         binding.btnCommentSubmit.isEnabled = false
         initPlaceData()
         setToolbar()
-        setComment()
+        initNetwork()
         checkActiveAndLength()
     }
 
@@ -71,119 +75,20 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
         }
     }
 
-    private fun setComment() {
-        val commentsList = mutableListOf<CommentData>().apply {
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg",
-                    "user1",
-                    "22.12.13",
-                    "댓글\n내용1"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg",
-                    "user2",
-                    "22.12.14",
-                    "댓글\n" +
-                        "내용2"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg",
-                    "user3",
-                    "22.12.15",
-                    "댓글\n" +
-                        "내용3"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg",
-                    "user1",
-                    "22.12.13",
-                    "댓글\n내용1"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg",
-                    "user2",
-                    "22.12.14",
-                    "댓글\n" +
-                        "내용2"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg",
-                    "user3",
-                    "22.12.15",
-                    "댓글\n" +
-                        "내용3"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg",
-                    "user1",
-                    "22.12.13",
-                    "댓글\n내용1"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg",
-                    "user2",
-                    "22.12.14",
-                    "댓글\n" +
-                        "내용2"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg",
-                    "user3",
-                    "22.12.15",
-                    "댓글\n" +
-                        "내용3"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg",
-                    "user1",
-                    "22.12.13",
-                    "댓글\n내용1"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg",
-                    "user2",
-                    "22.12.14",
-                    "댓글\n" +
-                        "내용2"
-                )
-            )
-            add(
-                CommentData(
-                    "https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg",
-                    "user3",
-                    "22.12.15",
-                    "댓글\n" +
-                        "내용3"
-                )
-            )
-        }
-
-        binding.tvCommentCount.text = "댓글\t ${commentsList.size}"
-
-        with(binding.rvPlaceDetailComment) {
-            adapter = CommentAdapter(commentsList, this@PlaceDetailFragment)
-        }
+    private fun initNetwork() {
+        YeogidaClient.placeService.getAscComments(
+            2
+        ).customEnqueue(
+            onSuccess = {
+                val commentsList = mutableListOf<CommentData>().apply {
+                    it.data?.let { it1 -> addAll(it1.commentList) }
+                }
+                with(binding.rvPlaceDetailComment) {
+                    adapter = CommentAdapter(commentsList, this@PlaceDetailFragment)
+                }
+                binding.tvCommentCount.text = "댓글\t ${it.data?.commentCounts}"
+            }
+        )
     }
 
     // 보내기 버튼 활성화 및 최대 글자수 확인
@@ -197,7 +102,9 @@ class PlaceDetailFragment : Fragment(), OnItemClick {
     }
 
     private fun activeConfirmButton() {
-        binding.btnCommentSubmit.isEnabled = !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim().isNotEmpty()
+        binding.btnCommentSubmit.isEnabled =
+            !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim()
+            .isNotEmpty()
     }
 
     private fun initDeleteDialog() {

@@ -197,7 +197,6 @@ class JoinActivity : AppCompatActivity() {
                         Log.i("BUTTON", "showpermission")
                     }
 
-
                     else -> {
                         withContext(Dispatchers.Main) {
                             requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), REQUEST_STORAGE)
@@ -303,9 +302,13 @@ class JoinActivity : AppCompatActivity() {
                     200 -> {
                         val accessToken = loginResponse.body()?.data?.accessToken
                         val refreshToken = loginResponse.body()?.data?.refreshToken
+                        val memberId = loginResponse.body()?.data?.memberId
 
                         dataStore.saveIsLogin(true)
                         dataStore.saveUserToken(accessToken, refreshToken)
+                        if (memberId != null) {
+                            dataStore.saveMemberId(memberId)
+                        }
 
                         withContext(Dispatchers.Main) {
                             Log.e(
@@ -313,6 +316,9 @@ class JoinActivity : AppCompatActivity() {
                             )
                             Log.e(
                                 "SignUp/userRefreshToken", dataStore.userRefreshToken.first()
+                            )
+                            Log.e(
+                                "SignUp", dataStore.memberId.first().toString()
                             )
                             startMain()
                         }

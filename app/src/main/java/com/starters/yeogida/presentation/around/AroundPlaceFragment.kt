@@ -17,6 +17,7 @@ import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.util.customEnqueue
+import kotlinx.android.synthetic.main.fragment_around_place.*
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
@@ -35,6 +36,7 @@ class AroundPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // getTripData()
         initPlaceNetwork("id")
         initNavigation()
         initBottomSheet()
@@ -58,13 +60,21 @@ class AroundPlaceFragment : Fragment() {
         val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
         binding.rvAroundPlace.adapter = aroundPlaceAdapter
         YeogidaClient.placeService.getPlaceList(
-            2,
+            3,
             condition
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
-                    responseData.data?.let { data -> aroundPlaceAdapter.aroundPlaceList.addAll(data.placeList) }
-                    aroundPlaceAdapter.notifyDataSetChanged()
+                    if (responseData.data?.placeList?.isEmpty() == true) {
+                        with(binding) {
+                            rvAroundPlace.visibility = View.GONE
+                            layoutAroundPlaceTop.visibility = View.GONE
+                            layoutAroundPlaceEmpty.visibility = View.VISIBLE
+                        }
+                    } else {
+                        responseData.data?.let { data -> aroundPlaceAdapter.aroundPlaceList.addAll(data.placeList) }
+                        aroundPlaceAdapter.notifyDataSetChanged()
+                    }
                 }
             }
         )

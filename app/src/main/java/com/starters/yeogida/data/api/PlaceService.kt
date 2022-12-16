@@ -4,10 +4,18 @@ import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.AscCommentsResponse
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.place.AddCommentResponse
+import com.starters.yeogida.data.remote.response.place.PlaceListResponse
 import retrofit2.Call
 import retrofit2.http.*
 
 interface PlaceService {
+    // 장소 목록
+    @GET("{tripId}/places")
+    fun getPlaceList(
+        @Path("tripId") tripId: Long,
+        @Query("condition") condition: String
+    ): Call<BaseResponse<PlaceListResponse>>
+
     // 댓글 목록 (작성순)
     @GET("{placeId}/comments/idAsc")
     fun getAscComments(

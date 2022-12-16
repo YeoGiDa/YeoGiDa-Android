@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.R
-import com.starters.yeogida.data.local.PlaceData
+import com.starters.yeogida.data.remote.response.place.PlaceData
 import com.starters.yeogida.databinding.ItemPlaceBinding
 
 class AroundPlaceAdapter(private val viewModel: AroundPlaceViewModel) :

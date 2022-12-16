@@ -11,30 +11,30 @@
 
         <variable
             name="place"
-            type="com.starters.yeogida.data.local.PlaceData" />
+            type="com.starters.yeogida.data.remote.response.place.PlaceData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> viewModel.onPlaceClicked()}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
-        android:background="@drawable/rectangle_border_gray200_12">
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rectangle_border_gray200_12"
+        android:onClick="@{() -> viewModel.onPlaceClicked()}">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_place_thumbnail"
+            imageUrl="@{place.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
             android:layout_marginStart="12dp"
-            android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:scaleType="centerCrop"
-            imageUrl="@{place.placeThumbnail}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/RoundedBig"
@@ -46,13 +46,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
-            tools:text="일이삼사오육칠팔구십"
-            android:text="@{place.placeName}"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:fontFamily="@font/noto_sans_bold"
+            android:text="@{place.title}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/iv_place_thumbnail"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="일이삼사오육칠팔구십" />
 
         <ImageView
             android:id="@+id/iv_place_star"
@@ -67,16 +67,16 @@
 
         <TextView
             android:id="@+id/tv_place_star"
+            float="@{place.star}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="3.5"
-            android:text="@{place.star}"
-            android:textColor="@color/gray_500"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/noto_sans_regular"
+            android:textColor="@color/gray_500"
             app:layout_constraintBottom_toBottomOf="@+id/iv_place_star"
             app:layout_constraintStart_toEndOf="@+id/iv_place_star"
-            app:layout_constraintTop_toTopOf="@+id/iv_place_star" />
+            app:layout_constraintTop_toTopOf="@+id/iv_place_star"
+            tools:text="3.5" />
 
         <ImageView
             android:id="@+id/iv_place_comment"
@@ -93,29 +93,29 @@
             android:id="@+id/tv_place_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="99"
-            android:text="@{@string/unit_int(place.comment)}"
             android:layout_marginStart="4dp"
-            android:textColor="@color/gray_500"
             android:fontFamily="@font/noto_sans_regular"
+            android:text="@{@string/unit_int(place.commentCount)}"
+            android:textColor="@color/gray_500"
             app:layout_constraintBottom_toBottomOf="@+id/iv_place_comment"
             app:layout_constraintStart_toEndOf="@+id/iv_place_comment"
-            app:layout_constraintTop_toTopOf="@+id/iv_place_comment" />
+            app:layout_constraintTop_toTopOf="@+id/iv_place_comment"
+            tools:text="99" />
 
         <TextView
             android:id="@+id/tv_place_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="술"
             android:layout_marginEnd="12dp"
-            android:text="@{place.tag}"
             android:background="@drawable/rectangle_fill_light_yellow_17"
-            android:padding="10dp"
             android:fontFamily="@font/noto_sans_regular"
+            android:padding="10dp"
+            android:text="@{place.tag}"
             android:textColor="@color/gray_800"
             app:layout_constraintBottom_toBottomOf="@+id/tv_place_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_place_name" />
+            app:layout_constraintTop_toTopOf="@+id/tv_place_name"
+            tools:text="술" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

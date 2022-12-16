@@ -2,6 +2,7 @@ package com.starters.yeogida.network
 
 import com.starters.yeogida.data.api.HomeService
 import com.starters.yeogida.data.api.PlaceService
+import com.starters.yeogida.data.api.TripService
 import com.starters.yeogida.data.api.UserService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,6 +23,10 @@ interface YeogidaClient {
 
         val placeService: PlaceService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             provideService(PlaceService::class.java)
+        }
+
+        val tripService: TripService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            provideService(TripService::class.java)
         }
 
         // YS

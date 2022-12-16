@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +16,28 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.starters.yeogida.R
+import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAddTripBinding
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.ImageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.util.ImageUtil
+import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class AddTripFragment : Fragment() {
     private lateinit var binding: FragmentAddTripBinding
+    private var imageFile: File? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,13 +118,59 @@ class AddTripFragment : Fragment() {
                         Glide.with(requireContext()).load(selectedPicUri).into(ivAddTripPhoto)
                     }
                 }
+
+                activity?.applicationContext?.let { _ ->
+                    selectedPicUri?.let { imageUri ->
+                        imageFile = ImageUtil.getResizePicture(requireContext(), imageUri)
+                        Log.e("imageFile", "Null ? ${imageFile == null}")
+                    }
+                }
             }
         }
 
-    fun moveToAroundPlace(view: View) {
+    private fun moveToAroundPlace() {
         val intent = Intent(activity, PlaceActivity::class.java)
         startActivity(intent)
         (activity as AddTripActivity).finish()
+    }
+
+    // 여행지 추가 api 연결
+    fun postTrip(view: View) {
+        fun String?.toPlainRequestBody() =
+            requireNotNull(this).toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val textHashMap = hashMapOf<String, RequestBody>()
+
+        with(binding) {
+            val regionRequestBody = tvAddTripRegion.toString().toPlainRequestBody()
+            val titleRequestBody = etAddTripName.text.toString().toPlainRequestBody()
+            val subTitleRequestBody = etAddTripSubtitle.text.toString().toPlainRequestBody()
+
+            textHashMap["region"] = regionRequestBody
+            textHashMap["title"] = titleRequestBody
+            textHashMap["subTitle"] = subTitleRequestBody
+        }
+
+        val requestFile = imageFile?.asRequestBody("image/*".toMediaTypeOrNull())
+            ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val tripImg = MultipartBody.Part.createFormData(
+            "imgUrl", imageFile?.name ?: "", requestFile
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.tripService.postTrip(
+                YeogidaApplication.getInstance().getDataStore().userBearerToken.first(),
+                tripImg,
+                textHashMap
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 201) {
+                        moveToAroundPlace()
+                    }
+                }
+            )
+        }
     }
 
     // 갤러리 창 연결

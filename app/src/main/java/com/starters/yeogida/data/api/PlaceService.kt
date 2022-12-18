@@ -10,9 +10,10 @@ import retrofit2.http.*
 
 interface PlaceService {
     // 장소 목록
-    @GET("{tripId}/places")
-    fun getPlaceList(
+    @GET("{tripId}/places/{tag}")
+    fun getPlaceTagList(
         @Path("tripId") tripId: Long,
+        @Path("tag") tag: String,
         @Query("condition") condition: String
     ): Call<BaseResponse<PlaceListResponse>>
 

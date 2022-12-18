@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.chip.Chip
 import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
@@ -17,11 +18,12 @@ import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.util.customEnqueue
-import kotlinx.android.synthetic.main.fragment_around_place.*
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
     private val viewModel: AroundPlaceViewModel by viewModels()
+    private var sortValue: String = "id"
+    private var tagValue: String = "nothing"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,9 +39,10 @@ class AroundPlaceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // getTripData()
-        initPlaceNetwork("id")
+        initPlaceList()
         initNavigation()
         initBottomSheet()
+        initChipClickListener()
         with(binding.layoutCollapsingAroundPlace) {
             title = "일이삼사오육칠팔구십"
         }
@@ -51,28 +54,40 @@ class AroundPlaceFragment : Fragment() {
         binding.btnAroundPlaceSort.setOnClickListener {
             val bottomSheetDialog = PlaceSortBottomSheetFragment {
                 binding.btnAroundPlaceSort.text = it
+                when (it) {
+                    "최신순" -> sortValue = "id"
+                    "별점순" -> sortValue = "star"
+                    "댓글 많은순" -> sortValue = "comment"
+                }
+                initPlaceList()
             }
             bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         }
     }
 
-    private fun initPlaceNetwork(condition: String) {
+    // 정렬, 태그에 따른 장소 리스트
+    private fun initPlaceList() {
         val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
         binding.rvAroundPlace.adapter = aroundPlaceAdapter
-        YeogidaClient.placeService.getPlaceList(
-            3,
-            condition
+        YeogidaClient.placeService.getPlaceTagList(
+            2,
+            tagValue,
+            sortValue
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
-                    if (responseData.data?.placeList?.isEmpty() == true) {
+                    if (sortValue.isEmpty() && responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
                         }
                     } else {
-                        responseData.data?.let { data -> aroundPlaceAdapter.aroundPlaceList.addAll(data.placeList) }
+                        responseData.data?.let { data ->
+                            aroundPlaceAdapter.aroundPlaceList.addAll(
+                                data.placeList
+                            )
+                        }
                         aroundPlaceAdapter.notifyDataSetChanged()
                     }
                 }
@@ -91,6 +106,21 @@ class AroundPlaceFragment : Fragment() {
 
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
+        }
+    }
+
+    // chip button 클릭 시
+    private fun initChipClickListener() {
+        binding.chipGroup.setOnCheckedStateChangeListener { _, checkedId ->
+            if (checkedId.isEmpty()) {
+                tagValue = "nothing"
+                initPlaceList()
+            } else {
+                val selectedChipText =
+                    binding.chipGroup.findViewById<Chip>(binding.chipGroup.checkedChipId).text.toString()
+                tagValue = selectedChipText
+                initPlaceList()
+            }
         }
     }
 

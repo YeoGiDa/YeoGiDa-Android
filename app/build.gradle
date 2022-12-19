@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
 }
 
@@ -104,4 +105,7 @@ dependencies {
 
     // Image Picker
     implementation 'io.github.ParkSangGwon:tedimagepicker:1.2.8'
+
+    // fcm
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
 }

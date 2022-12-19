@@ -249,4 +249,5 @@ fabric.properties
 .idea/
 /app/src/main/res/values/kakao_app_key.xml
 /app/src/main/res/values/base_url.xml
+/app/google-services.json
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin,gradle

@@ -22,6 +22,20 @@
         android:theme="@style/Theme.YeoGida"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <service android:name=".YeogidaFirebaseMessagingService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_native_key" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_app_key" />
+
         <activity
             android:name=".presentation.place.AddPlaceActivity"
             android:exported="true" />
@@ -39,13 +53,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_native_key" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_map_app_key" />
 
         <activity
             android:name=".presentation.splash.SplashActivity"

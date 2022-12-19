@@ -28,8 +28,8 @@
 
     <style name="CustomRatingBar.Indicator">
         <item name="android:progressDrawable">@drawable/layer_rating_integrate_indicator</item>
-        <item name="android:minHeight">38dip</item>
-        <item name="android:maxHeight">38dip</item>
+        <item name="android:minHeight">46dip</item>
+        <item name="android:maxHeight">46dip</item>
     </style>
 
     <!-- Toolbar Title Style -->

@@ -128,8 +128,9 @@ class AddTripFragment : Fragment() {
             }
         }
 
-    private fun moveToAroundPlace() {
+    private fun moveToAroundPlace(tripId: Long) {
         val intent = Intent(activity, PlaceActivity::class.java)
+        intent.putExtra("tripId", tripId)
         startActivity(intent)
         (activity as AddTripActivity).finish()
     }
@@ -142,7 +143,7 @@ class AddTripFragment : Fragment() {
         val textHashMap = hashMapOf<String, RequestBody>()
 
         with(binding) {
-            val regionRequestBody = tvAddTripRegion.toString().toPlainRequestBody()
+            val regionRequestBody = tvAddTripRegion.text.toString().toPlainRequestBody()
             val titleRequestBody = etAddTripName.text.toString().toPlainRequestBody()
             val subTitleRequestBody = etAddTripSubtitle.text.toString().toPlainRequestBody()
 
@@ -164,9 +165,9 @@ class AddTripFragment : Fragment() {
                 tripImg,
                 textHashMap
             ).customEnqueue(
-                onSuccess = {
-                    if (it.code == 201) {
-                        moveToAroundPlace()
+                onSuccess = { responseData ->
+                    if (responseData.code == 201) {
+                        responseData.data?.tripId?.let { tripId -> moveToAroundPlace(tripId) }
                     }
                 }
             )

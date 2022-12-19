@@ -24,6 +24,7 @@ class AroundPlaceFragment : Fragment() {
     private val viewModel: AroundPlaceViewModel by viewModels()
     private var sortValue: String = "id"
     private var tagValue: String = "nothing"
+    private var tripId: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,14 +39,36 @@ class AroundPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // getTripData()
+        getTripId()
         initPlaceList()
         initNavigation()
         initBottomSheet()
         initChipClickListener()
-        with(binding.layoutCollapsingAroundPlace) {
-            title = "일이삼사오육칠팔구십"
-        }
+    }
+
+    private fun getTripId() {
+        val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
+        args?.tripId?.let { tripId = it }
+        initTripData()
+    }
+
+    private fun initTripData() {
+        YeogidaClient.tripService.getTripInfo(
+            tripId
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    with(binding) {
+                        layoutCollapsingAroundPlace.title = it.data?.title
+                        GlideApp.with(ivAroundPlaceTrip)
+                            .load(it.data?.imgUrl)
+                            .into(ivAroundPlaceTrip)
+                        tvAroundPlacePlaceCount.text = it.data?.placeCount.toString()
+                        tvAroundPlaceTripLikeCount.text = it.data?.heartCount.toString()
+                    }
+                }
+            }
+        )
     }
 
     private fun initBottomSheet() {
@@ -70,13 +93,13 @@ class AroundPlaceFragment : Fragment() {
         val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
         binding.rvAroundPlace.adapter = aroundPlaceAdapter
         YeogidaClient.placeService.getPlaceTagList(
-            2,
+            tripId,
             tagValue,
             sortValue
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
-                    if (sortValue.isEmpty() && responseData.data?.placeList?.isEmpty() == true) {
+                    if (sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
@@ -93,10 +116,6 @@ class AroundPlaceFragment : Fragment() {
                 }
             }
         )
-
-        GlideApp.with(binding.ivAroundPlaceTrip)
-            .load("https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg")
-            .into(binding.ivAroundPlaceTrip)
     }
 
     private fun initNavigation() {

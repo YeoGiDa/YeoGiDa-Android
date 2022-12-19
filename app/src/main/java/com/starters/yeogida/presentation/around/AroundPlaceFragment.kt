@@ -2,7 +2,6 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,19 +39,36 @@ class AroundPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getTripData()
+        getTripId()
         initPlaceList()
         initNavigation()
         initBottomSheet()
         initChipClickListener()
-        with(binding.layoutCollapsingAroundPlace) {
-            title = "일이삼사오육칠팔구십"
-        }
     }
 
-    private fun getTripData() {
+    private fun getTripId() {
         val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
         args?.tripId?.let { tripId = it }
+        initTripData()
+    }
+
+    private fun initTripData() {
+        YeogidaClient.tripService.getTripInfo(
+            tripId
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    with(binding) {
+                        layoutCollapsingAroundPlace.title = it.data?.title
+                        GlideApp.with(ivAroundPlaceTrip)
+                            .load(it.data?.imgUrl)
+                            .into(ivAroundPlaceTrip)
+                        tvAroundPlacePlaceCount.text = it.data?.placeCount.toString()
+                        tvAroundPlaceTripLikeCount.text = it.data?.heartCount.toString()
+                    }
+                }
+            }
+        )
     }
 
     private fun initBottomSheet() {
@@ -100,10 +116,6 @@ class AroundPlaceFragment : Fragment() {
                 }
             }
         )
-
-        GlideApp.with(binding.ivAroundPlaceTrip)
-            .load("https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg")
-            .into(binding.ivAroundPlaceTrip)
     }
 
     private fun initNavigation() {

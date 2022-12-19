@@ -13,12 +13,17 @@ import android.util.Log
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.R
@@ -58,6 +63,53 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     private var placeTag: String? = null
     private var placeImageList = mutableListOf<File?>()
 
+    private val placeResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+
+                data?.let { data ->
+                    val place = Autocomplete.getPlaceFromIntent(data)
+
+                    place.id?.let { id ->
+                        Log.e("placeSelectionEvents/id", id)
+
+                        placeId = id
+                    }
+
+                    place.name?.let { name ->
+                        Log.e("placeSelectionEvents/Name", name)
+
+                        placeTitle = name
+                        binding.tvAddPlaceName.text = name
+                    }
+
+                    place.address?.let { address ->
+                        Log.e("placeSelectionEvents/address", address)
+
+                        placeAddress = address
+                    }
+
+                    place.latLng?.let { latLng ->
+                        Log.e("placeSelectionEvents/latLong", latLng.toString())
+
+                        placeLatitude = latLng.latitude
+                        placeLongitude = latLng.longitude
+                    }
+
+                    activeSubmitButton()
+                }
+
+                // Error status
+                val status = Autocomplete.getStatusFromIntent(data)
+
+                status?.let { status ->
+                    Log.e("PlaceSelectionEvents/status", status.statusMessage.toString())
+                    activeSubmitButton()
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_place)
@@ -66,13 +118,43 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
         setOnBackPressed() // 뒤로가기 리스너
 
-        setPlaceImageAdapter()
+        setPlaceImageAdapter()  // 장소 사진 리스트 어댑터 연결
         onAddPhotoButtonClicked() // 장소 사진 추가 버튼 클릭
         setTextChangedListener()    // 리뷰 TextChangedListener
         setPlaceRating()   // 별점 ChangedListener
         setPlaceTag()       // 장소 태그
+        setPlaceSearchListener() // 장소 이름
 
         setOnSubmitButtonClicked()  // 완료 버튼 클릭 시, 주소 값, 태그 값
+    }
+
+    private fun setPlaceSearchListener() {
+        val apiKey = getString(R.string.google_map_app_key)
+        if (!Places.isInitialized()) {
+            Places.initialize(applicationContext, apiKey)
+        }
+
+        binding.tvAddPlaceName.setOnClickListener {
+            openPlaceSearch()
+        }
+    }
+
+    private fun openPlaceSearch() {
+        val fields = listOf(
+            Place.Field.ID,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG,
+            Place.Field.NAME
+        )
+
+        val intent = Autocomplete.IntentBuilder(
+            AutocompleteActivityMode.OVERLAY,
+            fields
+        )
+            .setCountry("KR")
+            .build(this)
+
+        placeResultLauncher.launch(intent)
     }
 
     private fun setTextChangedListener() {

@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.common
 
+import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.starters.yeogida.GlideApp
@@ -19,6 +20,15 @@ fun loadCircleImage(imageView: ImageView, imageUrl: String?) {
         GlideApp.with(imageView)
             .load(imageUrl)
             .circleCrop()
+            .into(imageView)
+    }
+}
+
+@BindingAdapter("imageUri")
+fun loadImageWithUri(imageView: ImageView, imageUri: Uri?) {
+    imageUri?.let {
+        GlideApp.with(imageView)
+            .load(it)
             .into(imageView)
     }
 }

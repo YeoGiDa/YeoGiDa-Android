@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ class AroundPlaceFragment : Fragment() {
     private val viewModel: AroundPlaceViewModel by viewModels()
     private var sortValue: String = "id"
     private var tagValue: String = "nothing"
+    private var tripId: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +40,7 @@ class AroundPlaceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // getTripData()
+        getTripData()
         initPlaceList()
         initNavigation()
         initBottomSheet()
@@ -46,6 +48,11 @@ class AroundPlaceFragment : Fragment() {
         with(binding.layoutCollapsingAroundPlace) {
             title = "일이삼사오육칠팔구십"
         }
+    }
+
+    private fun getTripData() {
+        val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
+        args?.tripId?.let { tripId = it }
     }
 
     private fun initBottomSheet() {
@@ -70,13 +77,13 @@ class AroundPlaceFragment : Fragment() {
         val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
         binding.rvAroundPlace.adapter = aroundPlaceAdapter
         YeogidaClient.placeService.getPlaceTagList(
-            2,
+            tripId,
             tagValue,
             sortValue
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
-                    if (sortValue.isEmpty() && responseData.data?.placeList?.isEmpty() == true) {
+                    if (sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE

@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.place
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,9 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.YeogidaApplication
-import com.starters.yeogida.data.local.PlaceDetailData
 import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.CommentData
+import com.starters.yeogida.data.remote.response.place.PlaceImg
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
@@ -22,7 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.util.Collections.addAll
+import kotlinx.coroutines.withContext
 import kotlin.properties.Delegates
 
 class PlaceDetailFragment : Fragment() {
@@ -30,6 +31,7 @@ class PlaceDetailFragment : Fragment() {
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private lateinit var token: String
     private var memberId by Delegates.notNull<Long>()
+    private var placeId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +55,6 @@ class PlaceDetailFragment : Fragment() {
 
         initAuthorization()
         initPlaceData()
-        setToolbar()
-        initCommentNetwork()
         checkActiveAndLength()
     }
 
@@ -66,26 +66,35 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun initPlaceData() {
-        binding.place = PlaceDetailData(
-            "단양 여기는 어디인가",
-            "충청북도 단양군 단양읍 어쩌구 저쩌구 123-456",
-            "관광지",
-            3.5F,
-            "웅진씽크빅\n유데미 스타터스\n화이팅"
-        )
+        placeId = requireArguments().getLong("placeId")
+        Log.e("PlaceDetail/placeId", placeId.toString())
+        getPlaceDetail()
+        initCommentNetwork()
     }
 
-    private fun setToolbar() {
-        val images = mutableListOf<String>().apply {
-            add("https://cdn.pixabay.com/photo/2018/02/17/13/08/the-body-of-water-3159920__480.jpg")
-            add("https://cdn.pixabay.com/photo/2018/02/03/05/30/dodam-sambong-3126970__480.jpg")
-            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
-            add("https://cdn.pixabay.com/photo/2019/11/01/06/00/republic-of-korea-4593403__480.jpg")
-            add("https://cdn.pixabay.com/photo/2018/08/23/17/27/paragliding-3626288__480.jpg")
+    private fun getPlaceDetail() {
+        val placeService = YeogidaClient.placeService
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = placeService.getPlaceDetail(placeId)
+
+            when (response.code()) {
+                200 -> {
+                    val data = response.body()?.data
+                    data?.let {
+                        withContext(Dispatchers.Main) {
+                            binding.place = data
+                            setToolbar(data.placeImgs)
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    private fun setToolbar(placeImages: List<PlaceImg>) {
 
         with(binding.viewpagerPlaceToolbar) {
-            adapter = PlaceDetailPhotoAdapter(requireContext(), images)
+            adapter = PlaceDetailPhotoAdapter(placeImages)
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
         }
 
@@ -108,13 +117,13 @@ class PlaceDetailFragment : Fragment() {
     private fun activeConfirmButton() {
         binding.btnCommentSubmit.isEnabled =
             !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim()
-            .isNotEmpty()
+                .isNotEmpty()
     }
 
     // 댓글 조회 api
     private fun initCommentNetwork() {
         YeogidaClient.placeService.getAscComments(
-            2
+            placeId
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
@@ -200,7 +209,7 @@ class PlaceDetailFragment : Fragment() {
 
         YeogidaClient.placeService.postComment(
             token,
-            2,
+            placeId,
             commentRequest
         ).customEnqueue(
             onSuccess = {

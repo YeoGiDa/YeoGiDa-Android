@@ -18,5 +18,13 @@
         <action
             android:id="@+id/action_mypage_to_alarm"
             app:destination="@id/navigation_alarm" />
+        <action
+            android:id="@+id/action_mypage_to_comment"
+            app:destination="@id/navigation_my_comment_place" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_my_comment_place"
+        android:name="com.starters.yeogida.presentation.mypage.MyCommentPlaceFragment"
+        android:label="fragment_my_comment_place"
+        tools:layout="@layout/fragment_my_comment_place" />
 </navigation>

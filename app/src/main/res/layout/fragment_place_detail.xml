@@ -7,7 +7,7 @@
 
         <variable
             name="place"
-            type="com.starters.yeogida.data.local.PlaceDetailData" />
+            type="com.starters.yeogida.data.remote.response.place.PlaceDetailResponse" />
 
         <variable
             name="view"
@@ -35,7 +35,7 @@
                 app:contentScrim="@color/white"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Place.Title"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                app:title="@{place.placeName}">
+                app:title="@{place.title}">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewpager_place_toolbar"
@@ -88,7 +88,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/noto_sans_medium"
-                    android:text="@{place.placeName}"
+                    android:text="@{place.title}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
                     android:layout_marginTop="10dp"
                     android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="@{place.rating}"
+                    android:rating="@{place.star}"
                     app:layout_constraintStart_toStartOf="@id/tv_place_detail_name"
                     app:layout_constraintTop_toBottomOf="@+id/tv_place_detail_address" />
 
@@ -142,13 +142,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/noto_sans_medium"
-                    android:text="@{place.reviewContent}"
+                    android:text="@{place.content}"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="@id/tv_place_detail_tag"
                     app:layout_constraintStart_toStartOf="@id/tv_place_detail_name"
                     app:layout_constraintTop_toBottomOf="@+id/rb_place_detail"
                     tools:text="리\n뷰\n내\n용\n입니다." />
+
+                <TextView
+                    android:id="@+id/tv_add_place_created_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:text="@{place.createdTime}"
+                    android:textColor="@color/gray_400"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="@id/tv_place_detail_review"
+                    app:layout_constraintTop_toBottomOf="@id/tv_place_detail_review"
+                    tools:text="2022년 12월 14일" />
 
                 <View
                     android:id="@+id/view_separate_1"
@@ -158,7 +172,7 @@
                     android:background="@color/gray_100"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_place_detail_review" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_add_place_created_time" />
 
                 <TextView
                     android:id="@+id/tv_comment_count"

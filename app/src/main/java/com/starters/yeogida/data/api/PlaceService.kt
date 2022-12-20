@@ -4,8 +4,10 @@ import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.AscCommentsResponse
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.place.AddCommentResponse
+import com.starters.yeogida.data.remote.response.place.PlaceDetailResponse
 import com.starters.yeogida.data.remote.response.place.PlaceListResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface PlaceService {
@@ -37,4 +39,9 @@ interface PlaceService {
         @Header("Authorization") token: String,
         @Path("commentId") commentId: Long
     ): Call<BaseResponse<Any>>
+
+    @GET("places/{placeId}")
+    suspend fun getPlaceDetail(
+        @Path("placeId") placeId: String
+    ): Response<BaseResponse<PlaceDetailResponse>>
 }

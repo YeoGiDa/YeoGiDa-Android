@@ -2,9 +2,11 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -44,6 +46,7 @@ class AroundPlaceFragment : Fragment() {
         initNavigation()
         initBottomSheet()
         initChipClickListener()
+        openPlaceDetail()
     }
 
     private fun getTripId() {
@@ -122,9 +125,16 @@ class AroundPlaceFragment : Fragment() {
         binding.tbAroundPlace.setNavigationOnClickListener {
             (activity as PlaceActivity).finish()
         }
+    }
 
+    fun openPlaceDetail() {
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
+            Log.e("placeId", viewModel.openPlaceId.toString())
+            findNavController().navigate(
+                R.id.action_aroundPlace_to_placeDetail, bundleOf(
+                    "placeId" to viewModel.openPlaceId
+                )
+            )
         }
     }
 

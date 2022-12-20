@@ -5,8 +5,10 @@ import com.starters.yeogida.presentation.common.SingleLiveEvent
 
 class AroundPlaceViewModel : ViewModel() {
     val openPlaceDetailEvent = SingleLiveEvent<Any>()
+    var openPlaceId: Long? = null
 
-    fun onPlaceClicked() {
+    fun onPlaceClicked(placeId: Long?) {
         openPlaceDetailEvent.call()
+        openPlaceId = placeId
     }
 }

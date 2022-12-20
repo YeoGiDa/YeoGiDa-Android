@@ -42,6 +42,6 @@ interface PlaceService {
 
     @GET("places/{placeId}")
     suspend fun getPlaceDetail(
-        @Path("placeId") placeId: String
+        @Path("placeId") placeId: Long
     ): Response<BaseResponse<PlaceDetailResponse>>
 }

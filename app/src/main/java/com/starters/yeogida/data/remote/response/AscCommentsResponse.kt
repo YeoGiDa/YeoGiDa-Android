@@ -9,7 +9,7 @@ data class CommentData(
     val commentId: Long,
     val memberId: Long,
     val imgUrl: String,
-    val nickName: String,
+    val nickname: String,
     val createdTime: String,
     val content: String
 )

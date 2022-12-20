@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{comment.nickName}"
+            android:text="@{comment.nickname}"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/iv_item_comment_profile"

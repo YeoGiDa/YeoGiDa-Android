@@ -49,18 +49,10 @@ class MyPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.view = this
 
-        initNavigation()
         setLogout()
         setWithDrawDialog()
-    }
-
-    private fun initNavigation() {
-        with(binding) {
-            layoutMypageAlarm.setOnClickListener {
-                findNavController().navigate(R.id.action_mypage_to_alarm)
-            }
-        }
     }
 
     private fun setWithDrawDialog() {
@@ -208,5 +200,13 @@ class MyPageFragment : Fragment() {
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    fun moveToNotification(view: View) {
+        findNavController().navigate(R.id.action_mypage_to_alarm)
+    }
+
+    fun moveToCommentPlace(view: View) {
+        findNavController().navigate(R.id.action_mypage_to_comment)
     }
 }

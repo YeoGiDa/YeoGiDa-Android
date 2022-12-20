@@ -22,7 +22,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/rectangle_border_gray200_12"
-        android:onClick="@{() -> viewModel.onPlaceClicked()}">
+        android:onClick="@{() -> viewModel.onPlaceClicked(place.placeId)}">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_place_thumbnail"

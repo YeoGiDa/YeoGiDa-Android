@@ -2,9 +2,11 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,6 +16,7 @@ import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
@@ -44,6 +47,7 @@ class AroundPlaceFragment : Fragment() {
         initNavigation()
         initBottomSheet()
         initChipClickListener()
+        openPlaceDetail()
     }
 
     private fun getTripId() {
@@ -122,10 +126,17 @@ class AroundPlaceFragment : Fragment() {
         binding.tbAroundPlace.setNavigationOnClickListener {
             (activity as PlaceActivity).finish()
         }
+    }
 
-        viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_aroundPlace_to_placeDetail)
-        }
+    fun openPlaceDetail() {
+        viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
+            Log.e("placeId", placeId.toString())
+            findNavController().navigate(
+                R.id.action_aroundPlace_to_placeDetail, bundleOf(
+                    "placeId" to placeId
+                )
+            )
+        })
     }
 
     // chip button 클릭 시

@@ -103,4 +103,8 @@ class MyCommentPlaceFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
+
+    fun moveToTop(view: View) {
+        binding.scrollViewCommentPlace.smoothScrollTo(0, 0)
+    }
 }

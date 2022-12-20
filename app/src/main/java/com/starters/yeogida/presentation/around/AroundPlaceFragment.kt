@@ -16,6 +16,7 @@ import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
@@ -128,14 +129,14 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun openPlaceDetail() {
-        viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner) {
-            Log.e("placeId", viewModel.openPlaceId.toString())
+        viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
+            Log.e("placeId", placeId.toString())
             findNavController().navigate(
                 R.id.action_aroundPlace_to_placeDetail, bundleOf(
-                    "placeId" to viewModel.openPlaceId
+                    "placeId" to placeId
                 )
             )
-        }
+        })
     }
 
     // chip button 클릭 시

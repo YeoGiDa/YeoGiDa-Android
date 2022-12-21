@@ -29,8 +29,10 @@ import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.ActivityAddPlaceBinding
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.ImageActivity
+import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.shortToast
 import gun0912.tedimagepicker.builder.TedImagePicker
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +40,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
@@ -53,7 +60,8 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
     private var isTagSelected: Boolean = false
 
-    private var placeId: String? = null
+    private var tripId: Long = 0
+
     private var placeTitle: String? = null
     private var placeAddress: String? = null
     private var placeStar: Float? = null
@@ -61,7 +69,7 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     private var placeLongitude: Double? = null
     private var placeLatitude: Double? = null
     private var placeTag: String? = null
-    private var placeImageList = mutableListOf<File?>()
+    private var placeImageFileList = mutableListOf<File?>()
 
     private val placeResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -70,12 +78,6 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
                 data?.let { data ->
                     val place = Autocomplete.getPlaceFromIntent(data)
-
-                    place.id?.let { id ->
-                        Log.e("placeSelectionEvents/id", id)
-
-                        placeId = id
-                    }
 
                     place.name?.let { name ->
                         Log.e("placeSelectionEvents/Name", name)
@@ -115,7 +117,9 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_place)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.view = this
 
+        getTripId()
         setOnBackPressed() // 뒤로가기 리스너
 
         setPlaceImageAdapter()  // 장소 사진 리스트 어댑터 연결
@@ -126,6 +130,10 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
         setPlaceSearchListener() // 장소 이름
 
         setOnSubmitButtonClicked()  // 완료 버튼 클릭 시, 주소 값, 태그 값
+    }
+
+    private fun getTripId() {
+        tripId = intent.getLongExtra("tripId", 0)
     }
 
     private fun setPlaceSearchListener() {
@@ -189,8 +197,101 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
     private fun setOnSubmitButtonClicked() {
         // TODO. 완료 버튼 클릭 시 API 연결
+        binding.btnAddPlaceSubmit.setOnClickListener {
+            placeReviewContent = binding.etAddPlaceReview.text.toString()   // 리뷰 내용
 
-        placeReviewContent = binding.etAddPlaceReview.text.toString()   // 리뷰 내용
+            val requestTitle = placeTitle?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestAddress = placeAddress?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestStar = placeStar.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestContent = placeReviewContent?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestLongitude =
+                placeLongitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val requestLatitude =
+                placeLatitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestTag = placeTag?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val partMap = hashMapOf<String, RequestBody>()
+            partMap["title"] = requestTitle
+            partMap["address"] = requestAddress
+            partMap["star"] = requestStar
+            partMap["content"] = requestContent
+            partMap["longitude"] = requestLongitude
+            partMap["latitude"] = requestLatitude
+            partMap["tag"] = requestTag
+
+            // 이미지
+            val requestPlaceImages = mutableListOf<MultipartBody.Part>()
+
+            // placeImageUriList -> placeImageFileList
+            placeImageFileList.clear()
+
+            placeImageUriList.forEach { uri ->
+                placeImageFileList.add(
+                    ImageUtil.getResizePicture(this, uri)
+                )
+            }
+
+            if (placeImageFileList.isNotEmpty()) {
+                placeImageFileList.forEach { imageFile ->
+                    imageFile?.let {
+                        val requestImageFile =
+                            imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                        val partImg = MultipartBody.Part.createFormData(
+                            "imgUrls",
+                            imageFile.name,
+                            requestImageFile
+                        )
+                        requestPlaceImages.add(partImg)
+                    }
+                }
+            } else {
+                val requestImageFile = "".toRequestBody("text/plain".toMediaTypeOrNull())
+                requestPlaceImages.add(
+                    MultipartBody.Part.createFormData(
+                        "imgUrls",
+                        "",
+                        requestImageFile
+                    )
+                )
+            }
+
+            val placeService = YeogidaClient.placeService
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = placeService.postPlace(
+                    dataStore.userBearerToken.first(),
+                    tripId,
+                    partMap,
+                    requestPlaceImages
+                )
+
+                when (response.code()) {
+                    201 -> {
+                        finish()
+                    }
+
+                    403 -> {
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+
+                    404 -> {    // 여행지가 존재하지 않을 경우
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+
+                    else -> {
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun setPlaceTag() {
@@ -233,7 +334,6 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     private fun setPlaceImageAdapter() {
         binding.rvAddPlacePhoto.adapter = AddPlaceImgAdapter(placeImageUriList, this)
     }
-
 
     private fun onAddPhotoButtonClicked() {
         viewModel.openGalleryEvent.observe(this) {

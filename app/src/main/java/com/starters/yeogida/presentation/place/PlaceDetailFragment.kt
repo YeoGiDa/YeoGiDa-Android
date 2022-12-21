@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -32,6 +33,7 @@ class PlaceDetailFragment : Fragment() {
     private lateinit var token: String
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
+    private var tripId: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,7 @@ class PlaceDetailFragment : Fragment() {
         binding.view = this
         binding.btnCommentSubmit.isEnabled = false
 
+        setOnBackPressed()
         initAuthorization()
         initPlaceData()
         checkActiveAndLength()
@@ -81,6 +84,7 @@ class PlaceDetailFragment : Fragment() {
                 200 -> {
                     val data = response.body()?.data
                     data?.let {
+                        tripId = data.tripId
                         withContext(Dispatchers.Main) {
                             binding.place = data
                             setToolbar(data.placeImgs)
@@ -98,10 +102,27 @@ class PlaceDetailFragment : Fragment() {
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
         }
 
+
+    }
+
+    private fun setOnBackPressed() {
         // 뒤로가기 리스너
         binding.tbPlaceDetail.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // 뒤로가기 클릭 시 실행시킬 코드 입력
+                findNavController().navigateUp()
+            }
+        }
+
+        // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     // 보내기 버튼 활성화 및 최대 글자수 확인

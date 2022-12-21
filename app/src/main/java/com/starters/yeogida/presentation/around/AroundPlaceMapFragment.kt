@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceMapBinding
+import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.util.customEnqueue
 
 class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var mView: MapView
@@ -33,6 +35,8 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         mView = binding.mapViewAroundPlace
         mView.onCreate(savedInstanceState)
         mView.getMapAsync(this)
+
+        getPlaceList()
         initNavigation()
 
         return binding.root
@@ -41,20 +45,52 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.setOnMarkerClickListener(this)
-        createMarker()
-    }
-
-    private fun createMarker() {
-        val marker = LatLng(37.570286992195, 126.98361037914)
-        mMap.addMarker(MarkerOptions().position(marker).title("스타터스"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker))
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
     }
 
     override fun onMarkerClick(p0: Marker): Boolean {
         val bottomSheetDialog = PlaceMapBottomSheetFragment()
         bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         return true
+    }
+
+    private fun getPlaceList() {
+        YeogidaClient.placeService.getPlaceMapList(
+            2
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    // 장소들의 중심 좌표로 카메라 이동
+                    it.data?.let { response -> initMapCamera(response.meanLat, it.data.meanLng) }
+                    val locationArrayList = arrayListOf<LatLng>()
+                    for (i in 0 until (it.data?.placeList?.size ?: 0)) {
+                        val mLatLng = it.data?.placeList?.get(i)?.let { it1 -> LatLng(it1.latitude, it1.longitude) }
+                        if (mLatLng != null) {
+                            locationArrayList.add(mLatLng)
+                        }
+                    }
+                    createMarker(locationArrayList)
+                }
+            }
+        )
+    }
+
+    // 장소들의 중심 좌표로 카메라 이동
+    private fun initMapCamera(latitude: Double, longitude: Double) {
+        val mLatLng = LatLng(latitude, longitude)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng))
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+    }
+
+    private fun initNavigation() {
+        binding.tbAroundPlaceMap.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun createMarker(arrayList: ArrayList<LatLng>) {
+        for (i in 0 until arrayList.size) {
+            mMap.addMarker(MarkerOptions().position(arrayList[i]))
+        }
     }
 
     override fun onStart() {
@@ -85,11 +121,5 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     override fun onDestroy() {
         mView.onDestroy()
         super.onDestroy()
-    }
-
-    private fun initNavigation() {
-        binding.tbAroundPlaceMap.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
     }
 }

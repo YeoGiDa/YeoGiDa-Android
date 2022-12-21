@@ -19,15 +19,38 @@
         android:layout_height="match_parent"
         tools:context=".presentation.mypage.MypageFragment">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_my_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_back">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/mypage"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_mypage_profile"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_my_page"
             app:shapeAppearanceOverlay="@style/Circle"
             tools:src="@drawable/rectangle_fill_gray100_10" />
 
@@ -148,6 +171,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view1">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_trip"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -185,6 +215,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view2">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_comment_black"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -225,6 +262,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view3">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_profile"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -264,6 +308,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view9">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_notification"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -302,6 +353,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view4">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_notice"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -339,6 +397,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view5">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_support"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -379,6 +444,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view6">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_logout"
+                android:layout_gravity="center"/>
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -417,6 +489,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view7">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_withdraw"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:layout_width="0dp"

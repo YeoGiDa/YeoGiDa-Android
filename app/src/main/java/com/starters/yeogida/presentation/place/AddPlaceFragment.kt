@@ -287,6 +287,10 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
 
                 when (response.code()) {
                     201 -> {
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigateUp()
+                            findNavController().navigate(R.id.action_aroundPlace_to_placeDetail, bundleOf("placeId" to response.body()?.data?.placeId))
+                        }
                     }
 
                     403 -> {

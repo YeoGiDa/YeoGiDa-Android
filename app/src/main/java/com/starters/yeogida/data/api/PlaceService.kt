@@ -6,6 +6,7 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.place.AddCommentResponse
 import com.starters.yeogida.data.remote.response.place.PlaceDetailResponse
 import com.starters.yeogida.data.remote.response.place.PlaceListResponse
+import com.starters.yeogida.data.remote.response.place.PlaceMapListResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -18,6 +19,18 @@ interface PlaceService {
         @Path("tag") tag: String,
         @Query("condition") condition: String
     ): Call<BaseResponse<PlaceListResponse>>
+
+    // 장소 지도로 보기
+    @GET("{tripId}/places/inMap")
+    fun getPlaceMapList(
+        @Path("tripId") tripId: Long
+    ): Call<BaseResponse<PlaceMapListResponse>>
+
+    // 장소 상세
+    @GET("places/{placeId}")
+    suspend fun getPlaceDetail(
+        @Path("placeId") placeId: Long
+    ): Response<BaseResponse<PlaceDetailResponse>>
 
     // 댓글 목록 (작성순)
     @GET("{placeId}/comments/idAsc")
@@ -39,9 +52,4 @@ interface PlaceService {
         @Header("Authorization") token: String,
         @Path("commentId") commentId: Long
     ): Call<BaseResponse<Any>>
-
-    @GET("places/{placeId}")
-    suspend fun getPlaceDetail(
-        @Path("placeId") placeId: Long
-    ): Response<BaseResponse<PlaceDetailResponse>>
 }

@@ -25,6 +25,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.maps.android.clustering.ClusterManager
 import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.data.local.PlaceBottomSheetData
 import com.starters.yeogida.databinding.FragmentAroundBinding
@@ -37,6 +38,8 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+
+    private var userList: ArrayList<Place> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +68,10 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mView.getMapAsync {
+            setUpClusterManager(mMap)
+            userList = getAllItem()
+        }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         updateLocation()
         mMap.setOnMarkerClickListener(this)
@@ -73,6 +80,44 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         }
     }
 
+    private fun getAllItem(): ArrayList<Place> {
+        var arrayList: ArrayList<Place> = ArrayList()
+        val latLng1 = LatLng(37.570223492195, 126.98361037914)
+        val latLng2 = LatLng(37.570211191115, 126.98000031114)
+        val latLng3 = LatLng(37.570239992195, 126.98234031114)
+        val latLng4 = LatLng(37.57056992395, 126.981241037074)
+
+        val user1 = Place(1, latLng1)
+        val user2 = Place(2, latLng2)
+        val user3 = Place(3, latLng3)
+        val user4 = Place(4, latLng4)
+
+        arrayList.add(user1)
+        arrayList.add(user2)
+        arrayList.add(user3)
+        arrayList.add(user4)
+
+        return arrayList
+    }
+
+    private fun setUpClusterManager(mMap: GoogleMap) {
+        val clusterManager = ClusterManager<Place> (requireContext(), mMap)
+        mMap.setOnCameraIdleListener(clusterManager)
+        userList = getAllItem()
+        clusterManager.addItems(userList)
+        clusterManager.cluster()
+
+        clusterManager.setOnClusterItemClickListener {
+            placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            placeBottomSheetBehavior.isDraggable = true
+            initBottomSheet()
+            initBottomSheetAdapter()
+
+            return@setOnClusterItemClickListener false
+        }
+    }
+
+    // 현재 위치
     @SuppressLint("MissingPermission")
     private fun updateLocation() {
 
@@ -113,10 +158,6 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     override fun onMarkerClick(p0: Marker): Boolean {
-        placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        placeBottomSheetBehavior.isDraggable = true
-        initBottomSheet()
-        initBottomSheetAdapter()
         return true
     }
 

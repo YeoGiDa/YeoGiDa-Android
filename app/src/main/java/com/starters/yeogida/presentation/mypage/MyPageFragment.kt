@@ -18,6 +18,7 @@ import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.databinding.FragmentMyPageBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.presentation.user.LoginActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,8 +52,15 @@ class MyPageFragment : Fragment() {
         binding.viewModel = viewModel
         binding.view = this
 
+        initClickListener()
         setLogout()
         setWithDrawDialog()
+    }
+
+    private fun initClickListener() {
+        binding.tbMyPage.setNavigationOnClickListener {
+            (activity as MyPageActivity).finish()
+        }
     }
 
     private fun setWithDrawDialog() {

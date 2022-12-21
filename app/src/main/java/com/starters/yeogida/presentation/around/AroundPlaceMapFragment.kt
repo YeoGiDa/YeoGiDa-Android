@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.starters.yeogida.R
+import com.starters.yeogida.data.remote.response.place.PlaceMapList
 import com.starters.yeogida.databinding.FragmentAroundPlaceMapBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.util.customEnqueue
@@ -23,6 +24,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var mView: MapView
     private lateinit var binding: FragmentAroundPlaceMapBinding
     private lateinit var mMap: GoogleMap
+    private lateinit var mPlaceMapList: List<PlaceMapList>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,19 +50,23 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     }
 
     override fun onMarkerClick(p0: Marker): Boolean {
-        val bottomSheetDialog = PlaceMapBottomSheetFragment()
+        val position = p0.id.substring(1).toInt()
+        val bottomSheetDialog = PlaceMapBottomSheetFragment(mPlaceMapList[position])
         bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         return true
     }
 
     private fun getPlaceList() {
         YeogidaClient.placeService.getPlaceMapList(
-            2
+            requireArguments().getLong("tripId")
         ).customEnqueue(
             onSuccess = {
                 if (it.code == 200) {
                     // 장소들의 중심 좌표로 카메라 이동
                     it.data?.let { response -> initMapCamera(response.meanLat, it.data.meanLng) }
+                    mPlaceMapList = it.data?.placeList ?: arrayListOf()
+
+                    // 위도 경도 리스트 만들기
                     val locationArrayList = arrayListOf<LatLng>()
                     for (i in 0 until (it.data?.placeList?.size ?: 0)) {
                         val mLatLng = it.data?.placeList?.get(i)?.let { it1 -> LatLng(it1.latitude, it1.longitude) }
@@ -68,6 +74,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
                             locationArrayList.add(mLatLng)
                         }
                     }
+                    // 위도 경도 리스트로 마커 생성
                     createMarker(locationArrayList)
                 }
             }

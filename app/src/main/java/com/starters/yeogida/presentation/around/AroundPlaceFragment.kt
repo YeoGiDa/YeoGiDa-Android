@@ -155,7 +155,7 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun moveToPlaceMap(view: View) {
-        findNavController().navigate(R.id.action_aroundPlace_to_placeMap)
+        findNavController().navigate(R.id.action_aroundPlace_to_placeMap, bundleOf("tripId" to tripId))
     }
 
     fun moveToAddPlace(view: View) {

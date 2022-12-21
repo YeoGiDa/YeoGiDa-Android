@@ -7,6 +7,7 @@ data class LikeTripResponse(
 data class LikeTrip(
     val tripId: Long,
     val memberId: Long,
+    val nickname: String,
     val title: String,
     val subTitle: String,
     val imgUrl: String,

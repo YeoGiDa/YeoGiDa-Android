@@ -21,10 +21,18 @@
         <action
             android:id="@+id/action_mypage_to_comment"
             app:destination="@id/navigation_my_comment_place" />
+        <action
+            android:id="@+id/action_mypage_to_my_trip"
+            app:destination="@id/navigation_my_trip" />
     </fragment>
     <fragment
         android:id="@+id/navigation_my_comment_place"
         android:name="com.starters.yeogida.presentation.mypage.MyCommentPlaceFragment"
         android:label="fragment_my_comment_place"
         tools:layout="@layout/fragment_my_comment_place" />
+    <fragment
+        android:id="@+id/navigation_my_trip"
+        android:name="com.starters.yeogida.presentation.mypage.MyTripFragment"
+        android:label="MyPlaceFragment"
+        tools:layout="@layout/fragment_my_trip" />
 </navigation>

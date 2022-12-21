@@ -142,6 +142,7 @@
             android:id="@+id/layout_mypage_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="@{view::moveToMyTrip}"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

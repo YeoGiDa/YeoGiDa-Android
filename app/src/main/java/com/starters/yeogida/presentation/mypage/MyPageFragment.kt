@@ -209,4 +209,8 @@ class MyPageFragment : Fragment() {
     fun moveToCommentPlace(view: View) {
         findNavController().navigate(R.id.action_mypage_to_comment)
     }
+
+    fun moveToMyTrip(view: View) {
+        findNavController().navigate(R.id.action_mypage_to_my_trip)
+    }
 }

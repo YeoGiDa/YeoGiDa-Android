@@ -63,13 +63,13 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
             onSuccess = {
                 if (it.code == 200) {
                     // 장소들의 중심 좌표로 카메라 이동
-                    it.data?.let { response -> initMapCamera(response.meanLat, it.data.meanLng) }
+                    it.data?.let { data -> initMapCamera(data.meanLat, data.meanLng) }
                     mPlaceMapList = it.data?.placeList ?: arrayListOf()
 
                     // 위도 경도 리스트 만들기
                     val locationArrayList = arrayListOf<LatLng>()
                     for (i in 0 until (it.data?.placeList?.size ?: 0)) {
-                        val mLatLng = it.data?.placeList?.get(i)?.let { it1 -> LatLng(it1.latitude, it1.longitude) }
+                        val mLatLng = it.data?.placeList?.get(i)?.let { place -> LatLng(place.latitude, place.longitude) }
                         if (mLatLng != null) {
                             locationArrayList.add(mLatLng)
                         }

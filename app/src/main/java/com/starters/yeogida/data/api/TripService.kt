@@ -45,4 +45,10 @@ interface TripService {
     suspend fun getLikeTrip(
         @Header("Authorization") bearerToken: String,
     ): Response<BaseResponse<LikeTripResponse>>
+
+    @GET("trips/my/heart/{region}")
+    suspend fun getRegionLikeTrip(
+        @Header("Authorization") bearerToken: String,
+        @Path("region") region: String
+    ): Response<BaseResponse<LikeTripResponse>>
 }

@@ -15,8 +15,8 @@ class LikeTripAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    interface ItemClick { //인터페이스
-        fun onClick(view: View, position: Int)
+    interface ItemClick {
+        fun onClick(view: View, likeTrip: LikeTripData)
     }
 
     var itemClick: ItemClick? = null
@@ -29,9 +29,10 @@ class LikeTripAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is LikeTripViewHolder) {
             holder.bind(likeTripList[position])
+
             if (itemClick != null) {
                 holder.itemView.findViewById<ImageButton>(R.id.btn_like).setOnClickListener {
-                    itemClick?.onClick(it, position)
+                    itemClick?.onClick(it, likeTripList[position])
                 }
             }
         }

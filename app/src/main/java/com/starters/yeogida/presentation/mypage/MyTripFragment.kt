@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.databinding.FragmentMyTripBinding
-import com.starters.yeogida.presentation.common.RegionCategory
-import com.starters.yeogida.presentation.like.LikeTripAdapter
 import com.starters.yeogida.presentation.like.LikeTripViewModel
 import com.starters.yeogida.presentation.trip.AddTripActivity
 
@@ -28,7 +25,7 @@ class MyTripFragment : Fragment() {
         binding.view = this
 
         initClickListener()
-        initData()
+        //initData()
 
         return binding.root
     }
@@ -39,7 +36,7 @@ class MyTripFragment : Fragment() {
         }
     }
 
-    private fun initData() {
+    /*private fun initData() {
         val tripAdapter = LikeTripAdapter(
             listOf(
                 LikeTripData(
@@ -106,7 +103,7 @@ class MyTripFragment : Fragment() {
             viewModel
         )
         binding.rvMyTrip.adapter = tripAdapter
-    }
+    }*/
 
     fun moveToTop(view: View) {
         binding.scrollViewMyPlace.smoothScrollTo(0, 0)

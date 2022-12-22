@@ -1,6 +1,5 @@
 package com.starters.yeogida.presentation.around
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
-import com.starters.yeogida.presentation.place.AddPlaceActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.util.customEnqueue
@@ -36,23 +34,35 @@ class AroundPlaceFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_around_place, container, false)
-        binding.view = this
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.view = this
         getTripId()
         initPlaceList()
         initNavigation()
         initBottomSheet()
         initChipClickListener()
-        openPlaceDetail()
+        setOpenPlaceDetail()
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun getTripId() {
+        // 여행지 추가 후 tripId 받아오기
         val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
         args?.tripId?.let { tripId = it }
+
+        // 장소 추가 후 tripId 받아오기
+
+        // 둘러보기 - 장소 상세 - 장소 목록 - 장소 추가
+
+        // 여기 좋아 - 장소 목록 - 장소 추가
         initTripData()
     }
 
@@ -129,7 +139,7 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
-    fun openPlaceDetail() {
+    fun setOpenPlaceDetail() {
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
             Log.e("placeId", placeId.toString())
             findNavController().navigate(
@@ -160,8 +170,7 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun moveToAddPlace(view: View) {
-        val intent = Intent(requireContext(), AddPlaceActivity::class.java)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_aroundPlace_to_addPlace, bundleOf("tripId" to tripId))
     }
 
     fun moveToTop(view: View) {

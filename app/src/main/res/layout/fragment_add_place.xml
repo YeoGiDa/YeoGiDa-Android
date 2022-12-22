@@ -11,14 +11,14 @@
 
         <variable
             name="view"
-            type="com.starters.yeogida.presentation.place.AddPlaceActivity" />
+            type="com.starters.yeogida.presentation.place.AddPlaceFragment" />
 
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.place.AddPlaceActivity">
+        tools:context=".presentation.place.AddPlaceFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_add_place"

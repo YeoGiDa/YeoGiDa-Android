@@ -1,6 +1,7 @@
 package com.starters.yeogida.data.remote.response.place
 
 data class PlaceDetailResponse(
+    val tripId: Long,
     val placeId: Long,
     val memberId: Long,
     val title: String,

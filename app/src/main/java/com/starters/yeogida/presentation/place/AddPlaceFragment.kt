@@ -10,16 +10,22 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -28,9 +34,11 @@ import com.google.android.material.chip.Chip
 import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
-import com.starters.yeogida.databinding.ActivityAddPlaceBinding
+import com.starters.yeogida.databinding.FragmentAddPlaceBinding
+import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.ImageActivity
+import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.shortToast
 import gun0912.tedimagepicker.builder.TedImagePicker
 import kotlinx.coroutines.CoroutineScope
@@ -38,10 +46,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
-class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
-    private lateinit var binding: ActivityAddPlaceBinding
+class AddPlaceFragment : Fragment(), PlaceImageClickListener {
+    private lateinit var binding: FragmentAddPlaceBinding
     private val viewModel: AddPlaceViewModel by viewModels()
 
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
@@ -53,7 +66,8 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
     private var isTagSelected: Boolean = false
 
-    private var placeId: String? = null
+    private var tripId: Long = 0
+
     private var placeTitle: String? = null
     private var placeAddress: String? = null
     private var placeStar: Float? = null
@@ -61,21 +75,15 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     private var placeLongitude: Double? = null
     private var placeLatitude: Double? = null
     private var placeTag: String? = null
-    private var placeImageList = mutableListOf<File?>()
+    private var placeImageFileList = mutableListOf<File?>()
 
     private val placeResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 val data = result.data
 
                 data?.let { data ->
                     val place = Autocomplete.getPlaceFromIntent(data)
-
-                    place.id?.let { id ->
-                        Log.e("placeSelectionEvents/id", id)
-
-                        placeId = id
-                    }
 
                     place.name?.let { name ->
                         Log.e("placeSelectionEvents/Name", name)
@@ -110,28 +118,38 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_place)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_place, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.view = this
 
+        getTripId()
         setOnBackPressed() // 뒤로가기 리스너
 
-        setPlaceImageAdapter()  // 장소 사진 리스트 어댑터 연결
+        setPlaceImageAdapter() // 장소 사진 리스트 어댑터 연결
         onAddPhotoButtonClicked() // 장소 사진 추가 버튼 클릭
-        setTextChangedListener()    // 리뷰 TextChangedListener
-        setPlaceRating()   // 별점 ChangedListener
-        setPlaceTag()       // 장소 태그
+        setTextChangedListener() // 리뷰 TextChangedListener
+        setPlaceRating() // 별점 ChangedListener
+        setPlaceTag() // 장소 태그
         setPlaceSearchListener() // 장소 이름
 
-        setOnSubmitButtonClicked()  // 완료 버튼 클릭 시, 주소 값, 태그 값
+        setOnSubmitButtonClicked() // 완료 버튼 클릭 시, 주소 값, 태그 값
+        return binding.root
+    }
+
+    private fun getTripId() {
+        tripId = requireArguments().getLong("tripId")
     }
 
     private fun setPlaceSearchListener() {
         val apiKey = getString(R.string.google_map_app_key)
         if (!Places.isInitialized()) {
-            Places.initialize(applicationContext, apiKey)
+            Places.initialize(requireActivity().application, apiKey)
         }
 
         binding.tvAddPlaceName.setOnClickListener {
@@ -152,7 +170,7 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
             fields
         )
             .setCountry("KR")
-            .build(this)
+            .build(requireContext())
 
         placeResultLauncher.launch(intent)
     }
@@ -164,7 +182,7 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
                 with(binding.etAddPlaceReview) {
                     val length = this.length()
                     if (length == 200) {
-                        shortToast("리뷰는 200자를 넘을 수 없습니다.")
+                        requireContext().shortToast("리뷰는 200자를 넘을 수 없습니다.")
                     } else {
                         binding.tvAddPlaceReviewTextCount.text = "$length / 200"
                         activeSubmitButton()
@@ -180,17 +198,116 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     private fun activeSubmitButton() {
         with(binding) {
             btnAddPlaceSubmit.isEnabled =
-                placeTitle != null
-                        && isTagSelected // 태그
-                        && ratingbarAddPlace.rating >= 1F // 별점
-                        && !etAddPlaceReview.text.isNullOrBlank() // 리뷰
+                placeTitle != null &&
+                isTagSelected && // 태그
+                ratingbarAddPlace.rating >= 1F && // 별점
+                !etAddPlaceReview.text.isNullOrBlank() // 리뷰
         }
     }
 
     private fun setOnSubmitButtonClicked() {
         // TODO. 완료 버튼 클릭 시 API 연결
+        binding.btnAddPlaceSubmit.setOnClickListener {
+            placeReviewContent = binding.etAddPlaceReview.text.toString() // 리뷰 내용
 
-        placeReviewContent = binding.etAddPlaceReview.text.toString()   // 리뷰 내용
+            val requestTitle = placeTitle?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestAddress = placeAddress?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestStar = placeStar.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestContent = placeReviewContent?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestLongitude =
+                placeLongitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val requestLatitude =
+                placeLatitude.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val requestTag = placeTag?.toRequestBody("text/plain".toMediaTypeOrNull())
+                ?: "".toRequestBody("text/plain".toMediaTypeOrNull())
+
+            val partMap = hashMapOf<String, RequestBody>()
+            partMap["title"] = requestTitle
+            partMap["address"] = requestAddress
+            partMap["star"] = requestStar
+            partMap["content"] = requestContent
+            partMap["longitude"] = requestLongitude
+            partMap["latitude"] = requestLatitude
+            partMap["tag"] = requestTag
+
+            // 이미지
+            val requestPlaceImages = mutableListOf<MultipartBody.Part>()
+
+            // placeImageUriList -> placeImageFileList
+            placeImageFileList.clear()
+
+            placeImageUriList.forEach { uri ->
+                placeImageFileList.add(
+                    ImageUtil.getResizePicture(requireContext(), uri)
+                )
+            }
+
+            if (placeImageFileList.isNotEmpty()) {
+                placeImageFileList.forEach { imageFile ->
+                    imageFile?.let {
+                        val requestImageFile =
+                            imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                        val partImg = MultipartBody.Part.createFormData(
+                            "imgUrls",
+                            imageFile.name,
+                            requestImageFile
+                        )
+                        requestPlaceImages.add(partImg)
+                    }
+                }
+            } else {
+                val requestImageFile = "".toRequestBody("text/plain".toMediaTypeOrNull())
+                requestPlaceImages.add(
+                    MultipartBody.Part.createFormData(
+                        "imgUrls",
+                        "",
+                        requestImageFile
+                    )
+                )
+            }
+
+            val placeService = YeogidaClient.placeService
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = placeService.postPlace(
+                    dataStore.userBearerToken.first(),
+                    tripId,
+                    partMap,
+                    requestPlaceImages
+                )
+
+                when (response.code()) {
+                    201 -> {
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigateUp()
+                            findNavController().navigate(
+                                R.id.action_aroundPlace_to_placeDetail,
+                                bundleOf("placeId" to response.body()?.data?.placeId)
+                            )
+                        }
+                    }
+
+                    403 -> {
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+
+                    404 -> { // 여행지가 존재하지 않을 경우
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+
+                    else -> {
+                        Log.e("AddPlace/Error", response.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun setPlaceTag() {
@@ -211,39 +328,39 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
     private fun setPlaceRating() {
         binding.ratingbarAddPlace.onRatingBarChangeListener = (
-                RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
-                    if (rating < 1.0F) {
-                        ratingBar?.rating = 1.0F
-                    } else {
-                        with(binding.tvAddPlaceRatingTitle) {
-                            text = when (rating) {
-                                1.0F, 1.5F -> "매우 별로"
-                                2.0F, 2.5F -> "별로"
-                                3.0F, 3.5F -> "보통"
-                                4.0F, 4.5F -> "좋아요"
-                                else -> "매우 좋아요"
-                            }
+            RatingBar.OnRatingBarChangeListener { ratingBar, rating, fromUser ->
+                if (rating < 1.0F) {
+                    ratingBar?.rating = 1.0F
+                } else {
+                    with(binding.tvAddPlaceRatingTitle) {
+                        text = when (rating) {
+                            1.0F, 1.5F -> "매우 별로"
+                            2.0F, 2.5F -> "별로"
+                            3.0F, 3.5F -> "보통"
+                            4.0F, 4.5F -> "좋아요"
+                            else -> "매우 좋아요"
                         }
                     }
-                    placeStar = rating
-                    activeSubmitButton()
-                })
+                }
+                placeStar = rating
+                activeSubmitButton()
+            }
+            )
     }
 
     private fun setPlaceImageAdapter() {
         binding.rvAddPlacePhoto.adapter = AddPlaceImgAdapter(placeImageUriList, this)
     }
 
-
     private fun onAddPhotoButtonClicked() {
-        viewModel.openGalleryEvent.observe(this) {
+        viewModel.openGalleryEvent.observe(viewLifecycleOwner) {
 
             CoroutineScope(Dispatchers.IO).launch {
                 val isRejected = dataStore.imagePermissionIsRejected.first()
 
                 when {
                     ContextCompat.checkSelfPermission(
-                        this@AddPlaceActivity,
+                        requireContext(),
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         withContext(Dispatchers.Main) {
@@ -255,13 +372,13 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
 
                     isRejected -> {
                         withContext(Dispatchers.Main) {
-                            showSettingDialog(this@AddPlaceActivity)
+                            showSettingDialog(requireContext())
                         }
                     }
 
                     shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
                         withContext(Dispatchers.Main) {
-                            showPermissionContextPopup(this@AddPlaceActivity)
+                            showPermissionContextPopup(requireContext())
                         }
                         Log.i("BUTTON", "showpermission")
                     }
@@ -276,7 +393,6 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
                         Log.i("BUTTON", "else")
                     }
                 }
-
             }
         }
     }
@@ -296,9 +412,8 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Log.e("거부", requestCode.toString())
-                    Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
+                    requireContext().shortToast("권한을 거부하였습니다.")
                 } else {
-
                 }
             }
 
@@ -306,7 +421,7 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
+                    requireContext().shortToast("권한을 거부하였습니다.")
                     CoroutineScope(Dispatchers.IO).launch {
                         dataStore.saveIsImgPermissionRejected(true)
                     }
@@ -314,7 +429,6 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
             }
 
             else -> {
-
             }
         }
     }
@@ -344,7 +458,7 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
             setMessage("앱에서 사진을 불러오기 위해 권한이 필요합니다.")
             setPositiveButton("동의") { _, _ ->
                 ActivityCompat.requestPermissions(
-                    this@AddPlaceActivity,
+                    requireActivity(),
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                     PERMISSION_ALBUM
                 )
@@ -356,18 +470,28 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
     }
 
     override fun deleteImage(imageUri: Uri) {
-        placeImageUriList.remove(imageUri)
-        binding.rvAddPlacePhoto.adapter?.notifyDataSetChanged()
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("사진을 삭제하시겠어요?")
+            setPositiveBtn("확인") {
+                placeImageUriList.remove(imageUri)
+                binding.rvAddPlacePhoto.adapter?.notifyDataSetChanged()
+                dismissDialog()
+            }
+            setNegativeBtn("닫기") {
+                dismissDialog()
+            }
+        }
     }
 
     override fun openImageScreen(imageUri: Uri) {
-        val intent = Intent(this, ImageActivity::class.java)
+        val intent = Intent(requireContext(), ImageActivity::class.java)
         intent.putExtra("imageUri", imageUri.toString())
         startActivity(intent)
     }
 
     private fun navigatePhotos() {
-        TedImagePicker.with(this)
+        TedImagePicker.with(requireContext())
             .buttonBackground(R.color.main_blue)
             .dropDownAlbum()
             .max(10, "최대 10장까지 가능합니다.")
@@ -378,7 +502,6 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
                 binding.rvAddPlacePhoto.adapter?.notifyDataSetChanged()
             }
     }
-
 
     private fun setOnBackPressed() {
         binding.tbAddPlace.setNavigationOnClickListener {
@@ -393,18 +516,21 @@ class AddPlaceActivity : AppCompatActivity(), PlaceImageClickListener {
         }
 
         // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     private fun showCancelDialog() {
-        CustomDialog(this).apply {
+        CustomDialog(requireContext()).apply {
             showDialog()
             setTitle("작성을 취소하시겠습니까?")
 
             setPositiveBtn("확인") {
                 dismissDialog()
-                shortToast("글 작성을 취소하였습니다")
-                finish()
+                requireContext().shortToast("글 작성을 취소하였습니다")
+                // finish()
             }
             setNegativeBtn("닫기") {
                 dismissDialog()

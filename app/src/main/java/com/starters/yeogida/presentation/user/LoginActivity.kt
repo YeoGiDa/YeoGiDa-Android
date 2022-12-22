@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.MainActivity
@@ -23,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val userService = YeogidaClient.userService
+    private lateinit var fcmToken: String
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -37,11 +40,7 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
         binding.layoutLoginKakao.setOnClickListener {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                loginWithKakaoTalk()
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-            }
+            getFCMToken()
         }
     }
 
@@ -58,10 +57,11 @@ class LoginActivity : AppCompatActivity() {
                         Log.e("카카오 로그인", "토큰 정보 보기 실패", error)
                     } else if (tokenInfo != null) {
                         Log.i(
-                            "카카오 로그인", "토큰 정보 보기 성공" +
-                                    "\n회원번호: ${tokenInfo.id}" +
-                                    "\n만료시간: ${tokenInfo.expiresIn} 초" +
-                                    "\n앱 ID : ${tokenInfo.appId}"
+                            "카카오 로그인",
+                            "토큰 정보 보기 성공" +
+                                "\n회원번호: ${tokenInfo.id}" +
+                                "\n만료시간: ${tokenInfo.expiresIn} 초" +
+                                "\n앱 ID : ${tokenInfo.appId}"
                         )
 
                         UserApiClient.instance.me { user, error ->
@@ -95,7 +95,8 @@ class LoginActivity : AppCompatActivity() {
         val loginResponse = userService.postLogin(
             LoginRequestData(
                 email,
-                userNum
+                userNum,
+                fcmToken
             )
         )
 
@@ -141,13 +142,14 @@ class LoginActivity : AppCompatActivity() {
         Intent(this@LoginActivity, JoinActivity::class.java).apply {
             putExtra("email", email) // 이메일
             putExtra("userNum", userNum) // 회원번호
+            putExtra("fcmToken", fcmToken)
 
             nickname?.let {
-                putExtra("nickname", it)  // 닉네임
+                putExtra("nickname", it) // 닉네임
             }
 
             profileImageUrl?.let {
-                putExtra("profileImageUrl", it)    // 프로필 이미지 URL
+                putExtra("profileImageUrl", it) // 프로필 이미지 URL
             }
 
             startActivity(this)
@@ -162,5 +164,28 @@ class LoginActivity : AppCompatActivity() {
             )
         )
         finish()
+    }
+
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("token", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                fcmToken = task.result
+
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                    loginWithKakaoTalk()
+                } else {
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                }
+
+                // Log and toast
+                Log.d("token", "FCM Token is $fcmToken")
+            }
+        )
     }
 }

@@ -41,12 +41,22 @@ class RegionBottomSheetFragment(val itemClick: (String) -> Unit) :
         regionAdapter.regionList.addAll(
             listOf(
                 RegionData("서울"),
-                RegionData("강원도"),
                 RegionData("경기도"),
-                RegionData("충청도"),
-                RegionData("전라도"),
-                RegionData("경상도"),
-                RegionData("제주도")
+                RegionData("인천"),
+                RegionData("세종"),
+                RegionData("강원도"),
+                RegionData("충청북도"),
+                RegionData("충청남도"),
+                RegionData("대전"),
+                RegionData("광주"),
+                RegionData("전라북도"),
+                RegionData("전라남도"),
+                RegionData("대구"),
+                RegionData("울산"),
+                RegionData("부산"),
+                RegionData("경상북도"),
+                RegionData("경상남도"),
+                RegionData("제주")
             )
         )
         regionAdapter.notifyDataSetChanged()

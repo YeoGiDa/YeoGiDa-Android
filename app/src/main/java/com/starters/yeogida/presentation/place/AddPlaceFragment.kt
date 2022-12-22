@@ -530,7 +530,7 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
             setPositiveBtn("확인") {
                 dismissDialog()
                 requireContext().shortToast("글 작성을 취소하였습니다")
-                // finish()
+                findNavController().navigateUp()
             }
             setNegativeBtn("닫기") {
                 dismissDialog()

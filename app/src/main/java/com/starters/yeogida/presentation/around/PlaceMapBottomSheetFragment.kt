@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.PlaceMapData
@@ -27,6 +29,8 @@ class PlaceMapBottomSheetFragment(private val placeList: PlaceMapList) : BottomS
         )
 
         initAdapter()
+        binding.view = this
+
         return binding.root
     }
 
@@ -39,5 +43,10 @@ class PlaceMapBottomSheetFragment(private val placeList: PlaceMapList) : BottomS
             placeList.tag,
             placeList.address
         )
+    }
+
+    fun moveToDetail(view: View) {
+        findNavController().navigate(R.id.action_placeMap_to_placeDetail, bundleOf("placeId" to placeList.placeId))
+        dismiss()
     }
 }

@@ -8,12 +8,16 @@
         <variable
             name="place"
             type="com.starters.yeogida.data.local.PlaceMapData" />
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.around.PlaceMapBottomSheetFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:onClick="@{view::moveToDetail}"
         android:background="@drawable/rectangle_fill_white_20"
         tools:context=".presentation.around.PlaceMapBottomSheetFragment">
 

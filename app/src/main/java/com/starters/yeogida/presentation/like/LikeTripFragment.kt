@@ -14,6 +14,7 @@ import com.starters.yeogida.data.remote.response.trip.LikeTrip
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.common.RegionCategory
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.shortToast
@@ -260,10 +261,10 @@ class LikeTripFragment : Fragment() {
     }
 
     private fun setTripClickListener() {
-        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner) {
-            Log.e("openAroundPlaceEvent", "Event Observed.")
-            viewModel.tripId.value?.let { tripId -> moveToAroundPlace(tripId) }
-        }
+        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
+            Log.e("tripId", tripId.toString())
+            moveToAroundPlace(tripId)
+        })
     }
 
     private fun setLikeAdapter(list: List<LikeTripData>) {

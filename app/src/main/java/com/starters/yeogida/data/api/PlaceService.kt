@@ -6,6 +6,9 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.place.AddCommentResponse
 import com.starters.yeogida.data.remote.response.place.PlaceDetailResponse
 import com.starters.yeogida.data.remote.response.place.PlaceListResponse
+import com.starters.yeogida.data.remote.response.place.PlaceMapListResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -60,11 +63,5 @@ interface PlaceService {
         @Path("tripId") tripId: Long,
         @PartMap postPlaceRequest: HashMap<String, RequestBody>,
         @Part imgUrls: List<MultipartBody.Part>
-    ): Response<BaseResponse<PlaceDetailResponse>>
-
-    // 장소 상세
-    @GET("places/{placeId}")
-    suspend fun getPlaceDetail(
-        @Path("placeId") placeId: Long
     ): Response<BaseResponse<PlaceDetailResponse>>
 }

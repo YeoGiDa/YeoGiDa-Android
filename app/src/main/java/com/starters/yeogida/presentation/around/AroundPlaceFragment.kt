@@ -108,6 +108,7 @@ class AroundPlaceFragment : Fragment() {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
+                            ivAroundPlaceMap.visibility = View.INVISIBLE
                         }
                     } else {
                         responseData.data?.let { data ->
@@ -155,7 +156,7 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun moveToPlaceMap(view: View) {
-        findNavController().navigate(R.id.action_aroundPlace_to_placeMap)
+        findNavController().navigate(R.id.action_aroundPlace_to_placeMap, bundleOf("tripId" to tripId))
     }
 
     fun moveToAddPlace(view: View) {

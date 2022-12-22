@@ -108,6 +108,7 @@ class AroundPlaceFragment : Fragment() {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
+                            ivAroundPlaceMap.visibility = View.INVISIBLE
                         }
                     } else {
                         responseData.data?.let { data ->

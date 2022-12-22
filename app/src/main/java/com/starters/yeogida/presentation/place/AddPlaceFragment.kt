@@ -17,7 +17,6 @@ import android.widget.RatingBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -144,7 +143,6 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
     }
 
     private fun getTripId() {
-        // tripId = intent.getLongExtra("tripId", 0)
         tripId = requireArguments().getLong("tripId")
     }
 
@@ -289,7 +287,10 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
                     201 -> {
                         withContext(Dispatchers.Main) {
                             findNavController().navigateUp()
-                            findNavController().navigate(R.id.action_aroundPlace_to_placeDetail, bundleOf("placeId" to response.body()?.data?.placeId))
+                            findNavController().navigate(
+                                R.id.action_aroundPlace_to_placeDetail,
+                                bundleOf("placeId" to response.body()?.data?.placeId)
+                            )
                         }
                     }
 
@@ -469,8 +470,18 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
     }
 
     override fun deleteImage(imageUri: Uri) {
-        placeImageUriList.remove(imageUri)
-        binding.rvAddPlacePhoto.adapter?.notifyDataSetChanged()
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("사진을 삭제하시겠어요?")
+            setPositiveBtn("확인") {
+                placeImageUriList.remove(imageUri)
+                binding.rvAddPlacePhoto.adapter?.notifyDataSetChanged()
+                dismissDialog()
+            }
+            setNegativeBtn("닫기") {
+                dismissDialog()
+            }
+        }
     }
 
     override fun openImageScreen(imageUri: Uri) {

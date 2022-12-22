@@ -85,7 +85,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     private fun initMapCamera(latitude: Double, longitude: Double) {
         val mLatLng = LatLng(latitude, longitude)
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng))
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(11f))
     }
 
     private fun initNavigation() {

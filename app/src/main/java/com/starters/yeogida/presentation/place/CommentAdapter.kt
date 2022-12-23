@@ -7,7 +7,12 @@ import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.databinding.ItemCommentBinding
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentAdapter(private val commentList: List<CommentData>, private val memberId: Long, val itemClick: (String, Long) -> Unit) :
+class CommentAdapter(
+    private val commentList: List<CommentData>,
+    private val memberId: Long,
+    private val viewModel: PlaceViewModel,
+    val itemClick: (String, Long) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -38,6 +43,7 @@ class CommentAdapter(private val commentList: List<CommentData>, private val mem
         fun bind(comment: CommentData) {
             binding.comment = comment
             binding.memberId = memberId
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }

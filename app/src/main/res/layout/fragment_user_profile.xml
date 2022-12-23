@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="userProfile"
+            type="com.starters.yeogida.data.local.UserProfileData" />
+
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.user.profile.UserProfileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.user.profile.UserProfileFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_user_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+
+                android:id="@+id/tb_user_profile"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:navigationIcon="@drawable/ic_back">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/user_profile_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/iv_user_profile_report"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_report" />
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_user_profile_image"
+            circleImageUrl="@{userProfile.profileImgUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="140dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar_user_profile"
+            app:shapeAppearanceOverlay="@style/Circle"
+            tools:src="@drawable/ic_profile" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{userProfile.nickname}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@id/iv_user_profile_image"
+            app:layout_constraintStart_toStartOf="@id/iv_user_profile_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_user_profile_image"
+            app:layout_goneMarginTop="10dp"
+            tools:text="닉네임" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_user_profile_follow"
+            isFollow="@{userProfile.isFollow}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/selector_btn_follow"
+            android:fontFamily="@font/noto_sans_bold"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:onClick="@{() -> viewModel.onFollowBtnClicked(userProfile.memberId)}"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/iv_user_profile_image"
+            app:layout_constraintStart_toStartOf="@id/iv_user_profile_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_profile_follower_title"
+            tools:text="팔로우" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_follower_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@string/user_profile_follower_title"
+            android:textColor="@color/gray_500"
+            app:layout_constraintBottom_toBottomOf="@id/view_user_profile_separate_follow"
+            app:layout_constraintEnd_toStartOf="@id/tv_user_profile_follower_count"
+            app:layout_constraintTop_toTopOf="@id/view_user_profile_separate_follow" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_follower_count"
+            count="@{userProfile.followerCount}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/gray_700"
+            app:layout_constraintBottom_toBottomOf="@id/view_user_profile_separate_follow"
+            app:layout_constraintEnd_toStartOf="@+id/view_user_profile_separate_follow"
+            app:layout_constraintTop_toTopOf="@id/view_user_profile_separate_follow"
+            tools:text="6,032" />
+
+        <View
+            android:id="@+id/view_user_profile_separate_follow"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="@color/gray_400"
+            app:layout_constraintBottom_toTopOf="@id/btn_user_profile_follow"
+            app:layout_constraintEnd_toEndOf="@id/tv_user_profile_nickname"
+            app:layout_constraintStart_toStartOf="@id/tv_user_profile_nickname"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_profile_nickname" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_following_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/user_profile_following_title"
+            android:textColor="@color/gray_500"
+            app:layout_constraintBottom_toBottomOf="@id/view_user_profile_separate_follow"
+            app:layout_constraintStart_toEndOf="@id/view_user_profile_separate_follow"
+            app:layout_constraintTop_toTopOf="@id/view_user_profile_separate_follow" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_following_count"
+            count="@{userProfile.followingCount}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/gray_700"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_profile_following_title"
+            app:layout_constraintStart_toEndOf="@id/tv_user_profile_following_title"
+            app:layout_constraintTop_toTopOf="@id/tv_user_profile_following_title"
+            tools:text="6,032" />
+
+        <View
+            android:id="@+id/view_user_profile_separate_top_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/gray_400"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_user_profile_follow" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_trip_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@string/user_profile_trip_count_title"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_user_profile_separate_top_bottom" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_trip_count"
+            count="@{userProfile.tripCount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:textColor="@color/main_blue"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_profile_trip_title"
+            app:layout_constraintStart_toEndOf="@id/tv_user_profile_trip_title"
+            app:layout_constraintTop_toTopOf="@id/tv_user_profile_trip_title"
+            tools:text="3" />
+
+        <ImageView
+            android:id="@+id/iv_user_profile_like"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_like_yellow"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_profile_trip_title"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_user_profile_trip_like_count"
+            app:layout_constraintTop_toTopOf="@id/tv_user_profile_trip_title" />
+
+        <TextView
+            android:id="@+id/tv_user_profile_trip_like_count"
+            count="@{userProfile.tripLikeCount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/iv_user_profile_like"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_user_profile_like"
+            tools:text="12" />
+
+        <HorizontalScrollView
+            android:id="@+id/sv_user_profile_chip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="12dp"
+            android:nestedScrollingEnabled="false"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_user_profile_trip_title">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                app:chipSpacingHorizontal="16dp"
+                app:singleSelection="true" />
+        </HorizontalScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_trip"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sv_user_profile_chip"
+            tools:listitem="@layout/item_trip" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

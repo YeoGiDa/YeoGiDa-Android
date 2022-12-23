@@ -8,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.CommentData
@@ -18,6 +21,7 @@ import com.starters.yeogida.data.remote.response.place.PlaceImg
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +33,9 @@ import kotlin.properties.Delegates
 
 class PlaceDetailFragment : Fragment() {
     private lateinit var binding: FragmentPlaceDetailBinding
+    private val viewModel: PlaceViewModel by viewModels()
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
+
     private lateinit var token: String
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
@@ -55,10 +61,20 @@ class PlaceDetailFragment : Fragment() {
         binding.view = this
         binding.btnCommentSubmit.isEnabled = false
 
+        setUserProfileClicked()
         setOnBackPressed()
         initAuthorization()
         initPlaceData()
         checkActiveAndLength()
+    }
+
+    private fun setUserProfileClicked() {
+        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
+            findNavController().navigate(
+                R.id.action_place_detail_to_userProfile,
+                bundleOf("memberId" to memberId)
+            )
+        })
     }
 
     private fun initAuthorization() {
@@ -158,7 +174,8 @@ class PlaceDetailFragment : Fragment() {
                     with(binding.rvPlaceDetailComment) {
                         adapter = CommentAdapter(
                             commentsList,
-                            memberId
+                            memberId,
+                            viewModel
                         ) { commentAttribute: String, commentId: Long ->
                             initAttributeDialog(commentAttribute, commentId)
                         }

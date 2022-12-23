@@ -8,8 +8,10 @@ import com.starters.yeogida.data.local.FollowUserData
 import com.starters.yeogida.databinding.ItemFollowBinding
 import com.starters.yeogida.presentation.common.CustomDialog
 
-class FollowAdapter(private val followUserDataList: List<FollowUserData>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FollowAdapter(
+    private val followUserDataList: List<FollowUserData>,
+    private val viewModel: FollowViewModel
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var dlg: CustomDialog
 
@@ -47,6 +49,7 @@ class FollowAdapter(private val followUserDataList: List<FollowUserData>) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(followUserData: FollowUserData) {
             binding.user = followUserData
+            binding.viewModel = viewModel
 
             binding.btnFollowDelete.setOnClickListener {
                 openDialog(itemView.context)

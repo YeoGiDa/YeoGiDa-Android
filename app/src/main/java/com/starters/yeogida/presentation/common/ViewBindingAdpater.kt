@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import com.starters.yeogida.R
 
 // 여행지 좋아요 버튼
 @BindingAdapter("isLike")
@@ -25,7 +26,15 @@ fun userViewGone(view: TextView, writerId: Long, memberId: Long) {
 // 유저 상세 팔로우 버튼
 @BindingAdapter("isFollow")
 fun updateFollowBtnBackground(followBtn: AppCompatButton, isFollow: Boolean) {
-    followBtn.isSelected = isFollow
-    if (isFollow) followBtn.text = "팔로잉"
-    else followBtn.text = "팔로우"
+    with(followBtn) {
+        isSelected = isFollow
+
+        if (isFollow) {
+            text = "팔로잉"
+            setTextColor(resources.getColor(R.color.white, null))
+        } else {
+            text = "팔로우"
+            setTextColor(resources.getColor(R.color.white, null))
+        }
+    }
 }

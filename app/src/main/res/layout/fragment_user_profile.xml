@@ -28,6 +28,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.Toolbar
+
                 android:id="@+id/tb_user_profile"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -47,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginEnd="20dp"
                     android:src="@drawable/ic_report" />
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
@@ -84,6 +85,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_user_profile_follow"
+            isFollow="@{userProfile.isFollow}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -91,14 +93,13 @@
             android:fontFamily="@font/noto_sans_bold"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            isFollow="@{userProfile.isFollow}"
             android:onClick="@{() -> viewModel.onFollowBtnClicked(userProfile.memberId)}"
             android:padding="8dp"
-            tools:text="팔로우"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@id/iv_user_profile_image"
             app:layout_constraintStart_toStartOf="@id/iv_user_profile_image"
-            app:layout_constraintTop_toBottomOf="@id/tv_user_profile_follower_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_user_profile_follower_title"
+            tools:text="팔로우" />
 
         <TextView
             android:id="@+id/tv_user_profile_follower_title"
@@ -113,11 +114,11 @@
 
         <TextView
             android:id="@+id/tv_user_profile_follower_count"
+            count="@{userProfile.followerCount}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
-            android:text="@{userProfile.followerCount}"
             android:textColor="@color/gray_700"
             app:layout_constraintBottom_toBottomOf="@id/view_user_profile_separate_follow"
             app:layout_constraintEnd_toStartOf="@+id/view_user_profile_separate_follow"
@@ -150,11 +151,11 @@
 
         <TextView
             android:id="@+id/tv_user_profile_following_count"
+            count="@{userProfile.followingCount}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
-            android:text="@{userProfile.followingCount}"
             android:textColor="@color/gray_700"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_profile_following_title"
             app:layout_constraintStart_toEndOf="@id/tv_user_profile_following_title"
@@ -186,11 +187,11 @@
 
         <TextView
             android:id="@+id/tv_user_profile_trip_count"
+            count="@{userProfile.tripCount}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{userProfile.tripCount}"
             android:textColor="@color/main_blue"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_profile_trip_title"
@@ -211,11 +212,11 @@
 
         <TextView
             android:id="@+id/tv_user_profile_trip_like_count"
+            count="@{userProfile.tripLikeCount}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{userProfile.tripLikeCount}"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/iv_user_profile_like"
             app:layout_constraintEnd_toEndOf="parent"

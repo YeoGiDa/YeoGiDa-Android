@@ -293,7 +293,7 @@ class JoinActivity : AppCompatActivity() {
                 // 로그인 실행
                 val loginResponse = userService.postLogin(
                     LoginRequestData(
-                        userEmail, userNum
+                        userEmail, userNum, intent.getStringExtra("fcmToken")?.let { it }.toString()
                     )
                 )
 

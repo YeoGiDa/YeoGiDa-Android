@@ -35,7 +35,11 @@
         android:id="@+id/navigation_around_place_map"
         android:name="com.starters.yeogida.presentation.around.AroundPlaceMapFragment"
         android:label="fragment_around_place_map"
-        tools:layout="@layout/fragment_around_place_map" />
+        tools:layout="@layout/fragment_around_place_map" >
+        <action
+            android:id="@+id/action_placeMap_to_placeDetail"
+            app:destination="@id/navigation_place_detail" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_add_place"
         android:name="com.starters.yeogida.presentation.place.AddPlaceFragment"

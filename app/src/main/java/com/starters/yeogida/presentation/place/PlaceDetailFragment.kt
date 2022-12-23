@@ -103,6 +103,9 @@ class PlaceDetailFragment : Fragment() {
                         tripId = data.tripId
                         withContext(Dispatchers.Main) {
                             binding.place = data
+                            if (data.placeImgs[0].imgUrl == "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png") {
+                                binding.viewpagerPlaceToolbar.visibility = View.GONE
+                            }
                             setToolbar(data.placeImgs)
                         }
                     }

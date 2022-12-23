@@ -5,17 +5,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentHomeBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.util.customEnqueue
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,8 +33,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+
         binding.view = this
         initNetwork()
+        setUserProfileClicked()
     }
 
     private fun initNetwork() {
@@ -43,7 +51,7 @@ class HomeFragment : Fragment() {
             }
         )
 
-        val bestTravelerAdapter = BestTravelerAdapter()
+        val bestTravelerAdapter = BestTravelerAdapter(viewModel)
         binding.rvBestTraveler.adapter = bestTravelerAdapter
         YeogidaClient.homeService.getBestTraveler().customEnqueue(
             onSuccess = { responseData ->
@@ -61,5 +69,14 @@ class HomeFragment : Fragment() {
     fun moveToAddTrip(view: View) {
         val intent = Intent(activity, AddTripActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun setUserProfileClicked() {
+        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
+            findNavController().navigate(
+                R.id.action_home_to_userProfile,
+                bundleOf("memberId" to memberId)
+            )
+        })
     }
 }

@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.BestTravelerData
 import com.starters.yeogida.databinding.ItemBestTravelerBinding
 
-class BestTravelerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BestTravelerAdapter(private val viewModel: HomeViewModel) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val bestTravelerList = mutableListOf<BestTravelerData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = ItemBestTravelerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemBestTravelerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BestTravelerViewHolder(binding)
     }
 
@@ -24,9 +26,11 @@ class BestTravelerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return bestTravelerList.size
     }
 
-    inner class BestTravelerViewHolder(val binding: ItemBestTravelerBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BestTravelerViewHolder(val binding: ItemBestTravelerBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: BestTravelerData) {
             binding.traveler = data
+            binding.viewModel = viewModel
         }
     }
 }

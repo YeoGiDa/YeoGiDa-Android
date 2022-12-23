@@ -28,7 +28,7 @@ class UserProfileFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.userProfile = UserProfileData(
-            2012314,
+            memberId = requireArguments().getLong("memberId"),
             "여기다",
             "https://cdn.pixabay.com/photo/2020/11/28/06/15/cold-5783718_1280.jpg",
             232,

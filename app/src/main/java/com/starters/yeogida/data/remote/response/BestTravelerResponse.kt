@@ -5,7 +5,7 @@ data class BestTravelerResponse(
 )
 
 data class BestTravelerData(
-    val id: Long,
+    val memberId: Long,
     val nickname: String,
     val imgUrl: String,
     val heartCount: Int

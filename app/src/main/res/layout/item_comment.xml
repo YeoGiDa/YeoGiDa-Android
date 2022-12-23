@@ -12,6 +12,10 @@
         <variable
             name="memberId"
             type="Long" />
+
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.place.PlaceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +42,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:onClick="@{() -> viewModel.onUserClicked(comment.memberId) }"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/tv_item_comment_content"
             app:layout_constraintDimensionRatio="1:1"
@@ -52,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/noto_sans_regular"
+            android:onClick="@{() -> viewModel.onUserClicked(comment.memberId) }"
             android:text="@{comment.nickname}"
             android:textColor="@color/black"
             android:textStyle="bold"

@@ -28,7 +28,11 @@
         android:id="@+id/navigation_follow"
         android:name="com.starters.yeogida.presentation.follow.FollowHomeFragment"
         android:label="FollowHomeFragment"
-        tools:layout="@layout/fragment_follow_home" />
+        tools:layout="@layout/fragment_follow_home">
+        <action
+            android:id="@+id/action_follow_to_userProfile"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
         tools:layout="@layout/fragment_user_profile"

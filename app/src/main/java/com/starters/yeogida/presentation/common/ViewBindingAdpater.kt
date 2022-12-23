@@ -31,7 +31,7 @@ fun updateFollowBtnBackground(followBtn: AppCompatButton, isFollow: Boolean) {
 
         if (isFollow) {
             text = "팔로잉"
-            setTextColor(resources.getColor(R.color.white, null))
+            setTextColor(resources.getColor(R.color.black, null))
         } else {
             text = "팔로우"
             setTextColor(resources.getColor(R.color.white, null))

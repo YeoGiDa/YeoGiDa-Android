@@ -74,6 +74,8 @@ class AroundPlaceFragment : Fragment() {
                 if (it.code == 200) {
                     with(binding) {
                         layoutCollapsingAroundPlace.title = it.data?.title
+                        layoutCollapsingAroundPlace.subtitle = it.data?.subTitle
+
                         GlideApp.with(ivAroundPlaceTrip)
                             .load(it.data?.imgUrl)
                             .into(ivAroundPlaceTrip)

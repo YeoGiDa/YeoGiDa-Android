@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.around.AroundPlaceViewModel" />
+
+        <variable
+            name="tripInfo"
+            type="com.starters.yeogida.data.remote.response.trip.TripInfoResponse" />
+
+        <variable
             name="view"
             type="com.starters.yeogida.presentation.around.AroundPlaceFragment" />
 
@@ -36,10 +44,13 @@
                 app:expandedTitleGravity="start|bottom"
                 app:expandedTitleMarginBottom="16dp"
                 app:expandedTitleMarginTop="10dp"
+                app:title="@{tripInfo.title}"
+                app:subtitle="@{tripInfo.subTitle}"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Trip.Title"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <ImageView
+                    imageUrl="@{tripInfo.imgUrl}"
                     android:id="@+id/iv_around_place_trip"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
@@ -49,6 +60,7 @@
                     tools:src="@drawable/ic_app" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:onClick="@{() -> viewModel.onUserProfileClicked()}"
                     android:id="@+id/layout_around_place_user_profile"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="65dp"
@@ -57,6 +69,7 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.imageview.ShapeableImageView
+                        circleImageUrl="@{tripInfo.profileImgUrl}"
                         android:id="@+id/iv_around_place_profile"
                         android:layout_width="47dp"
                         android:layout_height="42dp"
@@ -69,7 +82,7 @@
                         app:shapeAppearanceOverlay="@style/Circle" />
 
                     <TextView
-                        android:text="닉네임"
+                        android:text="@{tripInfo.nickname}"
                         android:fontFamily="@font/noto_sans_bold"
                         android:id="@+id/tv_around_place_nickname"
                         android:layout_width="wrap_content"
@@ -118,6 +131,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        count="@{tripInfo.placeCount}"
                         android:id="@+id/tv_around_place_place_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,6 +164,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            count="@{tripInfo.heartCount}"
                             android:id="@+id/tv_around_place_trip_like_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -177,8 +192,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/tb_around_place"
                     android:layout_width="match_parent"
@@ -199,6 +212,7 @@
                         <androidx.appcompat.widget.AppCompatImageButton
                             android:id="@+id/btn_around_place_like"
                             android:layout_width="0dp"
+                            isLike="@{tripInfo.like}"
                             android:layout_height="0dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginTop="12dp"

@@ -1,7 +1,6 @@
 package com.starters.yeogida.presentation.around
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
-import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -41,8 +39,12 @@ class AroundPlaceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.view = this
+        binding.viewModel = viewModel
+
         getTripId()
         initPlaceList()
+        setOpenUserProfile()
+        // TODO. 좋아요 목록 연결 이벤트
         initNavigation()
         initBottomSheet()
         initChipClickListener()
@@ -72,16 +74,8 @@ class AroundPlaceFragment : Fragment() {
         ).customEnqueue(
             onSuccess = {
                 if (it.code == 200) {
-                    with(binding) {
-                        layoutCollapsingAroundPlace.title = it.data?.title
-                        layoutCollapsingAroundPlace.subtitle = it.data?.subTitle
-
-                        GlideApp.with(ivAroundPlaceTrip)
-                            .load(it.data?.imgUrl)
-                            .into(ivAroundPlaceTrip)
-                        tvAroundPlacePlaceCount.text = it.data?.placeCount.toString()
-                        tvAroundPlaceTripLikeCount.text = it.data?.heartCount.toString()
-                    }
+                    binding.tripInfo = it.data
+                    binding.executePendingBindings()
                 }
             }
         )
@@ -119,6 +113,7 @@ class AroundPlaceFragment : Fragment() {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
+                            btnAroundPlaceSort.visibility = View.INVISIBLE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
                             ivAroundPlaceMap.visibility = View.INVISIBLE
                         }
@@ -141,12 +136,23 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
+    // 장소 상세 연결
     fun setOpenPlaceDetail() {
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
-            Log.e("placeId", placeId.toString())
             findNavController().navigate(
                 R.id.action_aroundPlace_to_placeDetail, bundleOf(
                     "placeId" to placeId
+                )
+            )
+        })
+    }
+
+    // 유저 상세 연결
+    fun setOpenUserProfile() {
+        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
+            findNavController().navigate(
+                R.id.action_around_place_to_userProfile, bundleOf(
+                    "memberId" to memberId
                 )
             )
         })

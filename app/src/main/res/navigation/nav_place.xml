@@ -25,11 +25,15 @@
         <action
             android:id="@+id/action_aroundPlace_to_placeMap"
             app:destination="@id/navigation_around_place_map" />
-        <argument android:name="tripId"
-            app:argType="long"/>
+        <argument
+            android:name="tripId"
+            app:argType="long" />
         <action
             android:id="@+id/action_aroundPlace_to_addPlace"
             app:destination="@id/navigation_add_place" />
+        <action
+            android:id="@+id/action_around_place_to_userProfile"
+            app:destination="@id/userProfileFragment2" />
     </fragment>
     <fragment
         android:id="@+id/navigation_around_place_map"

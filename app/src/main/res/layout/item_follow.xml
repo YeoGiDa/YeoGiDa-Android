@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.starters.yeogida.data.local.FollowUserData" />
+            type="com.starters.yeogida.data.remote.response.follow.FollowUserData" />
 
         <variable
             name="viewModel"

@@ -9,7 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
-import com.starters.yeogida.data.local.FollowUserData
+import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.response.follow.FollowUserData
 import com.starters.yeogida.databinding.FragmentFollowBinding
 import com.starters.yeogida.presentation.common.EventObserver
 
@@ -17,6 +18,7 @@ class FollowFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowBinding
     private val viewModel: FollowViewModel by viewModels()
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     companion object {
         val FOLLOW_CATEGORY_ITEM = "FOLLOW_CATEGORY_ITEM"
@@ -49,43 +51,21 @@ class FollowFragment : Fragment() {
 
         val choice = arguments?.getInt(FOLLOW_CATEGORY_ITEM)
         setPage(choice)
+        initFollowData()
+        setOpenUserProfile()
+    }
 
+    private fun initFollowData() {
+        TODO("Not yet implemented")
+    }
+
+    private fun setOpenUserProfile() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
             findNavController().navigate(
                 R.id.action_follow_to_userProfile,
                 bundleOf("memberId" to memberId)
             )
         })
-
-        FollowLists.follower.addAll(
-            listOf(
-                FollowUserData(
-                    memberId = requireArguments().getLong("memberId"),
-                    "https://user-images.githubusercontent.com/20774764/153292680-cac43d23-3621-4cce-97b0-38db57d60aa0.png",
-                    "user1"
-                ),
-                FollowUserData(
-                    memberId = requireArguments().getLong("memberId"),
-                    "https://user-images.githubusercontent.com/20774764/153292685-e8ccb8df-cd94-4135-b472-c3d48e477202.png",
-                    "user2"
-                )
-            )
-        )
-
-        FollowLists.following.addAll(
-            listOf(
-                FollowUserData(
-                    memberId = requireArguments().getLong("memberId"),
-                    "https://user-images.githubusercontent.com/20774764/153292676-d3b24c31-f4ba-4273-9233-a0c77f835fd7.png",
-                    "user3"
-                ),
-                FollowUserData(
-                    memberId = requireArguments().getLong("memberId"),
-                    "https://user-images.githubusercontent.com/20774764/153292675-78a7108b-644e-4836-ad30-dd261d998e4c.png",
-                    "user4"
-                )
-            )
-        )
     }
 
     private fun setPage(choice: Int?) {
@@ -98,7 +78,7 @@ class FollowFragment : Fragment() {
         }
     }
 
-    private fun setFollowAdapter(followUserDataList: List<FollowUserData>) {
-        binding.rvFollow.adapter = FollowAdapter(followUserDataList, viewModel)
+    private fun setFollowAdapter(followUserResponseList: List<FollowUserData>) {
+        binding.rvFollow.adapter = FollowAdapter(followUserResponseList, viewModel)
     }
 }

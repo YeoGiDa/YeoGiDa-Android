@@ -32,6 +32,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 알림 포그라운드일 때
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        initNotification()
+    }
+
     private fun initNotification() {
         when (intent.getStringExtra("type").toString()) {
             "NEW_FOLLOW" -> {

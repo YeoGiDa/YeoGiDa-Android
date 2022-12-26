@@ -30,6 +30,11 @@ interface YeogidaClient {
             provideService(MyPageService::class.java)
         }
 
+        val followService: FollowService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            provideService(FollowService::class.java)
+        }
+
+
         // YS
         private val okHttpClient: OkHttpClient by lazy {
             OkHttpClient.Builder()

@@ -1,59 +1,52 @@
 package com.starters.yeogida.presentation.follow
 
-import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.data.local.FollowUserData
+import com.starters.yeogida.R
+import com.starters.yeogida.data.remote.response.follow.FollowUserData
 import com.starters.yeogida.databinding.ItemFollowBinding
-import com.starters.yeogida.presentation.common.CustomDialog
 
 class FollowAdapter(
-    private val followUserDataList: List<FollowUserData>,
+    private val followUserList: List<FollowUserData>,
     private val viewModel: FollowViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private lateinit var dlg: CustomDialog
+    interface ItemClick {
+        fun onDeleteBtnClick(view: View, user: FollowUserData)
+    }
+
+    var itemClick: ItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = ItemFollowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        dlg = CustomDialog(parent.context)
 
         return FollowItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FollowItemViewHolder) {
-            holder.bind(followUserDataList[position])
+            holder.bind(followUserList[position])
+
+            if (itemClick != null) {
+                holder.itemView.findViewById<Button>(R.id.btn_follow_delete).setOnClickListener {
+                    itemClick?.onDeleteBtnClick(it, followUserList[position])
+                }
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return followUserDataList.size
-    }
-
-
-    fun openDialog(context: Context) {
-        val dialog = CustomDialog(context)
-        dialog.setTitle("정말 삭제하시겠습니까?")
-        dialog.setNegativeBtn("취소") {
-            dialog.dismissDialog()
-        }
-        dialog.setPositiveBtn("삭제") {
-            dialog.dismissDialog()
-        }
-        dialog.showDialog()
+        return followUserList.size
     }
 
     inner class FollowItemViewHolder(private val binding: ItemFollowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(followUserData: FollowUserData) {
-            binding.user = followUserData
+        fun bind(followUserResponse: FollowUserData) {
+            binding.user = followUserResponse
             binding.viewModel = viewModel
-
-            binding.btnFollowDelete.setOnClickListener {
-                openDialog(itemView.context)
-            }
 
             binding.executePendingBindings()
         }

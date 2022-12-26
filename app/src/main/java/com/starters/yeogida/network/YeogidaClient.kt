@@ -26,6 +26,10 @@ interface YeogidaClient {
             provideService(TripService::class.java)
         }
 
+        val myPageService: MyPageService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            provideService(MyPageService::class.java)
+        }
+
         val followService: FollowService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             provideService(FollowService::class.java)
         }

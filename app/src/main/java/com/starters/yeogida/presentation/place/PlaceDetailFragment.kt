@@ -70,9 +70,10 @@ class PlaceDetailFragment : Fragment() {
 
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            val intent = Intent(requireContext(), UserProfileActivity::class.java)
-            intent.putExtra("memberId", memberId)
-            startActivity(intent)
+            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                putExtra("memberId", memberId)
+                startActivity(this)
+            }
         })
     }
 

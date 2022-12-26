@@ -1,20 +1,27 @@
 package com.starters.yeogida.presentation.user.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.data.local.UserProfileData
+import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
+import com.starters.yeogida.network.YeogidaClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentUserProfileBinding
     private val viewModel: UserProfileViewModel by viewModels()
+    private val userService = YeogidaClient.userService
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,39 +34,39 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
-        binding.userProfile = UserProfileData(
-            memberId = requireArguments().getLong("memberId"),
-            "여기다",
-            "https://cdn.pixabay.com/photo/2020/11/28/06/15/cold-5783718_1280.jpg",
-            232,
-            232,
-            true,
-            3,
-            12
-        )
 
+        initUserProfile()
         setOnBackPressed()
     }
 
     private fun setOnBackPressed() {
-        // 뒤로가기 리스너
         binding.tbUserProfile.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            requireActivity().finish()
         }
+    }
 
-        val onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // 뒤로가기 클릭 시 실행시킬 코드 입력
-                findNavController().navigateUp()
+    private fun initUserProfile() {
+        requireActivity().intent?.extras?.let {
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = userService.getUserProfile(
+                    dataStore.userBearerToken.first(),
+                    it.getLong("memberId")
+                )
+
+                when (response.code()) {
+                    200 -> {
+                        withContext(Dispatchers.Main) {
+                            binding.userProfile = response.body()?.data
+                            binding.executePendingBindings()
+                        }
+                    }
+                    else -> {
+                        Log.e("UserProfile", "$response")
+                    }
+                }
             }
         }
-
-        // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
     }
 }

@@ -1,8 +1,8 @@
 package com.starters.yeogida.presentation.user.profile
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import com.starters.yeogida.R
 
 class UserProfileActivity : AppCompatActivity() {
@@ -18,10 +18,8 @@ class UserProfileActivity : AppCompatActivity() {
 
     private fun getMemberId() {
         memberId = intent.getLongExtra("memberId", 0)
+        Log.e("UserProfileActivity", memberId.toString())
 
-        val bundle = bundleOf("memberId" to memberId)
-        UserProfileFragment().apply {
-            arguments = bundle
-        }
+        intent.putExtra("memberId", memberId)
     }
 }

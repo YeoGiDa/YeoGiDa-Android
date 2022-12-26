@@ -5,17 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentHomeBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 
 class HomeFragment : Fragment() {
@@ -73,10 +72,10 @@ class HomeFragment : Fragment() {
 
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            findNavController().navigate(
-                R.id.action_home_to_userProfile,
-                bundleOf("memberId" to memberId)
-            )
+            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                putExtra("memberId", memberId)
+                startActivity(this)
+            }
         })
     }
 }

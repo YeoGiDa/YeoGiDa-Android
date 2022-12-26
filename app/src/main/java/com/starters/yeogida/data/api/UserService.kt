@@ -6,12 +6,14 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.LoginResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.data.remote.response.ValidateTokenResponseData
+import com.starters.yeogida.data.remote.response.userProfile.UserProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
 interface UserService {
+    // 회원가입
     @Multipart
     @POST("members/join")
     suspend fun addUser(
@@ -19,18 +21,28 @@ interface UserService {
         @PartMap memberJoinRequest: HashMap<String, RequestBody>
     ): Response<BaseResponse<SignUpResponseData>>
 
+    // 로그인
     @POST("members/login")
     suspend fun postLogin(
         @Body loginRequestData: LoginRequestData
     ): Response<BaseResponse<LoginResponse>>
 
+    // 토큰 유효성 검사
     @POST("token/validate")
     suspend fun validateToken(
         @Body tokenData: TokenData
     ): Response<BaseResponse<ValidateTokenResponseData>>
 
+    // 회원탈퇴
     @DELETE("members/delete")
     suspend fun withDrawUser(
         @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<Any>>
+
+    // 유저 상세 불러오기
+    @GET("follow/{findMemberId}/detail")
+    suspend fun getUserProfile(
+        @Header("Authorization") bearerToken: String,
+        @Path("findMemberId") memberId: Long
+    ): Response<BaseResponse<UserProfileResponse>>
 }

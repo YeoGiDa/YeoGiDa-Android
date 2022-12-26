@@ -19,23 +19,10 @@
         android:id="@+id/navigation_home"
         android:name="com.starters.yeogida.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_home_to_userProfile"
-            app:destination="@id/userProfileFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/navigation_follow"
         android:name="com.starters.yeogida.presentation.follow.FollowHomeFragment"
         android:label="FollowHomeFragment"
-        tools:layout="@layout/fragment_follow_home">
-        <action
-            android:id="@+id/action_follow_to_userProfile"
-            app:destination="@id/userProfileFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/userProfileFragment"
-        tools:layout="@layout/fragment_user_profile"
-        android:name="com.starters.yeogida.presentation.user.profile.UserProfileFragment"
-        android:label="UserProfileFragment" />
+        tools:layout="@layout/fragment_follow_home" />
 </navigation>

@@ -19,6 +19,13 @@ interface FollowService {
         @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<FollowingUserResponse>>
 
+    // 팔로잉 추가
+    @POST("follow/{toMemberId}")
+    suspend fun addFollowing(
+        @Header("Authorization") bearerToken: String,
+        @Path("toMemberId") memberId: Long
+    ): Response<BaseResponse<Boolean>>
+
     // 팔로잉 삭제
     @DELETE("follow/{toMemberId}/following")
     suspend fun deleteFollowing(

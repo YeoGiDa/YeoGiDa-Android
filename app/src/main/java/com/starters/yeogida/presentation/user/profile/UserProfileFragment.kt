@@ -26,6 +26,7 @@ class UserProfileFragment : Fragment() {
 
     private val userService = YeogidaClient.userService
     private val followService = YeogidaClient.followService
+    private val tripService = YeogidaClient.tripService
 
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
@@ -41,10 +42,14 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
-        initUserProfile()
         setOnBackPressed()
-        onFollowBtnClicked()
+
+        requireActivity().intent?.extras?.let { bundle ->
+            val clickedMemberId = bundle.getLong("memberId")
+            initUserProfile(clickedMemberId)
+        }
+
+        setOnFollowBtnClicked()
     }
 
     private fun setOnBackPressed() {
@@ -53,31 +58,49 @@ class UserProfileFragment : Fragment() {
         }
     }
 
-    private fun initUserProfile() {
-        requireActivity().intent?.extras?.let {
+    private fun initUserProfile(memberId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = userService.getUserProfile(
+                dataStore.userBearerToken.first(),
+                memberId
+            )
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = userService.getUserProfile(
-                    dataStore.userBearerToken.first(),
-                    it.getLong("memberId")
-                )
-
-                when (response.code()) {
-                    200 -> {
-                        withContext(Dispatchers.Main) {
-                            binding.userProfile = response.body()?.data
-                            binding.executePendingBindings()
-                        }
+            when (response.code()) {
+                200 -> {
+                    withContext(Dispatchers.Main) {
+                        binding.userProfile = response.body()?.data
+                        binding.executePendingBindings()
                     }
-                    else -> {
-                        Log.e("UserProfile", "$response")
-                    }
+                }
+                else -> {
+                    Log.e("UserProfile", "$response")
                 }
             }
         }
     }
 
-    private fun onFollowBtnClicked() {
+    /*private fun initUserTripList(memberId : Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = tripService.getUserTripList(
+                memberId,
+                "최신순"
+            )
+
+            when (response.code()) {
+                200 -> {
+                    withContext(Dispatchers.Main) {
+                        binding.userProfile = response.body()?.data
+                        binding.executePendingBindings()
+                    }
+                }
+                else -> {
+                    Log.e("UserProfile", "$response")
+                }
+            }
+        }
+    }*/
+
+    private fun setOnFollowBtnClicked() {
         viewModel.followUserEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
             val isFollow = binding.btnUserProfileFollow.isSelected
 

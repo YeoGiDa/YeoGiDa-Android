@@ -46,9 +46,17 @@ interface TripService {
         @Header("Authorization") bearerToken: String,
     ): Response<BaseResponse<LikeTripResponse>>
 
+    // 여기 좋아 - 지역 별 여행지 조회
     @GET("trips/my/heart/{region}")
     suspend fun getRegionLikeTrip(
         @Header("Authorization") bearerToken: String,
         @Path("region") region: String
     ): Response<BaseResponse<LikeTripResponse>>
+
+    // 유저 상세 여행지 목록
+    @GET("trips/member/{memberId}")
+    suspend fun getUserTripList(
+        @Path("memberId") memberId: Long,
+        @Query("condition") condition: String
+    )
 }

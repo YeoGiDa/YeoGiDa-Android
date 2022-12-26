@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.place
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
-import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.CommentData
@@ -22,6 +21,7 @@ import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -70,10 +70,10 @@ class PlaceDetailFragment : Fragment() {
 
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            findNavController().navigate(
-                R.id.action_place_detail_to_userProfile,
-                bundleOf("memberId" to memberId)
-            )
+            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                putExtra("memberId", memberId)
+                startActivity(this)
+            }
         })
     }
 

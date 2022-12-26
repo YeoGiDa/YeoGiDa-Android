@@ -2,13 +2,12 @@ package com.starters.yeogida
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.starters.yeogida.databinding.ActivityMainBinding
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -50,11 +49,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val memberId = intent.getStringExtra("targetId")?.toLong()
-                navController?.navigate(R.id.navigation_follow)
-                navController?.navigate(
-                    R.id.action_follow_to_userProfile,
-                    bundleOf("memberId" to memberId)
-                )
+
+                Intent(this, UserProfileActivity::class.java).apply {
+                    putExtra("memberId", memberId)
+                    startActivity(this)
+                }
             }
             "NEW_COMMENT" -> {
                 val tripId = intent.getStringExtra("targetId")?.split(",")?.get(0)?.toLong()

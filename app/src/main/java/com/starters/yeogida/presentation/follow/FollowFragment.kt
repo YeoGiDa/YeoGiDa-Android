@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.follow
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,11 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.follow.FollowUserData
@@ -21,6 +19,7 @@ import com.starters.yeogida.databinding.FragmentFollowBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -247,10 +246,10 @@ class FollowFragment : Fragment() {
 
     private fun setOpenUserProfile() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            findNavController().navigate(
-                R.id.action_follow_to_userProfile,
-                bundleOf("memberId" to memberId)
-            )
+            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                putExtra("memberId", memberId)
+                startActivity(this)
+            }
         })
     }
 

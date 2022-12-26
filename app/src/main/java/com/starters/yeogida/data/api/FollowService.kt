@@ -4,10 +4,7 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.follow.FollowerUserResponse
 import com.starters.yeogida.data.remote.response.follow.FollowingUserResponse
 import retrofit2.Response
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface FollowService {
     // 팔로워 목록 조회
@@ -35,4 +32,18 @@ interface FollowService {
         @Header("Authorization") bearerToken: String,
         @Path("fromMemberId") memberId: Long
     ): Response<BaseResponse<Boolean>>
+
+    // 팔로워 검색
+    @GET("follow/search/follower")
+    suspend fun searchFollower(
+        @Header("Authorization") bearerToken: String,
+        @Query("nickname") nickname: String
+    ): Response<BaseResponse<FollowerUserResponse>>
+
+    // 팔로잉 검색
+    @GET("follow/search/following")
+    suspend fun searchFollowing(
+        @Header("Authorization") bearerToken: String,
+        @Query("nickname") nickname: String
+    ): Response<BaseResponse<FollowingUserResponse>>
 }

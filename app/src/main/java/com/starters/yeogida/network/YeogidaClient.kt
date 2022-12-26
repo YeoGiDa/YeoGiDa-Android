@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 interface YeogidaClient {
     companion object {
-        private const val BASE_URL = "http://api.yeogida.site/api/v1/"
+        private const val BASE_URL = "https://api.yeogida.site/api/v1/"
 
         val userService: UserService by lazy {
             retrofit.create(UserService::class.java)

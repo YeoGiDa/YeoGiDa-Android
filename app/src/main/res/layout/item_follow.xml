@@ -23,7 +23,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_follow_profile_image"
-            circleImageUrl="@{user.userProfileImageUrl}"
+            circleImageUrl="@{user.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:fontFamily="@font/noto_sans_medium"
-            android:text="@{user.userNickname}"
+            android:text="@{user.nickname}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

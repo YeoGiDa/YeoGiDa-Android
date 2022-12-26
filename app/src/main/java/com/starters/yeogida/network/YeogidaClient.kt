@@ -1,9 +1,6 @@
 package com.starters.yeogida.network
 
-import com.starters.yeogida.data.api.HomeService
-import com.starters.yeogida.data.api.PlaceService
-import com.starters.yeogida.data.api.TripService
-import com.starters.yeogida.data.api.UserService
+import com.starters.yeogida.data.api.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 interface YeogidaClient {
     companion object {
-        private const val BASE_URL = "http://api.yeogida.site/api/v1/"
+        private const val BASE_URL = "https://api.yeogida.site/api/v1/"
 
         val userService: UserService by lazy {
             retrofit.create(UserService::class.java)
@@ -27,6 +24,10 @@ interface YeogidaClient {
 
         val tripService: TripService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             provideService(TripService::class.java)
+        }
+
+        val myPageService: MyPageService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            provideService(MyPageService::class.java)
         }
 
         // YS

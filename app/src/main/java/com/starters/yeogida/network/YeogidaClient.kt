@@ -1,9 +1,6 @@
 package com.starters.yeogida.network
 
-import com.starters.yeogida.data.api.HomeService
-import com.starters.yeogida.data.api.PlaceService
-import com.starters.yeogida.data.api.TripService
-import com.starters.yeogida.data.api.UserService
+import com.starters.yeogida.data.api.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

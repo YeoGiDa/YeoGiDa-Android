@@ -120,8 +120,12 @@
     <string name="add_place_review_hint">리뷰를 작성해주세요.</string>
     <string name="add_place_photo_title">장소 사진 추가</string>
     <string name="add_place_photo_description">(최대 10장)</string>
+
+    <!-- User Profile -->
     <string name="user_profile_title">프로필</string>
     <string name="user_profile_follower_title">팔로워</string>
     <string name="user_profile_following_title">팔로잉</string>
     <string name="user_profile_trip_count_title">여행</string>
+
+    <string name="item_trip_like_user_title">좋아요</string>
 </resources>

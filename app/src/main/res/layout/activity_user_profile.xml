@@ -7,7 +7,7 @@
     tools:context=".presentation.user.profile.UserProfileActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/container_add_trip"
+        android:id="@+id/container_user_profile"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

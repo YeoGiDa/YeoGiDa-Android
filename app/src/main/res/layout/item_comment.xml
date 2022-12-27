@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/noto_sans_regular"
-            android:text="@{comment.createdTime}"
+            date="@{comment.createdTime}"
             android:textColor="@color/gray_400"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/tv_item_comment_content"

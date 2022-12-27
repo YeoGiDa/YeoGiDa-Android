@@ -61,7 +61,7 @@
                     android:layout_marginTop="?attr/actionBarSize"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
-                    tools:src="@drawable/ic_app" />
+                    tools:src="@drawable/img_google" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}"
@@ -78,7 +78,7 @@
                         android:layout_width="47dp"
                         android:layout_height="42dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_profile"
+                        tools:src="@drawable/ic_profile"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
                         android:layout_marginTop="10dp"
                         android:textSize="16sp"
                         android:layout_marginBottom="10dp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="@id/iv_around_place_profile"
                         app:layout_constraintStart_toEndOf="@id/iv_around_place_profile"
                         app:layout_constraintTop_toTopOf="@id/iv_around_place_profile"

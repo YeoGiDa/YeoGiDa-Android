@@ -21,9 +21,8 @@
         <action
             android:id="@+id/action_aroundPlace_to_placeMap"
             app:destination="@id/navigation_around_place_map" />
-        <argument
-            android:name="tripId"
-            app:argType="long" />
+        <argument android:name="tripId"
+            app:argType="long"/>
         <action
             android:id="@+id/action_aroundPlace_to_addPlace"
             app:destination="@id/navigation_add_place" />
@@ -31,12 +30,11 @@
             android:id="@+id/action_around_place_to_trip_like_user_list"
             app:destination="@id/navigation_trip_like_user_list" />
     </fragment>
-
     <fragment
         android:id="@+id/navigation_around_place_map"
         android:name="com.starters.yeogida.presentation.around.AroundPlaceMapFragment"
         android:label="fragment_around_place_map"
-        tools:layout="@layout/fragment_around_place_map">
+        tools:layout="@layout/fragment_around_place_map" >
         <action
             android:id="@+id/action_placeMap_to_placeDetail"
             app:destination="@id/navigation_place_detail" />

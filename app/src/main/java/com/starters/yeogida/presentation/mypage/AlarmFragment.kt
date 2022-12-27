@@ -1,15 +1,19 @@
 package com.starters.yeogida.presentation.mypage
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAlarmBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,10 +35,13 @@ class AlarmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
+        initNavigation()
     }
 
     private fun initAdapter() {
-        val notificationAdapter = NotificationAdapter()
+        val notificationAdapter = NotificationAdapter { type: String, targetId: Long ->
+            moveToPage(type, targetId)
+        }
         binding.rvNotification.adapter = notificationAdapter
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -48,6 +55,36 @@ class AlarmFragment : Fragment() {
                     }
                 }
             )
+        }
+    }
+
+    private fun initNavigation() {
+        binding.tbAlarm.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun moveToPage(type: String, targetId: Long) {
+        when (type) {
+            "NEW_FOLLOW" -> {
+                val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                intent.putExtra("memberId", targetId)
+                startActivity(intent)
+            }
+            "NEW_COMMENT" -> {
+                val intent = Intent(requireContext(), PlaceActivity::class.java)
+                intent.putExtra("type", "comment_alarm")
+                intent.putExtra("placeId", targetId)
+                startActivity(intent)
+            }
+            // ok
+            "NEW_HEART" -> {
+                val intent = Intent(requireContext(), PlaceActivity::class.java)
+                intent.putExtra("type", "heart")
+                intent.putExtra("tripId", targetId)
+                startActivity(intent)
+            }
+            else -> {}
         }
     }
 }

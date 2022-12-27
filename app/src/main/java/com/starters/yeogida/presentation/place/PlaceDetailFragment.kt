@@ -62,7 +62,7 @@ class PlaceDetailFragment : Fragment() {
         binding.btnCommentSubmit.isEnabled = false
 
         setUserProfileClicked()
-        setOnBackPressed()
+        setOnBackPressed(true)
         initAuthorization()
         initPlaceData()
         checkActiveAndLength()
@@ -86,6 +86,9 @@ class PlaceDetailFragment : Fragment() {
 
     private fun initPlaceData() {
         placeId = requireArguments().getLong("placeId")
+        if (requireArguments().getString("type") == "comment_alarm") {
+            setOnBackPressed(false)
+        }
         Log.e("PlaceDetail/placeId", placeId.toString())
         getPlaceDetail()
         initCommentNetwork()
@@ -120,28 +123,48 @@ class PlaceDetailFragment : Fragment() {
             adapter = PlaceDetailPhotoAdapter(placeImages)
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
         }
-
-
     }
 
-    private fun setOnBackPressed() {
-        // 뒤로가기 리스너
-        binding.tbPlaceDetail.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
+    private fun setOnBackPressed(boolean: Boolean) {
+        when (boolean) {
+            true -> {
+                // 뒤로가기 리스너
+                binding.tbPlaceDetail.setNavigationOnClickListener {
+                    findNavController().navigateUp()
+                }
 
-        val onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // 뒤로가기 클릭 시 실행시킬 코드 입력
-                findNavController().navigateUp()
+                val onBackPressedCallback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        // 뒤로가기 클릭 시 실행시킬 코드 입력
+                        findNavController().navigateUp()
+                    }
+                }
+
+                // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
+                requireActivity().onBackPressedDispatcher.addCallback(
+                    viewLifecycleOwner,
+                    onBackPressedCallback
+                )
+            }
+            false -> {
+                binding.tbPlaceDetail.setNavigationOnClickListener {
+                    (activity as PlaceActivity).finish()
+                }
+
+                val onBackPressedCallback = object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        // 뒤로가기 클릭 시 실행시킬 코드 입력
+                        (activity as PlaceActivity).finish()
+                    }
+                }
+
+                // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
+                requireActivity().onBackPressedDispatcher.addCallback(
+                    viewLifecycleOwner,
+                    onBackPressedCallback
+                )
             }
         }
-
-        // Android 시스템 뒤로가기를 하였을 때, 콜백 설정
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
     }
 
     // 보내기 버튼 활성화 및 최대 글자수 확인
@@ -157,7 +180,7 @@ class PlaceDetailFragment : Fragment() {
     private fun activeConfirmButton() {
         binding.btnCommentSubmit.isEnabled =
             !binding.etPlaceDetailComment.text.isNullOrEmpty() && binding.etPlaceDetailComment.text.trim()
-                .isNotEmpty()
+            .isNotEmpty()
     }
 
     // 댓글 조회 api

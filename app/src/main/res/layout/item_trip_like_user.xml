@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.starters.yeogida.data.local.TripLikeUserData" />
+            type="com.starters.yeogida.data.remote.response.trip.TripLikeUserData" />
 
         <variable
             name="viewModel"
@@ -15,15 +15,16 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{() -> viewModel.onUserProfileClicked(user.memberId)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="@{() -> viewModel.onUserProfileClicked(user.memberId)}"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_trip_like_user_profile"
-            circleImageUrl="@{user.profileImgUrl}"
+            circleImageUrl="@{user.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"

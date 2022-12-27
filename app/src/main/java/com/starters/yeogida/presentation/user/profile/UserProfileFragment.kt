@@ -30,6 +30,8 @@ class UserProfileFragment : Fragment() {
 
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
+    private var isFollow = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +71,7 @@ class UserProfileFragment : Fragment() {
                 200 -> {
                     withContext(Dispatchers.Main) {
                         binding.userProfile = response.body()?.data
+                        isFollow = response.body()?.data!!.isFollow
                         binding.executePendingBindings()
                     }
                 }
@@ -102,10 +105,14 @@ class UserProfileFragment : Fragment() {
 
     private fun setOnFollowBtnClicked() {
         viewModel.followUserEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            val isFollow = binding.btnUserProfileFollow.isSelected
-
             if (isFollow) {
                 // 이미 팔로우가 되어있을 경우 눌렸을 때 -> 팔로우 취소
+                with(binding.btnUserProfileFollow) {
+                    isSelected = false
+                    text = "팔로우"
+                    setTextColor(resources.getColor(R.color.white, null))
+                }
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val response = followService.deleteFollowing(
                         dataStore.userBearerToken.first(),
@@ -115,15 +122,16 @@ class UserProfileFragment : Fragment() {
                         when (response.code()) {
                             200 -> {
                                 // 팔로우 취소 성공
-                                with(binding.btnUserProfileFollow) {
-                                    isSelected = false
-                                    text = "팔로우"
-                                    setTextColor(resources.getColor(R.color.white, null))
-                                }
+                                isFollow = false
                             }
 
                             else -> {
                                 Log.e("deleteFollowing", "$response")
+                                with(binding.btnUserProfileFollow) {
+                                    isSelected = true
+                                    text = "팔로잉"
+                                    setTextColor(resources.getColor(R.color.black, null))
+                                }
                                 requireContext().shortToast("팔로우 취소 실패")
                             }
                         }
@@ -131,6 +139,12 @@ class UserProfileFragment : Fragment() {
                 }
             } else {
                 // 팔로우가 안되어 있는 경우 눌렸을 때 -> 팔로우 추가
+                with(binding.btnUserProfileFollow) {
+                    isSelected = true
+                    text = "팔로잉"
+                    setTextColor(resources.getColor(R.color.black, null))
+                }
+
                 CoroutineScope(Dispatchers.IO).launch {
                     val response = followService.addFollowing(
                         dataStore.userBearerToken.first(),
@@ -141,15 +155,16 @@ class UserProfileFragment : Fragment() {
                         when (response.code()) {
                             200 -> {
                                 // 팔로우 추가 성공
-                                with(binding.btnUserProfileFollow) {
-                                    isSelected = true
-                                    text = "팔로잉"
-                                    setTextColor(resources.getColor(R.color.black, null))
-                                }
+
                             }
 
                             else -> {
                                 Log.e("addFollowing", "$response")
+                                with(binding.btnUserProfileFollow) {
+                                    isSelected = false
+                                    text = "팔로우"
+                                    setTextColor(resources.getColor(R.color.white, null))
+                                }
                                 requireContext().shortToast("팔로우 추가 실패")
                             }
                         }

@@ -31,6 +31,8 @@ class BestTravelerAdapter(private val viewModel: HomeViewModel) :
         fun onBind(data: BestTravelerData) {
             binding.traveler = data
             binding.viewModel = viewModel
+
+            binding.executePendingBindings()
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.starters.yeogida.data.remote.response.trip
 
+import com.google.gson.annotations.SerializedName
+
 data class TripInfoResponse(
     val memberId: Long,
-    val profileImgUrl: String,
+    @SerializedName("member_imgUrl") val profileImgUrl: String,
     val nickname: String,
-    val isLike: Boolean,
+    @SerializedName("trip_like_check") val isLike: Boolean,
     val title: String,
     val subTitle: String,
     val imgUrl: String,

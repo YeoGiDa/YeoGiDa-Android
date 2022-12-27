@@ -8,10 +8,6 @@
         <variable
             name="view"
             type="com.starters.yeogida.presentation.mypage.MyPageFragment" />
-
-        <variable
-            name="viewModel"
-            type="com.starters.yeogida.presentation.mypage.MyPageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +19,6 @@
             android:id="@+id/tb_my_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,6 +34,15 @@
                 android:text="@string/mypage"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="4dp"
+                android:layout_marginEnd="12dp"
+                android:onClick="@{view::moveToSetting}"
+                android:src="@drawable/ic_setting" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -343,188 +347,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_mypage_account" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_notice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view4">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_notice"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_notice"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view5"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_notice" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view5">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_support"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_center"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view6"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_center" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.logoutUser() }"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view6">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_logout"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_logout"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view7"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_logout" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_withdraw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.showWithDrawDialog() }"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view7">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_withdraw"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_withdraw"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view8"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_withdraw" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

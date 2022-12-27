@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterManager
 import com.starters.yeogida.BuildConfig
-import com.starters.yeogida.data.local.PlaceBottomSheetData
 import com.starters.yeogida.databinding.FragmentAroundBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.util.customEnqueue
@@ -89,7 +88,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
                     for (i in 0 until (it.data?.placeList?.size ?: 0)) {
                         val mLatLng = it.data?.placeList?.get(i)?.let { place -> LatLng(place.latitude, place.longitude) }
                         if (mLatLng != null) {
-                            val place = Place(it.data.placeList[i].placeId, mLatLng)
+                            val place = Place(it.data.placeList[i].placeId, mLatLng, it.data.placeList[i].title, it.data.placeList[i].address)
                             arrayList.add(place)
                         }
                     }
@@ -133,8 +132,8 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         clusterManager.setOnClusterItemClickListener {
             placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             placeBottomSheetBehavior.isDraggable = true
-            initBottomSheet()
-            initBottomSheetAdapter()
+            initBottomSheet(it.name, it.address)
+            initBottomSheetAdapter(it.latLng.latitude, it.latLng.longitude)
 
             return@setOnClusterItemClickListener false
         }
@@ -184,46 +183,27 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         return true
     }
 
-    private fun initBottomSheet() {
+    private fun initBottomSheet(title: String, address: String) {
         with(binding.bottomSheetPlace) {
-            tvPlaceBottomSheetAddress.text = "서울시 종로구 땡땡길 123 1"
-            tvPlaceBottomSheetName.text = "여기는 종로"
+            tvPlaceBottomSheetAddress.text = address
+            tvPlaceBottomSheetName.text = title
         }
     }
 
-    private fun initBottomSheetAdapter() {
+    private fun initBottomSheetAdapter(latitude: Double, longitude: Double) {
         val placeAdapter = PlaceBottomSheetAdapter()
         binding.bottomSheetPlace.rvPlaceBottomSheet.adapter = placeAdapter
-        placeAdapter.placeList.addAll(
-            listOf(
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/08/02/14/26/winter-landscape-2571788_1280.jpg",
-                    "엘사",
-                    4.0
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/11/07/20/43/christmas-tree-2928142_1280.jpg",
-                    "산타할아버지",
-                    3.5
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/07/28/00/57/christmas-2547356_1280.jpg",
-                    "전구왕국",
-                    1.5
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2015/02/25/07/39/church-648430_1280.jpg",
-                    "겨울이좋아",
-                    3.0
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2014/04/10/15/37/snowman-321034_1280.jpg",
-                    "눈사람괴담",
-                    5.0
-                )
-            )
+        YeogidaClient.aroundService.getClusterMarkerData(
+            latitude,
+            longitude
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    it.data?.let { data -> placeAdapter.placeList.addAll(data.placeList) }
+                    placeAdapter.notifyDataSetChanged()
+                }
+            }
         )
-        placeAdapter.notifyDataSetChanged()
     }
 
     private fun setPlaceBottomSheet() {

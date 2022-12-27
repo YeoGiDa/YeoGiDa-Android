@@ -17,6 +17,10 @@
             name="view"
             type="com.starters.yeogida.presentation.around.AroundPlaceFragment" />
 
+        <variable
+            name="tripId"
+            type="Long" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -60,7 +64,7 @@
                     tools:src="@drawable/ic_app" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:onClick="@{() -> viewModel.onUserProfileClicked()}"
+                    android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}"
                     android:id="@+id/layout_around_place_user_profile"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="65dp"
@@ -144,6 +148,7 @@
                         tools:text="99" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:onClick="@{() -> viewModel.onLikeCountClicked(tripId)}"
                         android:id="@+id/layout_around_place_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"

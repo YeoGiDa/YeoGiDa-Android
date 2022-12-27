@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,7 +110,7 @@ class AroundPlaceFragment : Fragment() {
         ).customEnqueue(
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
-                    if (sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
+                    if (tagValue == "nothing" && sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
@@ -119,16 +120,23 @@ class AroundPlaceFragment : Fragment() {
                         }
                     } else {
                         responseData.data?.let { data ->
+                            with(binding) {
+                                rvAroundPlace.visibility = View.VISIBLE
+                                layoutAroundPlaceTop.visibility = View.VISIBLE
+                                btnAroundPlaceSort.visibility = View.VISIBLE
+                                layoutAroundPlaceEmpty.visibility = View.GONE
+                                ivAroundPlaceMap.visibility = View.VISIBLE
+                            }
                             aroundPlaceAdapter.aroundPlaceList.addAll(
                                 data.placeList
                             )
+                            aroundPlaceAdapter.notifyDataSetChanged()
                         }
                         when (sortValue) {
                             "id" -> binding.btnAroundPlaceSort.text = "최신순"
                             "star" -> binding.btnAroundPlaceSort.text = "별점순"
                             "comment" -> binding.btnAroundPlaceSort.text = "댓글 많은순"
                         }
-                        aroundPlaceAdapter.notifyDataSetChanged()
                     }
                 }
             }

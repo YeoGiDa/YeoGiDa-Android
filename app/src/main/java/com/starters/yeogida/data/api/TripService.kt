@@ -4,6 +4,7 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.trip.LikeTripResponse
 import com.starters.yeogida.data.remote.response.trip.PostTripResponse
 import com.starters.yeogida.data.remote.response.trip.TripInfoResponse
+import com.starters.yeogida.data.remote.response.trip.TripLikeUserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -59,4 +60,10 @@ interface TripService {
         @Path("memberId") memberId: Long,
         @Query("condition") condition: String
     )
+
+    // 여행지에 좋아요를 누른 유저 목록
+    @GET("trips/{tripId}/heartMembers")
+    suspend fun getTripLikeUserList(
+        @Path("tripId") tripId: Long
+    ): Response<BaseResponse<TripLikeUserResponse>>
 }

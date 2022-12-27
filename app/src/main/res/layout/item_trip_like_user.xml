@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.starters.yeogida.data.local.TripLikeUserData" />
+            type="com.starters.yeogida.data.remote.response.trip.TripLikeUserData" />
 
         <variable
             name="viewModel"
@@ -23,7 +23,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_trip_like_user_profile"
-            circleImageUrl="@{user.profileImgUrl}"
+            circleImageUrl="@{user.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"

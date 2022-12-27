@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.data.local.TripLikeUserData
+import com.starters.yeogida.data.remote.response.trip.TripLikeUserData
 import com.starters.yeogida.databinding.FragmentTripLikeUserBinding
 
 class TripLikeUserFragment : Fragment() {
 
     private val viewModel: AroundPlaceViewModel by viewModels()
     private lateinit var binding: FragmentTripLikeUserBinding
+
+    private val userList = mutableListOf<TripLikeUserData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +33,14 @@ class TripLikeUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userList = mutableListOf<TripLikeUserData>()
-        val tripId = requireArguments().getLong("tripId")
-        // TODO. userList에 여행지 좋아요 누른 유저 목록 담기
-
+        initData()
         setOnBackPressed()
         initAdapter(userList)
+    }
+
+    private fun initData() {
+        val tripId = requireArguments().getLong("tripId")
+
     }
 
     private fun initAdapter(userList: MutableList<TripLikeUserData>) {

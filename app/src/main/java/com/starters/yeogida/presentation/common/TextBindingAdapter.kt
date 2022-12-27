@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.common
 
+import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import java.time.LocalDateTime
@@ -34,7 +35,6 @@ fun translateDate(view: TextView, dateTime: String) {
     val compareMinuteTime = ChronoUnit.MINUTES.between(convertTime, now)
     val compareHourTime = ChronoUnit.HOURS.between(convertTime, now)
     val compareDayTime = ChronoUnit.DAYS.between(convertTime, now)
-    val compareMonthTime = ChronoUnit.MONTHS.between(convertTime, now)
     when {
         compareSecondTime < 60 -> view.text = "${compareSecondTime}초전"
         compareMinuteTime < 60 -> view.text = "${compareMinuteTime}분전"
@@ -44,6 +44,6 @@ fun translateDate(view: TextView, dateTime: String) {
             2 -> 28
             else -> 30
         } -> view.text = "${compareDayTime}일전"
-        else -> view.text = "${compareMonthTime}달전"
+        else -> view.text = dateTime.substring(0, 10)
     }
 }

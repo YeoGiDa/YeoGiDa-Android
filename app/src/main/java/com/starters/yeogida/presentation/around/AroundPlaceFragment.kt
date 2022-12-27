@@ -16,6 +16,7 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
@@ -169,9 +170,22 @@ class AroundPlaceFragment : Fragment() {
     // 유저 상세 연결
     private fun setOpenUserProfile() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            Intent(requireContext(), UserProfileActivity::class.java).apply {
-                putExtra("memberId", memberId)
-                startActivity(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+
+                if (myMemberId != memberId) {
+                    withContext(Dispatchers.Main) {
+                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                            putExtra("memberId", memberId)
+                            startActivity(this)
+                        }
+                    }
+                } else {
+                    Intent(requireContext(), MyPageActivity::class.java).apply {
+                        putExtra("memberId", memberId)
+                        startActivity(this)
+                    }
+                }
             }
         })
     }

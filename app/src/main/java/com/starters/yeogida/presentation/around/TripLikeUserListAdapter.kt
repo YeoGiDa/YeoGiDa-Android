@@ -3,7 +3,7 @@ package com.starters.yeogida.presentation.around
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.starters.yeogida.data.local.TripLikeUserData
+import com.starters.yeogida.data.remote.response.trip.TripLikeUserData
 import com.starters.yeogida.databinding.ItemTripLikeUserBinding
 
 class TripLikeUserListAdapter(
@@ -31,6 +31,7 @@ class TripLikeUserListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: TripLikeUserData) {
             binding.user = user
+            binding.viewModel = viewModel
             binding.executePendingBindings()
         }
     }

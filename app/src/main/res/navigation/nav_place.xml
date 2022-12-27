@@ -49,6 +49,14 @@
         android:id="@+id/navigation_trip_like_user_list"
         android:name="com.starters.yeogida.presentation.around.TripLikeUserFragment"
         android:label="AddPlaceFragment"
-        tools:layout="@layout/fragment_trip_like_user" />
+        tools:layout="@layout/fragment_trip_like_user">
+        <action
+            android:id="@+id/action_trip_like_user_list_to_userProfile"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.starters.yeogida.presentation.user.profile.UserProfileFragment"
+        android:label="UserProfileFragment" />
 
 </navigation>

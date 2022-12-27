@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.starters.yeogida.R
+import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentHomeBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
@@ -16,6 +17,11 @@ import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -72,9 +78,22 @@ class HomeFragment : Fragment() {
 
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            Intent(requireContext(), UserProfileActivity::class.java).apply {
-                putExtra("memberId", memberId)
-                startActivity(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+
+                if (myMemberId != memberId) {
+                    withContext(Dispatchers.Main) {
+                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                            putExtra("memberId", memberId)
+                            startActivity(this)
+                        }
+                    }
+                } else {
+                    Intent(requireContext(), MyPageActivity::class.java).apply {
+                        putExtra("memberId", memberId)
+                        startActivity(this)
+                    }
+                }
             }
         })
     }

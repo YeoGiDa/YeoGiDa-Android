@@ -48,14 +48,14 @@
                 app:expandedTitleGravity="start|bottom"
                 app:expandedTitleMarginBottom="16dp"
                 app:expandedTitleMarginTop="10dp"
-                app:title="@{tripInfo.title}"
-                app:subtitle="@{tripInfo.subTitle}"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Trip.Title"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:subtitle="@{tripInfo.subTitle}"
+                app:title="@{tripInfo.title}">
 
                 <ImageView
-                    imageUrl="@{tripInfo.imgUrl}"
                     android:id="@+id/iv_around_place_trip"
+                    imageUrl="@{tripInfo.imgUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginTop="?attr/actionBarSize"
@@ -64,38 +64,40 @@
                     tools:src="@drawable/img_google" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}"
                     android:id="@+id/layout_around_place_user_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="65dp"
-                    android:layout_gravity="top|start"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}"
+                    android:padding="4dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        circleImageUrl="@{tripInfo.profileImgUrl}"
                         android:id="@+id/iv_around_place_profile"
-                        android:layout_width="47dp"
-                        android:layout_height="42dp"
+                        circleImageUrl="@{tripInfo.profileImgUrl}"
+                        android:layout_width="43dp"
+                        android:layout_height="40dp"
                         android:scaleType="centerCrop"
-                        tools:src="@drawable/ic_profile"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/Circle" />
+                        app:shapeAppearanceOverlay="@style/Circle"
+                        tools:src="@drawable/ic_profile" />
 
                     <TextView
-                        android:text="@{tripInfo.nickname}"
-                        android:fontFamily="@font/noto_sans_bold"
                         android:id="@+id/tv_around_place_nickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="10dp"
-                        android:textSize="16sp"
                         android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/noto_sans_bold"
+                        android:text="@{tripInfo.nickname}"
                         android:textColor="@color/white"
+                        android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="@id/iv_around_place_profile"
                         app:layout_constraintStart_toEndOf="@id/iv_around_place_profile"
                         app:layout_constraintTop_toTopOf="@id/iv_around_place_profile"
@@ -118,10 +120,10 @@
                     android:layout_marginEnd="24dp"
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_black_a30_16"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:paddingEnd="6dp"
                     android:paddingStart="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="6dp"
                     app:layout_anchor="@id/appbar_around_place"
                     app:layout_anchorGravity="bottom|end|right">
 
@@ -135,8 +137,8 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        count="@{tripInfo.placeCount}"
                         android:id="@+id/tv_around_place_place_count"
+                        count="@{tripInfo.placeCount}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
@@ -148,11 +150,11 @@
                         tools:text="99" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:onClick="@{() -> viewModel.onLikeCountClicked(tripId)}"
                         android:id="@+id/layout_around_place_like_count"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_marginStart="6dp"
+                        android:onClick="@{() -> viewModel.onLikeCountClicked(tripId)}"
                         android:orientation="horizontal"
                         app:layout_constraintBottom_toBottomOf="@id/tv_around_place_place_count"
                         app:layout_constraintStart_toEndOf="@id/tv_around_place_place_count"
@@ -169,8 +171,8 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            count="@{tripInfo.heartCount}"
                             android:id="@+id/tv_around_place_trip_like_count"
+                            count="@{tripInfo.heartCount}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
@@ -215,15 +217,17 @@
                         android:layout_marginEnd="4dp">
 
                         <androidx.appcompat.widget.AppCompatImageButton
-                            android:onClick="@{() -> viewModel.onLikeBtnClicked(tripId)}"
                             android:id="@+id/btn_around_place_like"
-                            android:layout_width="0dp"
                             isLike="@{tripInfo.like}"
+                            android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginTop="12dp"
+                            android:layout_marginEnd="8dp"
                             android:layout_marginBottom="10dp"
                             android:background="@drawable/selector_btn_like"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:onClick="@{() -> viewModel.onLikeBtnClicked(tripId)}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -233,12 +237,15 @@
                             android:id="@+id/iv_around_place_map"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:onClick="@{view::moveToPlaceMap}"
                             android:padding="12dp"
-                            app:layout_constraintEnd_toStartOf="@id/btn_around_place_like"
                             android:src="@drawable/ic_map"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/btn_around_place_like"
                             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -280,7 +287,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:background="@null"
+                    android:background="?attr/selectableItemBackground"
                     android:drawableStart="@drawable/ic_arrow_downup"
                     android:drawablePadding="4dp"
                     android:drawableTint="@color/black"

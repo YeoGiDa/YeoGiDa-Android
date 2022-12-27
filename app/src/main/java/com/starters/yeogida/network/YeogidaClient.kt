@@ -18,6 +18,10 @@ interface YeogidaClient {
             provideService(HomeService::class.java)
         }
 
+        val aroundService: AroundService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            provideService(AroundService::class.java)
+        }
+
         val placeService: PlaceService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             provideService(PlaceService::class.java)
         }
@@ -33,7 +37,6 @@ interface YeogidaClient {
         val followService: FollowService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             provideService(FollowService::class.java)
         }
-
 
         // YS
         private val okHttpClient: OkHttpClient by lazy {

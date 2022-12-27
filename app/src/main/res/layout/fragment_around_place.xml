@@ -215,6 +215,7 @@
                         android:layout_marginEnd="4dp">
 
                         <androidx.appcompat.widget.AppCompatImageButton
+                            android:onClick="@{() -> viewModel.onLikeBtnClicked(tripId)}"
                             android:id="@+id/btn_around_place_like"
                             android:layout_width="0dp"
                             isLike="@{tripInfo.like}"

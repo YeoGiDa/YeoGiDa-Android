@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_mypage_to_my_trip"
             app:destination="@id/navigation_my_trip" />
+        <action
+            android:id="@+id/action_myPage_to_setting"
+            app:destination="@id/navigation_setting" />
     </fragment>
     <fragment
         android:id="@+id/navigation_my_comment_place"
@@ -35,4 +38,9 @@
         android:name="com.starters.yeogida.presentation.mypage.MyTripFragment"
         android:label="MyPlaceFragment"
         tools:layout="@layout/fragment_my_trip" />
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.starters.yeogida.presentation.mypage.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting"/>
 </navigation>

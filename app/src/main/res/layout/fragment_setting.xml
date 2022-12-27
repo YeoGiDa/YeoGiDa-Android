@@ -4,21 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="view"
-            type="com.starters.yeogida.presentation.mypage.MyPageFragment" />
+            type="com.starters.yeogida.presentation.mypage.SettingFragment" />
+
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.mypage.SettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.mypage.MypageFragment">
+        tools:context=".presentation.mypage.SettingFragment">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_my_page"
+            android:id="@+id/tb_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:elevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,222 +35,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/noto_sans_regular"
-                android:text="@string/mypage"
+                android:text="@string/mypage_setting"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:padding="4dp"
-                android:layout_marginEnd="12dp"
-                android:onClick="@{view::moveToSetting}"
-                android:src="@drawable/ic_setting" />
 
         </androidx.appcompat.widget.Toolbar>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_mypage_profile"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_my_page"
-            app:shapeAppearanceOverlay="@style/Circle"
-            tools:src="@drawable/rectangle_fill_gray100_10" />
-
-        <TextView
-            android:id="@+id/tv_mypage_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:fontFamily="@font/noto_sans_bold"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/iv_mypage_profile"
-            app:layout_constraintTop_toTopOf="@+id/iv_mypage_profile"
-            tools:text="나는닉네임최대8" />
-
-        <TextView
-            android:id="@+id/tv_mypage_follow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mypage_follow"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_mypage_trip"
-            app:layout_constraintStart_toStartOf="@+id/tv_mypage_nickname"
-            app:layout_constraintTop_toBottomOf="@+id/tv_mypage_nickname" />
-
-        <TextView
-            android:id="@+id/tv_mypage_follow_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_follow"
-            app:layout_constraintEnd_toStartOf="@+id/tv_mypage_following"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_follow"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_follow"
-            tools:text="123" />
-
-        <TextView
-            android:id="@+id/tv_mypage_trip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/mypage_trip"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_mypage_profile"
-            app:layout_constraintStart_toStartOf="@+id/tv_mypage_nickname" />
-
-        <TextView
-            android:id="@+id/tv_mypage_trip_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_trip"
-            app:layout_constraintEnd_toStartOf="@id/tv_mypage_like"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_trip"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_trip"
-            tools:text="31" />
-
-        <TextView
-            android:id="@+id/tv_mypage_following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:text="@string/mypage_following"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_follow"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_follow"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_follow" />
-
-        <TextView
-            android:id="@+id/tv_mypage_following_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_follow"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_following"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_follow"
-            tools:text="83" />
-
-        <TextView
-            android:id="@+id/tv_mypage_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:text="@string/mypage_like"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_trip"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_trip"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_trip" />
-
-        <TextView
-            android:id="@+id/tv_mypage_like_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_trip"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_like"
-            app:layout_constraintTop_toTopOf="@+id/tv_mypage_trip"
-            tools:text="206" />
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_marginTop="32dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_mypage_profile" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_trip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{view::moveToMyTrip}"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view1">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_trip"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_mytrip"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_trip" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view2">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_comment_black"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:onClick="@{view::moveToCommentPlace}"
-                android:text="@string/mypage_mycomment"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
 
         <View
             android:id="@+id/view3"
@@ -255,43 +48,7 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_alarm" />
-
-        <LinearLayout
-            android:id="@+id/layout_mypage_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view3">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_profile"
-                android:layout_gravity="center"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_account"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_alarm" />
 
         <View
             android:id="@+id/view9"
@@ -300,13 +57,13 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_comment" />
+            app:layout_constraintTop_toBottomOf="@id/tb_setting" />
 
         <LinearLayout
-            android:id="@+id/layout_mypage_alarm"
+            android:id="@+id/layout_setting_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{view::moveToNotification}"
+            android:onClick="@{view::moveToSettingNotification}"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -326,7 +83,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/mypage_alarm"
+                android:text="@string/mypage_alarm_setting"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -346,7 +103,189 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_mypage_account" />
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_alarm" />
+
+        <LinearLayout
+            android:id="@+id/layout_setting_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view4">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_notice"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:text="@string/mypage_notice"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view5"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/gray_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_notice" />
+
+        <LinearLayout
+            android:id="@+id/layout_setting_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view5">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_support"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:text="@string/mypage_center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/gray_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_center" />
+
+        <LinearLayout
+            android:id="@+id/layout_setting_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{ () -> viewModel.logoutUser() }"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view6">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_logout"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:text="@string/mypage_logout"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view7"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/gray_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_logout" />
+
+        <LinearLayout
+            android:id="@+id/layout_setting_withdraw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{ () -> viewModel.showWithDrawDialog() }"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view7">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/ic_withdraw"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:text="@string/mypage_withdraw"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view8"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/gray_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_setting_withdraw" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

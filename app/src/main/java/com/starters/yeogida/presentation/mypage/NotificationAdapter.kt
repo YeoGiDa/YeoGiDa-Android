@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.mypage.NotificationData
 import com.starters.yeogida.databinding.ItemAlarmBinding
+import java.util.*
 
-class NotificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NotificationAdapter(val itemClick: (String, Long) -> Unit) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val notificationList = mutableListOf<NotificationData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -17,6 +19,9 @@ class NotificationAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is NotificationViewHolder) {
             holder.onBind(notificationList[position])
+        }
+        holder.itemView.setOnClickListener {
+            itemClick(notificationList[position].alarmType, notificationList[position].targetId)
         }
     }
 

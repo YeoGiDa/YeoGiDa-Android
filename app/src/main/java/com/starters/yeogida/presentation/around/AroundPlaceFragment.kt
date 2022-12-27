@@ -13,13 +13,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
+import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
+import com.starters.yeogida.util.shortToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
@@ -27,6 +35,11 @@ class AroundPlaceFragment : Fragment() {
     private var sortValue: String = "id"
     private var tagValue: String = "nothing"
     private var tripId: Long = 0
+
+    private val tripService = YeogidaClient.tripService
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
+
+    private var isLike: Boolean = false    // 여행지 좋아요 여부
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +60,7 @@ class AroundPlaceFragment : Fragment() {
         getTripId()
         initPlaceList()
         setOpenUserProfile()
+        setOnLikeBtnClicked()
         setOpenTripLikeUserList()   // 여행지 좋아요 누른 유저 목록 연결
         initNavigation()
         initBottomSheet()
@@ -78,6 +92,7 @@ class AroundPlaceFragment : Fragment() {
             onSuccess = {
                 if (it.code == 200) {
                     binding.tripInfo = it.data
+                    isLike = it.data!!.isLike
                     binding.executePendingBindings()
                 }
             }
@@ -163,13 +178,27 @@ class AroundPlaceFragment : Fragment() {
     // 유저 상세 연결
     private fun setOpenUserProfile() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            Intent(requireContext(), UserProfileActivity::class.java).apply {
-                putExtra("memberId", memberId)
-                startActivity(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+
+                if (myMemberId != memberId) {
+                    withContext(Dispatchers.Main) {
+                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                            putExtra("memberId", memberId)
+                            startActivity(this)
+                        }
+                    }
+                } else {
+                    Intent(requireContext(), MyPageActivity::class.java).apply {
+                        putExtra("memberId", memberId)
+                        startActivity(this)
+                    }
+                }
             }
         })
     }
 
+    // 좋아요 목록 연결
     private fun setOpenTripLikeUserList() {
         viewModel.openTripLikeListEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
             findNavController().navigate(
@@ -179,6 +208,60 @@ class AroundPlaceFragment : Fragment() {
         })
     }
 
+    // 좋아요 버튼 클릭 시
+    private fun setOnLikeBtnClicked() {
+        viewModel.likeTripEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
+            if (isLike) {
+                // 좋아요가 눌려있을 때 -> 좋아요 취소 하기
+                binding.btnAroundPlaceLike.isSelected = false
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = tripService.deleteTripHeart(
+                        dataStore.userBearerToken.first(),
+                        tripId
+                    )
+
+                    withContext(Dispatchers.Main) {
+                        when (response.code()) {
+                            200 -> {
+                                isLike = false
+                            }
+
+                            else -> {
+                                binding.btnAroundPlaceLike.isSelected = true
+                                requireContext().shortToast("좋아요를 취소하는데 실패하였습니다.")
+                            }
+                        }
+                    }
+
+                }
+            } else {
+                // 좋아요가 눌려있지 않을 때 -> 좋아요 하기
+                binding.btnAroundPlaceLike.isSelected = true
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = tripService.postTripHeart(
+                        dataStore.userBearerToken.first(),
+                        tripId
+                    )
+
+                    withContext(Dispatchers.Main) {
+                        when (response.code()) {
+                            201 -> {
+                                isLike = true
+                            }
+
+                            else -> {
+                                binding.btnAroundPlaceLike.isSelected = false
+                                requireContext().shortToast("좋아요에 실패하였습니다.")
+                            }
+                        }
+                    }
+
+                }
+            }
+        })
+    }
 
     // chip button 클릭 시
     private fun initChipClickListener() {

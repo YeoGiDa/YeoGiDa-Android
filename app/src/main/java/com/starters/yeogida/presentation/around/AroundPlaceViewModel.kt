@@ -10,7 +10,21 @@ class AroundPlaceViewModel : ViewModel() {
     private val _openPlaceDetailEvent = MutableLiveData<Event<Long>>()
     val openPlaceDetailEvent: LiveData<Event<Long>> = _openPlaceDetailEvent
 
+    private val _openUserProfileEvent = MutableLiveData<Event<Long>>()
+    val openUserProfileEvent: LiveData<Event<Long>> = _openUserProfileEvent
+
+    private val _openTripLikeListEvent = MutableLiveData<Event<Long>>()
+    val openTripLikeListEvent: LiveData<Event<Long>> = _openTripLikeListEvent
+
     fun onPlaceClicked(placeId: Long) {
         _openPlaceDetailEvent.value = Event(placeId)
+    }
+
+    fun onUserProfileClicked(memberId: Long) {
+        _openUserProfileEvent.value = Event(memberId)
+    }
+
+    fun onLikeCountClicked(tripId: Long) {
+        _openTripLikeListEvent.value = Event(tripId)
     }
 }

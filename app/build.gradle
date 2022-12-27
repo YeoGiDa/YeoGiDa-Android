@@ -111,4 +111,7 @@ dependencies {
 
     // clustering
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
+
+    // CollapsingToolbar Subtitle Library
+    implementation "com.hendraanggrian.material:collapsingtoolbarlayout-subtitle:1.5.0"
 }

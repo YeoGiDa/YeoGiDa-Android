@@ -1,7 +1,7 @@
 package com.starters.yeogida.presentation.around
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
-import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
+import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 
 class AroundPlaceFragment : Fragment() {
@@ -41,8 +41,12 @@ class AroundPlaceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.view = this
+        binding.viewModel = viewModel
+
         getTripId()
         initPlaceList()
+        setOpenUserProfile()
+        setOpenTripLikeUserList()   // 여행지 좋아요 누른 유저 목록 연결
         initNavigation()
         initBottomSheet()
         initChipClickListener()
@@ -58,7 +62,7 @@ class AroundPlaceFragment : Fragment() {
         val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
         args?.tripId?.let { tripId = it }
 
-        // 장소 추가 후 tripId 받아오기
+        binding.tripId = tripId
 
         // 둘러보기 - 장소 상세 - 장소 목록 - 장소 추가
 
@@ -72,14 +76,8 @@ class AroundPlaceFragment : Fragment() {
         ).customEnqueue(
             onSuccess = {
                 if (it.code == 200) {
-                    with(binding) {
-                        layoutCollapsingAroundPlace.title = it.data?.title
-                        GlideApp.with(ivAroundPlaceTrip)
-                            .load(it.data?.imgUrl)
-                            .into(ivAroundPlaceTrip)
-                        tvAroundPlacePlaceCount.text = it.data?.placeCount.toString()
-                        tvAroundPlaceTripLikeCount.text = it.data?.heartCount.toString()
-                    }
+                    binding.tripInfo = it.data
+                    binding.executePendingBindings()
                 }
             }
         )
@@ -115,6 +113,7 @@ class AroundPlaceFragment : Fragment() {
                         with(binding) {
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
+                            btnAroundPlaceSort.visibility = View.INVISIBLE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
                             ivAroundPlaceMap.visibility = View.INVISIBLE
                         }
@@ -142,9 +141,9 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
-    fun setOpenPlaceDetail() {
+    // 장소 상세 연결
+    private fun setOpenPlaceDetail() {
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
-            Log.e("placeId", placeId.toString())
             findNavController().navigate(
                 R.id.action_aroundPlace_to_placeDetail, bundleOf(
                     "placeId" to placeId
@@ -152,6 +151,26 @@ class AroundPlaceFragment : Fragment() {
             )
         })
     }
+
+    // 유저 상세 연결
+    private fun setOpenUserProfile() {
+        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
+            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                putExtra("memberId", memberId)
+                startActivity(this)
+            }
+        })
+    }
+
+    private fun setOpenTripLikeUserList() {
+        viewModel.openTripLikeListEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
+            findNavController().navigate(
+                R.id.action_around_place_to_trip_like_user_list,
+                bundleOf("tripId" to tripId)
+            )
+        })
+    }
+
 
     // chip button 클릭 시
     private fun initChipClickListener() {

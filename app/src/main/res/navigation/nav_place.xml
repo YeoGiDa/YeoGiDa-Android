@@ -9,11 +9,7 @@
         android:id="@+id/navigation_place_detail"
         android:name="com.starters.yeogida.presentation.place.PlaceDetailFragment"
         android:label="PlaceDetailFragment"
-        tools:layout="@layout/fragment_place_detail">
-        <action
-            android:id="@+id/action_place_detail_to_userProfile"
-            app:destination="@id/userProfileFragment2" />
-    </fragment>
+        tools:layout="@layout/fragment_place_detail" />
     <fragment
         android:id="@+id/navigation_around_place"
         tools:layout="@layout/fragment_around_place"
@@ -25,15 +21,14 @@
         <action
             android:id="@+id/action_aroundPlace_to_placeMap"
             app:destination="@id/navigation_around_place_map" />
-        <argument
-            android:name="tripId"
-            app:argType="long" />
+        <argument android:name="tripId"
+            app:argType="long"/>
         <action
             android:id="@+id/action_aroundPlace_to_addPlace"
             app:destination="@id/navigation_add_place" />
         <action
-            android:id="@+id/action_around_place_to_userProfile"
-            app:destination="@id/userProfileFragment2" />
+            android:id="@+id/action_around_place_to_trip_like_user_list"
+            app:destination="@id/navigation_trip_like_user_list" />
     </fragment>
     <fragment
         android:id="@+id/navigation_around_place_map"
@@ -49,10 +44,11 @@
         android:name="com.starters.yeogida.presentation.place.AddPlaceFragment"
         android:label="AddPlaceFragment"
         tools:layout="@layout/fragment_add_place" />
+
     <fragment
-        android:id="@+id/userProfileFragment2"
-        tools:layout="@layout/fragment_user_profile"
-        android:name="com.starters.yeogida.presentation.user.profile.UserProfileFragment"
-        android:label="UserProfileFragment" />
+        android:id="@+id/navigation_trip_like_user_list"
+        android:name="com.starters.yeogida.presentation.around.TripLikeUserFragment"
+        android:label="AddPlaceFragment"
+        tools:layout="@layout/fragment_trip_like_user" />
 
 </navigation>

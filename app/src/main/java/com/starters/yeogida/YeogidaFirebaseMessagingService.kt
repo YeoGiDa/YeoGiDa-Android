@@ -1,11 +1,14 @@
 package com.starters.yeogida
 
+import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -25,38 +28,59 @@ class YeogidaFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
 
         // FCM을 통해서 전달 받은 정보에 Notification 정보가 있는 경우 알림을 생성한다.
-        if (remoteMessage.notification != null) {
-            sendNotification(remoteMessage)
+        if (remoteMessage.data["title"] != null) {
+            Log.d(TAG, remoteMessage.toString())
+            val title = remoteMessage.data["title"]
+            val body = remoteMessage.data["body"]
+            val type = remoteMessage.data["alarmType"]
+            val targetId = remoteMessage.data["targetId"]
+            sendNotification(title, body, type, targetId)
         } else {
-            Log.d(TAG, "수신 에러: Notification이 비어있습니다.")
+            Log.d(TAG, "수신 에러: data가 비어있습니다.")
         }
     }
 
-    // FCM에서 보낸 정보를 바탕으로 디바이스에 Notification을 생성한다.
-    private fun sendNotification(remoteMessage: RemoteMessage) {
+    private fun sendNotification(title: String?, body: String?, type: String?, targetId: String?) {
         // id를 고유값으로 지정하여 알림이 개별 표시
         val id = (System.currentTimeMillis() / 7).toInt()
-        var title = remoteMessage.notification!!.title
-        var body = remoteMessage.notification!!.body
+        val requestID = System.currentTimeMillis().toInt()
 
-        var intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, id, intent, PendingIntent.FLAG_ONE_SHOT)
+        val intent = Intent(this, MainActivity::class.java)
+
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            intent.putExtra("type", type)
+            intent.putExtra("targetId", targetId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            PendingIntent.getActivity(this, requestID, intent, FLAG_IMMUTABLE)
+        } else {
+            intent.putExtra("type", type)
+            intent.putExtra("targetId", targetId)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_ONE_SHOT)
+        }
 
         val channelId = "Channel ID"
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.sym_def_app_icon)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(soundUri)
             .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(channelId, "Notice", NotificationManager.IMPORTANCE_HIGH)
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notificationManager.createNotificationChannel(channel)
+        // 오레오 버전 이후에는 채널이 필요
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel =
+                NotificationChannel(channelId, "Notice", NotificationManager.IMPORTANCE_HIGH)
+            notificationManager.createNotificationChannel(channel)
+            channel.apply {
+                setShowBadge(false)
+            }
+        }
         notificationManager.notify(id, notificationBuilder.build())
     }
 }

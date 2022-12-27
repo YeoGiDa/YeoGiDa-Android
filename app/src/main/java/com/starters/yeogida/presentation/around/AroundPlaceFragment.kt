@@ -82,8 +82,6 @@ class AroundPlaceFragment : Fragment() {
     }
 
     private fun initBottomSheet() {
-        binding.btnAroundPlaceSort.text = "최신순"
-
         binding.btnAroundPlaceSort.setOnClickListener {
             val bottomSheetDialog = PlaceSortBottomSheetFragment {
                 binding.btnAroundPlaceSort.text = it
@@ -122,6 +120,11 @@ class AroundPlaceFragment : Fragment() {
                             aroundPlaceAdapter.aroundPlaceList.addAll(
                                 data.placeList
                             )
+                        }
+                        when (sortValue) {
+                            "id" -> binding.btnAroundPlaceSort.text = "최신순"
+                            "star" -> binding.btnAroundPlaceSort.text = "별점순"
+                            "comment" -> binding.btnAroundPlaceSort.text = "댓글 많은순"
                         }
                         aroundPlaceAdapter.notifyDataSetChanged()
                     }

@@ -7,23 +7,23 @@
 
         <variable
             name="user"
-            type="com.starters.yeogida.data.remote.response.follow.FollowUserData" />
+            type="com.starters.yeogida.data.local.TripLikeUserData" />
 
         <variable
             name="viewModel"
-            type="com.starters.yeogida.presentation.follow.FollowViewModel" />
+            type="com.starters.yeogida.presentation.around.AroundPlaceViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:onClick="@{ () -> viewModel.onUserClicked(user.memberId) }"
+        android:onClick="@{() -> viewModel.onUserProfileClicked(user.memberId)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_follow_profile_image"
-            circleImageUrl="@{user.imgUrl}"
+            android:id="@+id/iv_trip_like_user_profile"
+            circleImageUrl="@{user.profileImgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
@@ -32,7 +32,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@id/tv_follow_nickname"
+            app:layout_constraintEnd_toStartOf="@id/tv_trip_like_user_nickname"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circle"
@@ -40,38 +40,20 @@
             tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView
-            android:id="@+id/tv_follow_nickname"
+            android:id="@+id/tv_trip_like_user_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:fontFamily="@font/noto_sans_medium"
             android:text="@{user.nickname}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_follow_profile_image"
+            app:layout_constraintStart_toEndOf="@id/iv_trip_like_user_profile"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="닉네임" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_follow_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rectangle_fill_gray100_10"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:paddingStart="20dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="8dp"
-            android:stateListAnimator="@null"
-            android:text="@string/follow_item_delete"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

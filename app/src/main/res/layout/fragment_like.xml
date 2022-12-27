@@ -79,8 +79,11 @@
                 app:tabIndicatorColor="@color/main_blue"
                 app:tabPaddingBottom="20dp"
                 app:tabPaddingTop="20dp"
-                app:tabRippleColor="@null"
+                app:tabMinWidth="120dp"
+                app:tabGravity="fill"
+                app:tabMaxWidth="0dp"
                 app:tabMode="scrollable"
+                app:tabRippleColor="@null"
                 app:tabSelectedTextColor="@color/main_blue"
                 app:tabTextAppearance="@style/tab_text"
                 app:tabTextColor="@color/black" />
@@ -96,8 +99,53 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbar_like" />
+            app:layout_constraintTop_toBottomOf="@id/appbar_like"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_like_trip_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_around_place_empty"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="80dp"
+                android:padding="20dp"
+                android:src="@drawable/ic_like_trip_empty"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/main_blue" />
+
+            <TextView
+                android:id="@+id/tv_around_place_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:paddingBottom="20dp"
+                android:text="@string/like_trip_empty"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_around_place_empty" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

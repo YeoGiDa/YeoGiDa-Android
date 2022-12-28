@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.R
 import com.starters.yeogida.data.local.LikeTripData
-import com.starters.yeogida.databinding.ItemTripBinding
+import com.starters.yeogida.databinding.ItemLikeTripBinding
 
 class LikeTripAdapter(
     private val likeTripList: List<LikeTripData>,
@@ -22,7 +22,8 @@ class LikeTripAdapter(
     var itemClick: ItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding = ItemTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemLikeTripBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return LikeTripViewHolder(binding)
     }
 
@@ -42,7 +43,7 @@ class LikeTripAdapter(
         return likeTripList.size
     }
 
-    inner class LikeTripViewHolder(private val binding: ItemTripBinding) :
+    inner class LikeTripViewHolder(private val binding: ItemLikeTripBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(likeTrip: LikeTripData) {
             binding.likeTrip = likeTrip

@@ -36,7 +36,7 @@ class SplashViewModel : ViewModel() {
             userRefreshToken = dataStore.userRefreshToken.first()
 
             /*Log.e("SplashViewModel/init/userAccessToken", userAccessToken)
-            Log.e("SplashViewModel/init/userRefreshToken", userRefreshToken )*/
+            Log.e("SplashViewModel/init/userRefreshToken", userRefreshToken)*/
 
             validateToken(TokenData(userAccessToken, userRefreshToken))
         }

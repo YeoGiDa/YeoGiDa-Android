@@ -2,7 +2,7 @@ package com.starters.yeogida.presentation.like
 
 import com.starters.yeogida.data.local.LikeTripData
 
-object LikeTripLists {
+object RegionTripLists {
 
     val seoul: MutableList<LikeTripData> by lazy {
         mutableListOf()

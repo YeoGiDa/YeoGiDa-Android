@@ -97,10 +97,10 @@ class LikeTripFragment : Fragment() {
                                     data?.let { data ->
                                         val tripList = data.tripList
 
-                                        LikeTripLists.all.clear()
+                                        RegionTripLists.all.clear()
 
                                         for (i in tripList.indices) {
-                                            LikeTripLists.all.add(
+                                            RegionTripLists.all.add(
                                                 LikeTripData(
                                                     tripList[i].tripId,
                                                     tripList[i].region,
@@ -115,7 +115,7 @@ class LikeTripFragment : Fragment() {
                                             )
                                         }
                                         withContext(Dispatchers.Main) {
-                                            setLikeAdapter(LikeTripLists.all)
+                                            setLikeAdapter(RegionTripLists.all)
                                             binding.rvTrip.adapter?.notifyDataSetChanged()
                                         }
                                     }
@@ -161,7 +161,7 @@ class LikeTripFragment : Fragment() {
                     data?.let { data ->
                         val list = data.tripList
 
-                        with(LikeTripLists) {
+                        with(RegionTripLists) {
                             when (region) {
                                 "서울" -> fetchList(seoul, list)
                                 "경기도" -> fetchList(gyeonggi, list)
@@ -234,10 +234,10 @@ class LikeTripFragment : Fragment() {
                     data?.let { data ->
                         val list = data.tripList
 
-                        LikeTripLists.all.clear()
+                        RegionTripLists.all.clear()
 
                         for (i in list.indices) {
-                            LikeTripLists.all.add(
+                            RegionTripLists.all.add(
                                 LikeTripData(
                                     list[i].tripId,
                                     list[i].region,
@@ -252,7 +252,7 @@ class LikeTripFragment : Fragment() {
                             )
                         }
                         withContext(Dispatchers.Main) {
-                            setLikeAdapter(LikeTripLists.all)
+                            setLikeAdapter(RegionTripLists.all)
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
                     }

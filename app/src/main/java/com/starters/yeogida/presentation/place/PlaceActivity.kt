@@ -26,12 +26,12 @@ class PlaceActivity : AppCompatActivity() {
     private fun initNavigation() {
         val navController =
             supportFragmentManager.findFragmentById(R.id.container_place)?.findNavController()
-        if (intent.getStringExtra("type") == "comment") {
+        if (intent.getStringExtra("type") == "comment" || intent.getStringExtra("type") == "around") { // 백그라운드 댓글 알림 or 둘러보기에서 이동
             navController?.navigate(
                 R.id.action_aroundPlace_to_placeDetail,
                 bundleOf("placeId" to intent.getLongExtra("placeId", 0))
             )
-        } else if (intent.getStringExtra("type") == "comment_alarm") {
+        } else if (intent.getStringExtra("type") == "comment_alarm") { // 알림 목록 - 댓글에서 이동
             navController?.navigate(
                 R.id.action_aroundPlace_to_placeDetail,
                 bundleOf("placeId" to intent.getLongExtra("placeId", 0), "type" to "comment_alarm")

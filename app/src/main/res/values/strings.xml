@@ -77,6 +77,12 @@
     <string name="mypage_setting">설정</string>
     <string name="mypage_alarm_setting">알림 설정</string>
 
+    <!-- Setting Fragment -->
+    <string name="notification_setting_all">모든 알림</string>
+    <string name="notification_setting_like">좋아요 알림</string>
+    <string name="notification_setting_follow">팔로우 알림</string>
+    <string name="notification_setting_comment">댓글 알림</string>
+
     <string name="comment_place_title">댓글 단 장소</string>
 
     <!-- Add Trip Fragment -->

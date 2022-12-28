@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +26,10 @@ import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterManager
 import com.starters.yeogida.BuildConfig
-import com.starters.yeogida.data.local.PlaceBottomSheetData
 import com.starters.yeogida.databinding.FragmentAroundBinding
+import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.util.customEnqueue
 
 class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var binding: FragmentAroundBinding
@@ -68,10 +69,8 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     @SuppressLint("PotentialBehaviorOverride")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mView.getMapAsync {
-            setUpClusterManager(mMap)
-            userList = getAllItem()
-        }
+        getPlaceItem()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         updateLocation()
         mMap.setOnMarkerClickListener(this)
@@ -80,38 +79,62 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         }
     }
 
-    private fun getAllItem(): ArrayList<Place> {
+    private fun getPlaceItem() {
         var arrayList: ArrayList<Place> = ArrayList()
-        val latLng1 = LatLng(37.570223492195, 126.98361037914)
-        val latLng2 = LatLng(37.570211191115, 126.98000031114)
-        val latLng3 = LatLng(37.570239992195, 126.98234031114)
-        val latLng4 = LatLng(37.57056992395, 126.981241037074)
 
-        val user1 = Place(1, latLng1)
-        val user2 = Place(2, latLng2)
-        val user3 = Place(3, latLng3)
-        val user4 = Place(4, latLng4)
+        YeogidaClient.aroundService.getClusterList().customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    // 위도 경도 리스트 만들기
+                    for (i in 0 until (it.data?.placeList?.size ?: 0)) {
+                        val mLatLng = it.data?.placeList?.get(i)?.let { place -> LatLng(place.latitude, place.longitude) }
+                        if (mLatLng != null) {
+                            val place = Place(it.data.placeList[i].placeId, mLatLng, it.data.placeList[i].title, it.data.placeList[i].address)
+                            arrayList.add(place)
+                        }
+                    }
+                }
 
-        arrayList.add(user1)
-        arrayList.add(user2)
-        arrayList.add(user3)
-        arrayList.add(user4)
-
-        return arrayList
+                mView.getMapAsync {
+                    userList = arrayList
+                    setUpClusterManager(mMap, userList)
+                }
+            }
+        )
     }
 
-    private fun setUpClusterManager(mMap: GoogleMap) {
+    // 커스텀 마커를 위해 남겨둠
+//    private fun getAllItem(): ArrayList<Place> {
+//        var arrayList: ArrayList<Place> = ArrayList()
+//        val latLng1 = LatLng(37.570223492195, 126.98361037914)
+//        val latLng2 = LatLng(37.570211191115, 126.98000031114)
+//        val latLng3 = LatLng(37.570239992195, 126.98234031114)
+//        val latLng4 = LatLng(37.57056992395, 126.981241037074)
+//
+//        val user1 = Place(1, latLng1)
+//        val user2 = Place(2, latLng2)
+//        val user3 = Place(3, latLng3)
+//        val user4 = Place(4, latLng4)
+//
+//        arrayList.add(user1)
+//        arrayList.add(user2)
+//        arrayList.add(user3)
+//        arrayList.add(user4)
+//
+//        return arrayList
+//    }
+
+    private fun setUpClusterManager(mMap: GoogleMap, list: ArrayList<Place>) {
         val clusterManager = ClusterManager<Place> (requireContext(), mMap)
         mMap.setOnCameraIdleListener(clusterManager)
-        userList = getAllItem()
-        clusterManager.addItems(userList)
+        clusterManager.addItems(list)
         clusterManager.cluster()
 
         clusterManager.setOnClusterItemClickListener {
             placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             placeBottomSheetBehavior.isDraggable = true
-            initBottomSheet()
-            initBottomSheetAdapter()
+            initBottomSheet(it.name, it.address)
+            initBottomSheetAdapter(it.latLng.latitude, it.latLng.longitude)
 
             return@setOnClusterItemClickListener false
         }
@@ -161,46 +184,29 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         return true
     }
 
-    private fun initBottomSheet() {
+    private fun initBottomSheet(title: String, address: String) {
         with(binding.bottomSheetPlace) {
-            tvPlaceBottomSheetAddress.text = "서울시 종로구 땡땡길 123 1"
-            tvPlaceBottomSheetName.text = "여기는 종로"
+            tvPlaceBottomSheetAddress.text = address
+            tvPlaceBottomSheetName.text = title
         }
     }
 
-    private fun initBottomSheetAdapter() {
-        val placeAdapter = PlaceBottomSheetAdapter()
+    private fun initBottomSheetAdapter(latitude: Double, longitude: Double) {
+        val placeAdapter = PlaceBottomSheetAdapter() { tripId: Long, placeId: Long ->
+            moveToDetail(tripId, placeId)
+        }
         binding.bottomSheetPlace.rvPlaceBottomSheet.adapter = placeAdapter
-        placeAdapter.placeList.addAll(
-            listOf(
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/08/02/14/26/winter-landscape-2571788_1280.jpg",
-                    "엘사",
-                    4.0
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/11/07/20/43/christmas-tree-2928142_1280.jpg",
-                    "산타할아버지",
-                    3.5
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2017/07/28/00/57/christmas-2547356_1280.jpg",
-                    "전구왕국",
-                    1.5
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2015/02/25/07/39/church-648430_1280.jpg",
-                    "겨울이좋아",
-                    3.0
-                ),
-                PlaceBottomSheetData(
-                    "https://cdn.pixabay.com/photo/2014/04/10/15/37/snowman-321034_1280.jpg",
-                    "눈사람괴담",
-                    5.0
-                )
-            )
+        YeogidaClient.aroundService.getClusterMarkerData(
+            latitude,
+            longitude
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    it.data?.let { data -> placeAdapter.placeList.addAll(data.placeList) }
+                    placeAdapter.notifyDataSetChanged()
+                }
+            }
         )
-        placeAdapter.notifyDataSetChanged()
     }
 
     private fun setPlaceBottomSheet() {
@@ -210,6 +216,14 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             state = BottomSheetBehavior.STATE_HIDDEN
             isDraggable = true
         }
+    }
+
+    private fun moveToDetail(tripId: Long, placeId: Long) {
+        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        intent.putExtra("type", "around")
+        intent.putExtra("tripId", tripId)
+        intent.putExtra("placeId", placeId)
+        startActivity(intent)
     }
 
     // 권한 처리

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.TripListData
 import com.starters.yeogida.databinding.ItemHomeTripBinding
 
-class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TripAdapter(val itemClick: (Long) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     val tripList = mutableListOf<TripListData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -18,6 +18,9 @@ class TripAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HomeTripViewHolder) {
             holder.onBind(tripList[position])
+        }
+        holder.itemView.setOnClickListener {
+            itemClick(tripList[position].tripId)
         }
     }
 

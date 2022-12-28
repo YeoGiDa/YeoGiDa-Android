@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.databinding.FragmentNotificationSettingBinding
 
 class NotificationSettingFragment : Fragment() {
@@ -18,6 +19,11 @@ class NotificationSettingFragment : Fragment() {
         binding = FragmentNotificationSettingBinding.inflate(inflater, container, false)
         binding.view = this
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initClickListener()
     }
 
     // 각 알림 switch check 변경 시
@@ -49,6 +55,12 @@ class NotificationSettingFragment : Fragment() {
             switchNotificationComment.isChecked = b1
             switchNotificationLike.isChecked = b2
             switchNotificationFollow.isChecked = b3
+        }
+    }
+
+    private fun initClickListener() {
+        binding.tbNotificationSetting.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
     }
 }

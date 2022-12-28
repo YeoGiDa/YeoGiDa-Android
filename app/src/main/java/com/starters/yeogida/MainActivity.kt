@@ -102,20 +102,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkNotification() {
-        val dataStore = YeogidaApplication.getInstance().getDataStore()
-
         if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                dataStore.saveNotificationLikeIsAllow(true)
-                dataStore.saveNotificationFollowIsAllow(true)
-                dataStore.saveNotificationCommentIsAllow(true)
-            }
+            saveNotificationAllow(like = true, follow = true, comment = true)
         } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                dataStore.saveNotificationLikeIsAllow(false)
-                dataStore.saveNotificationFollowIsAllow(false)
-                dataStore.saveNotificationCommentIsAllow(false)
-            }
+            saveNotificationAllow(like = false, follow = false, comment = false)
+        }
+    }
+
+    private fun saveNotificationAllow(like: Boolean, follow: Boolean, comment: Boolean) {
+        val dataStore = YeogidaApplication.getInstance().getDataStore()
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.saveNotificationLikeIsAllow(like)
+            dataStore.saveNotificationFollowIsAllow(follow)
+            dataStore.saveNotificationCommentIsAllow(comment)
         }
     }
 }

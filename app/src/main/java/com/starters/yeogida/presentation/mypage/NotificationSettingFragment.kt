@@ -67,19 +67,19 @@ class NotificationSettingFragment : Fragment() {
     // 전체 알림 switch 변경 시
     fun changeSwitchAll(view: View) {
         if (binding.switchNotificationAll.isChecked) {
-            isCheckedNotification(b1 = true, b2 = true, b3 = true)
+            isCheckedNotification(like = true, follow = true, comment = true)
             saveNotification(like = true, follow = true, comment = true)
         } else {
-            isCheckedNotification(b1 = false, b2 = false, b3 = false)
+            isCheckedNotification(like = false, follow = false, comment = false)
             saveNotification(like = false, follow = false, comment = false)
         }
     }
 
-    private fun isCheckedNotification(b1: Boolean, b2: Boolean, b3: Boolean) {
+    private fun isCheckedNotification(like: Boolean, follow: Boolean, comment: Boolean) {
         with(binding) {
-            switchNotificationComment.isChecked = b1
-            switchNotificationLike.isChecked = b2
-            switchNotificationFollow.isChecked = b3
+            switchNotificationLike.isChecked = like
+            switchNotificationFollow.isChecked = follow
+            switchNotificationComment.isChecked = comment
         }
     }
 

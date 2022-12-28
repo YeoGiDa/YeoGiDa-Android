@@ -1,9 +1,14 @@
 package com.starters.yeogida.presentation.around
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -11,14 +16,13 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.starters.yeogida.R
 import com.starters.yeogida.data.remote.response.place.PlaceMapList
 import com.starters.yeogida.databinding.FragmentAroundPlaceMapBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.util.customEnqueue
+
 
 class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var mView: MapView
@@ -96,8 +100,30 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
 
     private fun createMarker(arrayList: ArrayList<LatLng>) {
         for (i in 0 until arrayList.size) {
-            mMap.addMarker(MarkerOptions().position(arrayList[i]))
+            val marker = bitmapDescriptorFromVector(requireContext(), R.drawable.ic_app_marker)
+            mMap.addMarker(MarkerOptions().position(arrayList[i]).icon(marker))
         }
+    }
+
+    private fun bitmapDescriptorFromVector(
+        context: Context,
+        @DrawableRes vectorResId: Int
+    ): BitmapDescriptor? {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(
+            0,
+            0,
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 
     override fun onStart() {

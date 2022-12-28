@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.mypage.NotificationSettingFragment" />
 
     </data>
 
@@ -36,15 +39,6 @@
         </androidx.appcompat.widget.Toolbar>
 
         <View
-            android:id="@+id/view3"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_alarm" />
-
-        <View
             android:id="@+id/view9"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
@@ -54,7 +48,7 @@
             app:layout_constraintTop_toBottomOf="@id/tb_notification_setting" />
 
         <LinearLayout
-            android:id="@+id/layout_setting_alarm"
+            android:id="@+id/layout_notification_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -75,11 +69,12 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_notification_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:checked="true"
+                android:onClick="@{view::changeSwitchAll}"
                 android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
@@ -91,10 +86,10 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_alarm" />
+            app:layout_constraintTop_toBottomOf="@id/layout_notification_all" />
 
         <LinearLayout
-            android:id="@+id/layout_setting_notice"
+            android:id="@+id/layout_notification_like"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -115,10 +110,12 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_notification_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{view::changeSwitch}"
                 android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
@@ -130,10 +127,10 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_notice" />
+            app:layout_constraintTop_toBottomOf="@id/layout_notification_like" />
 
         <LinearLayout
-            android:id="@+id/layout_setting_center"
+            android:id="@+id/layout_notification_follow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -154,10 +151,12 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_notification_follow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{view::changeSwitch}"
                 android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
@@ -169,10 +168,10 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_center" />
+            app:layout_constraintTop_toBottomOf="@id/layout_notification_follow" />
 
         <LinearLayout
-            android:id="@+id/layout_setting_logout"
+            android:id="@+id/layout_notification_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -193,10 +192,12 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_notification_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
+                android:onClick="@{view::changeSwitch}"
                 android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
@@ -208,7 +209,7 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_logout" />
+            app:layout_constraintTop_toBottomOf="@id/layout_notification_comment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

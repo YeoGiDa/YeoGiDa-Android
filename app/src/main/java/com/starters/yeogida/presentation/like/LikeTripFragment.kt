@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.local.LikeTripData
-import com.starters.yeogida.data.remote.response.trip.LikeTrip
+import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
@@ -196,7 +196,7 @@ class LikeTripFragment : Fragment() {
 
     private suspend fun fetchList(
         regionList: MutableList<LikeTripData>,
-        list: List<LikeTrip>
+        list: List<TripResponse>
     ) {
         regionList.clear()
 

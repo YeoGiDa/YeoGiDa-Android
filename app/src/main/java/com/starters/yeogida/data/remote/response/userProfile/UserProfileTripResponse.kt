@@ -1,7 +1,7 @@
-package com.starters.yeogida.data.remote.response.trip
+package com.starters.yeogida.data.remote.response.userProfile
 
 import com.starters.yeogida.data.remote.response.common.TripResponse
 
-data class LikeTripResponse(
+data class UserProfileTripResponse(
     val tripList: List<TripResponse>
 )

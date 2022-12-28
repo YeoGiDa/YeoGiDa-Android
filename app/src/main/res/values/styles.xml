@@ -96,9 +96,16 @@
         <item name="chipStrokeColor">@color/stroke_color_region_chip</item>
 
         <item name="android:textColor">@color/text_color_region_chip</item>
+        <item name="android:textAppearance">@style/RegionChipTextAppearance</item>
+
         <item name="chipIconTint">@color/text_color_region_chip</item>
         <item name="rippleColor">@null</item>
         <item name="chipBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="RegionChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_bold</item>
     </style>
 
     <!-- Bottom Sheet -->

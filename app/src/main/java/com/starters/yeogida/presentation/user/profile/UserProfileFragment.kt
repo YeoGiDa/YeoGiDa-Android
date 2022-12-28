@@ -14,6 +14,7 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.around.TripSortBottomSheetFragment
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.shortToast
@@ -35,6 +36,8 @@ class UserProfileFragment : Fragment() {
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private var memberId: Long = 0
+    private var region: String = "nothing"
+    private var sortValue: String = "id"
 
     private val tripList = mutableListOf<TripResponse>()
     private val regionSet = mutableSetOf<String>()
@@ -61,6 +64,8 @@ class UserProfileFragment : Fragment() {
         setTripAdapter()
         setOnTripClicked()
         initUserTripList()
+        initBottomSheet()
+        initChipClickListener()
     }
 
     override fun onResume() {
@@ -87,6 +92,21 @@ class UserProfileFragment : Fragment() {
         binding.rvUserProfileTrip.adapter = UserProfileAdapter(tripList, viewModel)
     }
 
+    // chip button 클릭 시
+    private fun initChipClickListener() {
+        binding.chipGroup.setOnCheckedStateChangeListener { _, checkedId ->
+            if (checkedId.isEmpty()) {
+                region = "nothing"
+                getSortedData()
+            } else {
+                val selectedChipText =
+                    binding.chipGroup.findViewById<Chip>(binding.chipGroup.checkedChipId).text.toString()
+                region = selectedChipText
+                getSortedData()
+            }
+        }
+    }
+
     private fun addRegionChip(region: String) {
         with(binding.chipGroup) {
             addView(Chip(requireContext(), null, R.attr.regionChipStyle).apply {
@@ -98,6 +118,20 @@ class UserProfileFragment : Fragment() {
     private fun setOnBackPressed() {
         binding.tbUserProfile.setNavigationOnClickListener {
             requireActivity().finish()
+        }
+    }
+
+    private fun initBottomSheet() {
+        binding.btnUserProfileSort.setOnClickListener {
+            val bottomSheetDialog = TripSortBottomSheetFragment {
+                binding.btnUserProfileSort.text = it
+                when (it) {
+                    "최신순" -> sortValue = "id"
+                    "인기순" -> sortValue = "heart"
+                }
+                getSortedData()
+            }
+            bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         }
     }
 
@@ -146,6 +180,7 @@ class UserProfileFragment : Fragment() {
                             for (region in regionSet) {
                                 addRegionChip(region)
                             }
+                            binding.btnUserProfileSort.text = "최신순"
                             binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -156,6 +191,41 @@ class UserProfileFragment : Fragment() {
             }
         }
     }
+
+    private fun getSortedData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.e("sortValue", sortValue)
+            Log.e("region", region)
+            val response = tripService.getUserTripList(
+                memberId,
+                region,
+                sortValue
+            )
+
+            when (response.code()) {
+                200 -> {
+                    val data = response.body()?.data
+                    data?.let { data ->
+                        tripList.clear()
+                        tripList.addAll(data.tripList)
+
+                        withContext(Dispatchers.Main) {
+                            when (sortValue) {
+                                "id" -> binding.btnUserProfileSort.text = "최신순"
+                                "heart" -> binding.btnUserProfileSort.text = "인기순"
+                            }
+                            binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
+
+                        }
+                    }
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
 
     private fun setOnFollowBtnClicked() {
         viewModel.followUserEvent.observe(viewLifecycleOwner, EventObserver { memberId ->

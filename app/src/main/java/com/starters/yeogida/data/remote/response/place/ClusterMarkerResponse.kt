@@ -5,6 +5,7 @@ data class ClusterMarkerResponse(
 )
 
 data class ClusterMarkerData(
+    val tripId: Long,
     val placeId: Long,
     val imgUrl: String,
     val nickname: String,

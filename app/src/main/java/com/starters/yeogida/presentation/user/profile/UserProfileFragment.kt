@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.user.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,11 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +34,10 @@ class UserProfileFragment : Fragment() {
 
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
+    private var memberId: Long = 0
+
+    private val tripList = mutableListOf<TripResponse>()
+    private val regionSet = mutableSetOf<String>()
     private var isFollow = false
 
     override fun onCreateView(
@@ -44,14 +52,47 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        getMemberId()
         setOnBackPressed()
-
-        requireActivity().intent?.extras?.let { bundle ->
-            val clickedMemberId = bundle.getLong("memberId")
-            initUserProfile(clickedMemberId)
-        }
-
+        initUserProfile()
         setOnFollowBtnClicked()
+
+        setTripAdapter()
+        setOnTripClicked()
+        initUserTripList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initUserProfile()
+    }
+
+    private fun setOnTripClicked() {
+        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
+            Intent(requireContext(), PlaceActivity::class.java).apply {
+                putExtra("tripId", tripId)
+                startActivity(this)
+            }
+        })
+    }
+
+    private fun getMemberId() {
+        requireActivity().intent?.extras?.let { bundle ->
+            memberId = bundle.getLong("memberId")
+        }
+    }
+
+    private fun setTripAdapter() {
+        binding.rvUserProfileTrip.adapter = UserProfileAdapter(tripList, viewModel)
+    }
+
+    private fun addRegionChip(region: String) {
+        with(binding.chipGroup) {
+            addView(Chip(requireContext(), null, R.attr.regionChipStyle).apply {
+                text = region
+            })
+        }
     }
 
     private fun setOnBackPressed() {
@@ -60,7 +101,7 @@ class UserProfileFragment : Fragment() {
         }
     }
 
-    private fun initUserProfile(memberId: Long) {
+    private fun initUserProfile() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = userService.getUserProfile(
                 dataStore.userBearerToken.first(),
@@ -82,26 +123,39 @@ class UserProfileFragment : Fragment() {
         }
     }
 
-    /*private fun initUserTripList(memberId : Long) {
+    private fun initUserTripList() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.getUserTripList(
                 memberId,
-                "최신순"
+                "nothing",
+                "id"
             )
 
             when (response.code()) {
                 200 -> {
-                    withContext(Dispatchers.Main) {
-                        binding.userProfile = response.body()?.data
-                        binding.executePendingBindings()
+                    val data = response.body()?.data
+                    data?.let { data ->
+                        tripList.clear()
+                        tripList.addAll(data.tripList)
+
+                        for (trip in tripList) {
+                            regionSet.add(trip.region)
+                        }
+
+                        withContext(Dispatchers.Main) {
+                            for (region in regionSet) {
+                                addRegionChip(region)
+                            }
+                            binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
+                        }
                     }
                 }
                 else -> {
-                    Log.e("UserProfile", "$response")
+
                 }
             }
         }
-    }*/
+    }
 
     private fun setOnFollowBtnClicked() {
         viewModel.followUserEvent.observe(viewLifecycleOwner, EventObserver { memberId ->

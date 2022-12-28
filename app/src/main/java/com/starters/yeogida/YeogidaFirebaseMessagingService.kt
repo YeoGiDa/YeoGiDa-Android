@@ -13,9 +13,14 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class YeogidaFirebaseMessagingService : FirebaseMessagingService() {
     val TAG = "FirebaseMessagingService"
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -34,7 +39,31 @@ class YeogidaFirebaseMessagingService : FirebaseMessagingService() {
             val body = remoteMessage.data["body"]
             val type = remoteMessage.data["alarmType"]
             val targetId = remoteMessage.data["targetId"]
-            sendNotification(title, body, type, targetId)
+
+            // 알림 설정 여부에 따라 알림 보여주기
+            when (type) {
+                "NEW_HEART" -> {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (dataStore.notificationLikeIsAllow.first()) {
+                            sendNotification(title, body, type, targetId)
+                        }
+                    }
+                }
+                "NEW_FOLLOW" -> {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (dataStore.notificationFollowIsAllow.first()) {
+                            sendNotification(title, body, type, targetId)
+                        }
+                    }
+                }
+                "NEW_COMMENT" -> {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (dataStore.notificationCommentIsAllow.first()) {
+                            sendNotification(title, body, type, targetId)
+                        }
+                    }
+                }
+            }
         } else {
             Log.d(TAG, "수신 에러: data가 비어있습니다.")
         }
@@ -59,7 +88,7 @@ class YeogidaFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_ONE_SHOT)
         }
 
-        val channelId = "Channel ID"
+        val channelId = "YeoGidia"
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.sym_def_app_icon)

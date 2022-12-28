@@ -1,60 +1,99 @@
 package com.starters.yeogida.presentation.mypage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.starters.yeogida.R
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.databinding.FragmentNotificationSettingBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NotificationSettingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotificationSettingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentNotificationSettingBinding
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentNotificationSettingBinding.inflate(inflater, container, false)
+        binding.view = this
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initSwitchChecked()
+        initClickListener()
+    }
+
+    private fun initSwitchChecked() {
+        CoroutineScope(Dispatchers.IO).launch {
+            with(binding) {
+                switchNotificationFollow.isChecked = dataStore.notificationFollowIsAllow.first()
+                switchNotificationLike.isChecked = dataStore.notificationLikeIsAllow.first()
+                switchNotificationComment.isChecked = dataStore.notificationCommentIsAllow.first()
+
+                if (switchNotificationComment.isChecked && switchNotificationLike.isChecked && switchNotificationFollow.isChecked) {
+                    switchNotificationAll.isChecked = true
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification_setting, container, false)
+// 각 알림 switch check 변경 시
+    fun changeSwitch(view: View) {
+        with(binding) {
+            // 각 알림 switch check를 모두 true 변경 시
+            if (switchNotificationComment.isChecked && switchNotificationLike.isChecked && switchNotificationFollow.isChecked) {
+                switchNotificationAll.isChecked = true
+            }
+
+            // 각 알림 switch check 중 false로 변경 시
+            if (!switchNotificationComment.isChecked || !switchNotificationLike.isChecked || !switchNotificationFollow.isChecked) {
+                switchNotificationAll.isChecked = false
+            }
+
+            saveNotification(like = switchNotificationLike.isChecked, follow = switchNotificationFollow.isChecked, comment = switchNotificationComment.isChecked)
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotificationSettingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NotificationSettingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    // 전체 알림 switch 변경 시
+    fun changeSwitchAll(view: View) {
+        if (binding.switchNotificationAll.isChecked) {
+            isCheckedNotification(like = true, follow = true, comment = true)
+            saveNotification(like = true, follow = true, comment = true)
+        } else {
+            isCheckedNotification(like = false, follow = false, comment = false)
+            saveNotification(like = false, follow = false, comment = false)
+        }
+    }
+
+    private fun isCheckedNotification(like: Boolean, follow: Boolean, comment: Boolean) {
+        with(binding) {
+            switchNotificationLike.isChecked = like
+            switchNotificationFollow.isChecked = follow
+            switchNotificationComment.isChecked = comment
+        }
+    }
+
+    private fun saveNotification(like: Boolean, follow: Boolean, comment: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.saveNotificationLikeIsAllow(like)
+            dataStore.saveNotificationFollowIsAllow(follow)
+            dataStore.saveNotificationCommentIsAllow(comment)
+        }
+    }
+
+    private fun initClickListener() {
+        binding.tbNotificationSetting.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 }

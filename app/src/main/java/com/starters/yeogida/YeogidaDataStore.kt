@@ -19,6 +19,11 @@ class YeogidaDataStore(private val context: Context) {
         booleanPreferencesKey("IS_IMAGE_PERMISSION_REJECTED")
     private val MEMBER_ID = longPreferencesKey("MEMBER_ID")
 
+    // 알림
+    private val NOTIFICATION_IS_LIKE = booleanPreferencesKey("NOTIFICATION_IS_LIKE")
+    private val NOTIFICATION_IS_FOLLOW = booleanPreferencesKey("NOTIFICATION_IS_FOLLOW")
+    private val NOTIFICATION_IS_COMMENT = booleanPreferencesKey("NOTIFICATION_IS_COMMENT")
+
     val userAccessToken: Flow<String> = context.userDataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -91,6 +96,42 @@ class YeogidaDataStore(private val context: Context) {
             userPrefs[MEMBER_ID] ?: 0
         }
 
+    val notificationLikeIsAllow: Flow<Boolean> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[NOTIFICATION_IS_LIKE] ?: true
+        }
+
+    val notificationFollowIsAllow: Flow<Boolean> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[NOTIFICATION_IS_FOLLOW] ?: true
+        }
+
+    val notificationCommentIsAllow: Flow<Boolean> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[NOTIFICATION_IS_COMMENT] ?: true
+        }
+
     private suspend fun saveAccessToken(accessToken: String) {
         context.userDataStore.edit { userPrefs ->
             userPrefs[USER_ACCESS_TOKEN_KEY] = accessToken
@@ -142,6 +183,24 @@ class YeogidaDataStore(private val context: Context) {
     suspend fun saveIsImgPermissionRejected(isRejected: Boolean) {
         context.userDataStore.edit { userPrefs ->
             userPrefs[IMAGE_PERMISSION_IS_REJECTED_KEY] = isRejected
+        }
+    }
+
+    suspend fun saveNotificationLikeIsAllow(isAllow: Boolean) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[NOTIFICATION_IS_LIKE] = isAllow
+        }
+    }
+
+    suspend fun saveNotificationFollowIsAllow(isAllow: Boolean) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[NOTIFICATION_IS_FOLLOW] = isAllow
+        }
+    }
+
+    suspend fun saveNotificationCommentIsAllow(isAllow: Boolean) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[NOTIFICATION_IS_COMMENT] = isAllow
         }
     }
 

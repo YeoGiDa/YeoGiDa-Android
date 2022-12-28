@@ -247,6 +247,7 @@ class UserProfileFragment : Fragment() {
                             200 -> {
                                 // 팔로우 취소 성공
                                 isFollow = false
+                                initUserProfile()
                             }
 
                             else -> {
@@ -256,6 +257,7 @@ class UserProfileFragment : Fragment() {
                                     text = "팔로잉"
                                     setTextColor(resources.getColor(R.color.black, null))
                                 }
+                                initUserProfile()
                                 requireContext().shortToast("팔로우 취소 실패")
                             }
                         }
@@ -279,7 +281,8 @@ class UserProfileFragment : Fragment() {
                         when (response.code()) {
                             200 -> {
                                 // 팔로우 추가 성공
-
+                                isFollow = true
+                                initUserProfile()
                             }
 
                             else -> {
@@ -289,6 +292,7 @@ class UserProfileFragment : Fragment() {
                                     text = "팔로우"
                                     setTextColor(resources.getColor(R.color.white, null))
                                 }
+                                initUserProfile()
                                 requireContext().shortToast("팔로우 추가 실패")
                             }
                         }

@@ -28,6 +28,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.databinding.FragmentAroundBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.customEnqueue
 
 class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -191,7 +192,9 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     private fun initBottomSheetAdapter(latitude: Double, longitude: Double) {
-        val placeAdapter = PlaceBottomSheetAdapter()
+        val placeAdapter = PlaceBottomSheetAdapter() { tripId: Long, placeId: Long ->
+            moveToDetail(tripId, placeId)
+        }
         binding.bottomSheetPlace.rvPlaceBottomSheet.adapter = placeAdapter
         YeogidaClient.aroundService.getClusterMarkerData(
             latitude,
@@ -213,6 +216,14 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             state = BottomSheetBehavior.STATE_HIDDEN
             isDraggable = true
         }
+    }
+
+    private fun moveToDetail(tripId: Long, placeId: Long) {
+        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        intent.putExtra("type", "around")
+        intent.putExtra("tripId", tripId)
+        intent.putExtra("placeId", placeId)
+        startActivity(intent)
     }
 
     // 권한 처리

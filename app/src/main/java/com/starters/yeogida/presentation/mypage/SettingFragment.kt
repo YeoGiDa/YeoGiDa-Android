@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.kakao.sdk.user.UserApiClient
+import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.api.UserService
 import com.starters.yeogida.data.remote.common.TokenData
@@ -41,6 +42,7 @@ class SettingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingBinding.inflate(inflater, container, false)
+        binding.view = this
         return binding.root
     }
 
@@ -206,5 +208,9 @@ class SettingFragment : Fragment() {
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    fun moveToNotificationSetting(view: View) {
+        findNavController().navigate(R.id.action_setting_to_notifacationSetting)
     }
 }

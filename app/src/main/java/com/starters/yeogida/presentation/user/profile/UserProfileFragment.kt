@@ -194,8 +194,6 @@ class UserProfileFragment : Fragment() {
 
     private fun getSortedData() {
         CoroutineScope(Dispatchers.IO).launch {
-            Log.e("sortValue", sortValue)
-            Log.e("region", region)
             val response = tripService.getUserTripList(
                 memberId,
                 region,

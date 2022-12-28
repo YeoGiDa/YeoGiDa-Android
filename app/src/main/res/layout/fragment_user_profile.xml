@@ -245,10 +245,34 @@
                 android:layout_marginStart="16dp"
                 app:chipSpacingHorizontal="16dp"
                 app:singleSelection="true" />
+
         </HorizontalScrollView>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_user_place_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_arrow_downup"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/black"
+            android:fontFamily="@font/noto_sans_medium"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_marginTop="12dp"
+            android:paddingStart="10dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/sv_user_profile_chip"
+            app:layout_constraintBottom_toTopOf="@id/rv_user_profile_trip"
+            app:layout_constraintEnd_toEndOf="@id/rv_user_profile_trip"
+            tools:text="인기순" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_trip"
+            android:id="@+id/rv_user_profile_trip"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -260,7 +284,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sv_user_profile_chip"
+            app:layout_constraintTop_toBottomOf="@id/btn_user_place_sort"
             tools:listitem="@layout/item_trip" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

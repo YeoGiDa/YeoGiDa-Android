@@ -64,6 +64,21 @@ class HomeFragment : Fragment() {
                 bestTravelerAdapter.notifyDataSetChanged()
             }
         )
+
+        val recentTripAdapter = TripAdapter()
+        binding.rvRecentTrip.adapter = recentTripAdapter
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.homeService.getRecentTrip(
+                YeogidaApplication.getInstance().getDataStore().userBearerToken.first()
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 200) {
+                        it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
+                        recentTripAdapter.notifyDataSetChanged()
+                    }
+                }
+            )
+        }
     }
 
     fun moveToMyPage(view: View) {
@@ -77,24 +92,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUserProfileClicked() {
-        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            CoroutineScope(Dispatchers.IO).launch {
-                val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+        viewModel.openUserProfileEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { memberId ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
 
-                if (myMemberId != memberId) {
-                    withContext(Dispatchers.Main) {
-                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                    if (myMemberId != memberId) {
+                        withContext(Dispatchers.Main) {
+                            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                                putExtra("memberId", memberId)
+                                startActivity(this)
+                            }
+                        }
+                    } else {
+                        Intent(requireContext(), MyPageActivity::class.java).apply {
                             putExtra("memberId", memberId)
                             startActivity(this)
                         }
                     }
-                } else {
-                    Intent(requireContext(), MyPageActivity::class.java).apply {
-                        putExtra("memberId", memberId)
-                        startActivity(this)
-                    }
                 }
             }
-        })
+        )
     }
 }

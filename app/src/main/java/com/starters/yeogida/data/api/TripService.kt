@@ -63,9 +63,10 @@ interface TripService {
     ): Response<BaseResponse<LikeTripResponse>>
 
     // 유저 상세 여행지 목록
-    @GET("trips/member/{memberId}")
+    @GET("trips/member/{memberId}/{region}")
     suspend fun getUserTripList(
         @Path("memberId") memberId: Long,
+        @Path("region") region: String,
         @Query("condition") condition: String
     ): Response<BaseResponse<UserProfileTripResponse>>
 

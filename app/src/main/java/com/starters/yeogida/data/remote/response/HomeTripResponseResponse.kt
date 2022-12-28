@@ -1,6 +1,6 @@
 package com.starters.yeogida.data.remote.response
 
-data class MonthlyBestResponse(
+data class HomeTripResponseResponse(
     val tripList: List<TripListData>
 )
 

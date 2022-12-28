@@ -54,6 +54,13 @@ interface TripService {
         @Path("region") region: String
     ): Response<BaseResponse<LikeTripResponse>>
 
+    // 여기 좋아 - 전체 검색
+    @GET("trips/my/heart/search")
+    suspend fun searchLikeTrip(
+        @Header("Authorization") bearerToken: String,
+        @Query("keyword") keyword: String
+    ): Response<BaseResponse<LikeTripResponse>>
+
     // 유저 상세 여행지 목록
     @GET("trips/member/{memberId}")
     suspend fun getUserTripList(
@@ -66,4 +73,6 @@ interface TripService {
     suspend fun getTripLikeUserList(
         @Path("tripId") tripId: Long
     ): Response<BaseResponse<TripLikeUserResponse>>
+
+
 }

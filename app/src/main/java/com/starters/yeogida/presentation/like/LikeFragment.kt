@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentLikeBinding
@@ -25,6 +25,8 @@ class LikeFragment : Fragment() {
 
     private val tripService = YeogidaClient.tripService
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
+
+    private val viewModel: LikeTripViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,12 +48,6 @@ class LikeFragment : Fragment() {
 
         regionList.clear()
         getRegionData()
-    }
-
-    private fun searchTextListener() {
-        binding.etSearch.addTextChangedListener {
-
-        }
     }
 
     private fun getRegionData() {

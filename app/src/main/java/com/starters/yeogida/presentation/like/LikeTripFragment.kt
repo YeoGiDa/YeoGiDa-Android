@@ -2,6 +2,8 @@ package com.starters.yeogida.presentation.like
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 class LikeTripFragment : Fragment() {
     private lateinit var binding: FragmentLikeTripBinding
@@ -40,12 +43,6 @@ class LikeTripFragment : Fragment() {
             }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val choice = arguments?.getInt(REGION_CATEGORY_ITEM)
-        initAdapter(choice)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,8 +58,93 @@ class LikeTripFragment : Fragment() {
 
         val choice = arguments?.getInt(REGION_CATEGORY_ITEM)
         initAdapter(choice)
+        initSearchView(choice)
+        setSearchTextChangedListener(choice)
 
         setTripClickListener()
+    }
+
+    private fun initSearchView(choice: Int?) {
+        choice?.let {
+            when (choice) {
+                0 -> {
+                    binding.etLikeTripSearch.visibility = View.VISIBLE
+                    binding.ivLikeTripSearch.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.etLikeTripSearch.visibility = View.GONE
+                    binding.ivLikeTripSearch.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setSearchTextChangedListener(choice: Int?) {
+        binding.etLikeTripSearch.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val searchText = binding.etLikeTripSearch.text.toString()
+                if (isValidSearchText(searchText)) {
+                    if (choice == 0) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val response = tripService.searchLikeTrip(
+                                dataStore.userBearerToken.first(),
+                                searchText
+                            )
+
+                            when (response.code()) {
+                                200 -> {
+                                    val data = response.body()?.data
+                                    data?.let { data ->
+                                        val tripList = data.tripList
+
+                                        LikeTripLists.all.clear()
+
+                                        for (i in tripList.indices) {
+                                            LikeTripLists.all.add(
+                                                LikeTripData(
+                                                    tripList[i].tripId,
+                                                    tripList[i].region,
+                                                    tripList[i].imgUrl,
+                                                    tripList[i].title,
+                                                    tripList[i].subTitle,
+                                                    tripList[i].nickname,
+                                                    true,
+                                                    tripList[i].heartCount,
+                                                    tripList[i].placeCount
+                                                )
+                                            )
+                                        }
+                                        withContext(Dispatchers.Main) {
+                                            setLikeAdapter(LikeTripLists.all)
+                                            binding.rvTrip.adapter?.notifyDataSetChanged()
+                                        }
+                                    }
+                                }
+                                else -> {
+                                    Log.e("searchFollow", response.toString())
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (searchText == "" && choice == 0) {
+                    initLikeTrip()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+    }
+
+    private fun isValidSearchText(searchText: String): Boolean {
+        val regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,10}\$"
+        val pattern = Pattern.compile(regex)
+
+        val matcher = pattern.matcher(searchText)
+
+        return matcher.matches()
     }
 
     private fun initRegionLikeTrip(region: String) {

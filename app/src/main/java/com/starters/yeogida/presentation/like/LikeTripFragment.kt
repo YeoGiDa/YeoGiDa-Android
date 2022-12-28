@@ -2,6 +2,8 @@ package com.starters.yeogida.presentation.like
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,7 @@ import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.data.remote.response.trip.LikeTrip
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
 import com.starters.yeogida.network.YeogidaClient
-import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
-import com.starters.yeogida.presentation.common.RegionCategory
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 class LikeTripFragment : Fragment() {
     private lateinit var binding: FragmentLikeTripBinding
@@ -57,8 +58,93 @@ class LikeTripFragment : Fragment() {
 
         val choice = arguments?.getInt(REGION_CATEGORY_ITEM)
         initAdapter(choice)
+        initSearchView(choice)
+        setSearchTextChangedListener(choice)
 
         setTripClickListener()
+    }
+
+    private fun initSearchView(choice: Int?) {
+        choice?.let {
+            when (choice) {
+                0 -> {
+                    binding.etLikeTripSearch.visibility = View.VISIBLE
+                    binding.ivLikeTripSearch.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.etLikeTripSearch.visibility = View.GONE
+                    binding.ivLikeTripSearch.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun setSearchTextChangedListener(choice: Int?) {
+        binding.etLikeTripSearch.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val searchText = binding.etLikeTripSearch.text.toString()
+                if (isValidSearchText(searchText)) {
+                    if (choice == 0) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val response = tripService.searchLikeTrip(
+                                dataStore.userBearerToken.first(),
+                                searchText
+                            )
+
+                            when (response.code()) {
+                                200 -> {
+                                    val data = response.body()?.data
+                                    data?.let { data ->
+                                        val tripList = data.tripList
+
+                                        LikeTripLists.all.clear()
+
+                                        for (i in tripList.indices) {
+                                            LikeTripLists.all.add(
+                                                LikeTripData(
+                                                    tripList[i].tripId,
+                                                    tripList[i].region,
+                                                    tripList[i].imgUrl,
+                                                    tripList[i].title,
+                                                    tripList[i].subTitle,
+                                                    tripList[i].nickname,
+                                                    true,
+                                                    tripList[i].heartCount,
+                                                    tripList[i].placeCount
+                                                )
+                                            )
+                                        }
+                                        withContext(Dispatchers.Main) {
+                                            setLikeAdapter(LikeTripLists.all)
+                                            binding.rvTrip.adapter?.notifyDataSetChanged()
+                                        }
+                                    }
+                                }
+                                else -> {
+                                    Log.e("searchFollow", response.toString())
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (searchText == "" && choice == 0) {
+                    initLikeTrip()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+    }
+
+    private fun isValidSearchText(searchText: String): Boolean {
+        val regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,10}\$"
+        val pattern = Pattern.compile(regex)
+
+        val matcher = pattern.matcher(searchText)
+
+        return matcher.matches()
     }
 
     private fun initRegionLikeTrip(region: String) {
@@ -108,7 +194,7 @@ class LikeTripFragment : Fragment() {
         }
     }
 
-    private fun fetchList(
+    private suspend fun fetchList(
         regionList: MutableList<LikeTripData>,
         list: List<LikeTrip>
     ) {
@@ -118,7 +204,7 @@ class LikeTripFragment : Fragment() {
             regionList.add(
                 LikeTripData(
                     list[i].tripId,
-                    RegionCategory.ALL,
+                    list[i].region,
                     list[i].imgUrl,
                     list[i].title,
                     list[i].subTitle,
@@ -129,11 +215,14 @@ class LikeTripFragment : Fragment() {
                 )
             )
         }
+
+        withContext(Dispatchers.Main) {
+            setLikeAdapter(regionList)
+        }
     }
 
 
     private fun initLikeTrip() {
-
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.getLikeTrip(
                 dataStore.userBearerToken.first()
@@ -151,7 +240,7 @@ class LikeTripFragment : Fragment() {
                             LikeTripLists.all.add(
                                 LikeTripData(
                                     list[i].tripId,
-                                    RegionCategory.ALL,
+                                    list[i].region,
                                     list[i].imgUrl,
                                     list[i].title,
                                     list[i].subTitle,
@@ -163,6 +252,7 @@ class LikeTripFragment : Fragment() {
                             )
                         }
                         withContext(Dispatchers.Main) {
+                            setLikeAdapter(LikeTripLists.all)
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -176,80 +266,13 @@ class LikeTripFragment : Fragment() {
     private fun initAdapter(choice: Int?) {
 
         choice?.let {
-            when (choice) {
-                0 -> {
-                    setLikeAdapter(LikeTripLists.all)
-                    initLikeTrip()
-                }
-                1 -> {
-                    setLikeAdapter(LikeTripLists.seoul)
-                    initRegionLikeTrip("서울")
-                }
-                2 -> {
-                    setLikeAdapter(LikeTripLists.gyeonggi)
-                    initRegionLikeTrip("경기도")
-                }
-                3 -> {
-                    setLikeAdapter(LikeTripLists.incheon)
-                    initRegionLikeTrip("인천")
-                }
-                4 -> {
-                    setLikeAdapter(LikeTripLists.sejong)
-                    initRegionLikeTrip("세종")
-                }
-                5 -> {
-                    setLikeAdapter(LikeTripLists.kangwon)
-                    initRegionLikeTrip("강원도")
-                }
-                6 -> {
-                    setLikeAdapter(LikeTripLists.chungbuk)
-                    initRegionLikeTrip("충청북도")
-                }
-                7 -> {
-                    setLikeAdapter(LikeTripLists.chungnam)
-                    initRegionLikeTrip("충청남도")
-                }
-                8 -> {
-                    setLikeAdapter(LikeTripLists.daejeon)
-                    initRegionLikeTrip("대전")
-                }
-                9 -> {
-                    setLikeAdapter(LikeTripLists.kwangju)
-                    initRegionLikeTrip("광주")
-                }
-                10 -> {
-                    setLikeAdapter(LikeTripLists.jeonbuk)
-                    initRegionLikeTrip("전라북도")
-                }
-                11 -> {
-                    setLikeAdapter(LikeTripLists.jeonnam)
-                    initRegionLikeTrip("전라남도")
-                }
-                12 -> {
-                    setLikeAdapter(LikeTripLists.daegu)
-                    initRegionLikeTrip("대구")
-                }
-                13 -> {
-                    setLikeAdapter(LikeTripLists.ulsan)
-                    initRegionLikeTrip("울산")
-                }
-                14 -> {
-                    setLikeAdapter(LikeTripLists.busan)
-                    initRegionLikeTrip("부산")
-                }
-                15 -> {
-                    setLikeAdapter(LikeTripLists.kyeongbuk)
-                    initRegionLikeTrip("경상북도")
-                }
-                16 -> {
-                    setLikeAdapter(LikeTripLists.kyeongnam)
-                    initRegionLikeTrip("경상남도")
-                }
-                17 -> {
-                    setLikeAdapter(LikeTripLists.jeju)
-                    initRegionLikeTrip("제주")
-                }
-                else -> {}
+            if (choice == 0) {
+                initLikeTrip()
+            } else {
+                Log.e("choice", choice.toString())
+                Log.e("region", LikeTripObj.regionList[choice])
+
+                initRegionLikeTrip(LikeTripObj.regionList[choice])
             }
         }
     }
@@ -274,7 +297,7 @@ class LikeTripFragment : Fragment() {
                     override fun onClick(likeBtn: View, likeTrip: LikeTripData) {
 
                         if (likeBtn.isSelected) { // 좋아요가 눌려있을 때
-                            showDeleteLikeDialog(likeTrip, likeBtn)
+                            deleteLikeTrip(likeTrip, likeBtn)
                         } else { // 좋아요가 눌려있지 않을 때
                             addLikeTrip(likeTrip, likeBtn)
                         }
@@ -284,28 +307,11 @@ class LikeTripFragment : Fragment() {
         }
     }
 
-    private fun showDeleteLikeDialog(
-        likeTrip: LikeTripData,
-        likeBtn: View
-    ) {
-        CustomDialog(requireContext()).apply {
-            showDialog()
-            setTitle("좋아요를 취소하시겠습니까?")
-
-            setPositiveBtn("확인") {
-                deleteLikeTrip(likeTrip, likeBtn)
-                dismissDialog()
-            }
-            setNegativeBtn("닫기") {
-                dismissDialog()
-            }
-        }
-    }
-
     private fun addLikeTrip(
         likeTrip: LikeTripData,
         likeBtn: View
     ) {
+        likeBtn.isSelected = true
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.postTripHeart(
                 dataStore.userBearerToken.first(),
@@ -315,12 +321,13 @@ class LikeTripFragment : Fragment() {
             when (response.code()) {
                 201 -> {
                     withContext(Dispatchers.Main) {
-                        likeBtn.isSelected = true
+                        requireContext().shortToast("좋아요를 추가하였습니다")
                     }
                 }
                 else -> {
                     Log.e("LikeResponse/Error", response.message())
                     withContext(Dispatchers.Main) {
+                        likeBtn.isSelected = true
                         requireContext().shortToast("에러")
                     }
                 }
@@ -332,6 +339,8 @@ class LikeTripFragment : Fragment() {
         likeTrip: LikeTripData,
         likeBtn: View
     ) {
+        likeBtn.isSelected = false
+
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.deleteTripHeart(
                 dataStore.userBearerToken.first(),
@@ -341,13 +350,13 @@ class LikeTripFragment : Fragment() {
             when (response.code()) {
                 200 -> {
                     withContext(Dispatchers.Main) {
-                        likeBtn.isSelected = false
                         requireContext().shortToast("좋아요를 취소하였습니다")
                     }
                 }
                 else -> {
                     Log.e("LikeResponse/Error", response.message())
                     withContext(Dispatchers.Main) {
+                        likeBtn.isSelected = true
                         requireContext().shortToast("에러")
                     }
                 }

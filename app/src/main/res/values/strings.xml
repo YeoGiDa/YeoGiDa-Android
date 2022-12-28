@@ -110,6 +110,8 @@
     <!-- Like Fragment -->
     <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>
     <string name="like_trip_sort">정렬</string>
+    <string name="like_trip_empty">아직 좋아요한 여행지가 없어요.\n여행지에 좋아요를 눌러보세요.</string>
+
 
     <!-- Place Detail Fragment -->
     <string name="place_detail_comment_hint">댓글을 입력하세요</string>

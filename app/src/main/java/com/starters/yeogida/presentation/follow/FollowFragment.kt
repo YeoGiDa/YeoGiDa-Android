@@ -84,7 +84,6 @@ class FollowFragment : Fragment() {
     private fun setSearchTextChangedListener(choice: Int) {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                // 완료 버튼 Enabled 이벤트
                 val searchText = binding.etSearch.text.toString()
                 if (isValidSearchText(searchText)) {
                     Log.e("isValidSearch", isValidSearchText(searchText).toString())

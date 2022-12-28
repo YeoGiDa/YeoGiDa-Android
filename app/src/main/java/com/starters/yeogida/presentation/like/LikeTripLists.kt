@@ -4,39 +4,60 @@ import com.starters.yeogida.data.local.LikeTripData
 
 object LikeTripLists {
 
-    val seoul = mutableListOf<LikeTripData>()
+    val seoul: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
 
-    val gyeonggi = mutableListOf<LikeTripData>()
+    val gyeonggi: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
 
-    val incheon = mutableListOf<LikeTripData>()
-
-    val sejong = mutableListOf<LikeTripData>()
-
-    val kangwon = mutableListOf<LikeTripData>()
-
-    val chungbuk = mutableListOf<LikeTripData>()
-
-    val chungnam = mutableListOf<LikeTripData>()
-
-    val daejeon = mutableListOf<LikeTripData>()
-
-    val kwangju = mutableListOf<LikeTripData>()
-
-    val jeonbuk = mutableListOf<LikeTripData>()
-
-    val jeonnam = mutableListOf<LikeTripData>()
-
-    val daegu = mutableListOf<LikeTripData>()
-
-    val ulsan = mutableListOf<LikeTripData>()
-
-    val busan = mutableListOf<LikeTripData>()
-
-    val kyeongbuk = mutableListOf<LikeTripData>()
-
-    val kyeongnam = mutableListOf<LikeTripData>()
-
-    val jeju = mutableListOf<LikeTripData>()
-
-    val all = mutableListOf<LikeTripData>()
+    val incheon: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val sejong: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val kangwon: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val chungbuk: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val chungnam: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val daejeon: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val kwangju: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val jeonbuk: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val jeonnam: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val daegu: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val ulsan: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val busan: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val kyeongbuk: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val kyeongnam: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val jeju: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
+    val all: MutableList<LikeTripData> by lazy {
+        mutableListOf()
+    }
 }

@@ -1,13 +1,22 @@
 package com.starters.yeogida
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.starters.yeogida.databinding.ActivityMainBinding
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
+import gun0912.tedimagepicker.util.ToastUtil.context
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -18,8 +27,16 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
         initNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(this)
+        }
 
         setContentView(binding.root)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkNotification()
     }
 
     private fun initBottomNavigation() {
@@ -72,6 +89,33 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             else -> {}
+        }
+    }
+
+    private fun createNotificationChannel(context: Context) {
+        val name = "YeoGidia"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channelId = "${context.packageName}-$name"
+        val channel = NotificationChannel(channelId, name, importance)
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun checkNotification() {
+        val dataStore = YeogidaApplication.getInstance().getDataStore()
+
+        if (NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                dataStore.saveNotificationLikeIsAllow(true)
+                dataStore.saveNotificationFollowIsAllow(true)
+                dataStore.saveNotificationCommentIsAllow(true)
+            }
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                dataStore.saveNotificationLikeIsAllow(false)
+                dataStore.saveNotificationFollowIsAllow(false)
+                dataStore.saveNotificationCommentIsAllow(false)
+            }
         }
     }
 }

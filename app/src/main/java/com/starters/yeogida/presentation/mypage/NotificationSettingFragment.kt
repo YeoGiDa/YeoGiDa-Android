@@ -1,60 +1,54 @@
 package com.starters.yeogida.presentation.mypage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.starters.yeogida.R
+import androidx.fragment.app.Fragment
+import com.starters.yeogida.databinding.FragmentNotificationSettingBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NotificationSettingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class NotificationSettingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentNotificationSettingBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentNotificationSettingBinding.inflate(inflater, container, false)
+        binding.view = this
+        return binding.root
+    }
+
+    // 각 알림 switch check 변경 시
+    fun changeSwitch(view: View) {
+        with(binding) {
+            // 각 알림 switch check를 모두 true 변경 시
+            if (switchNotificationComment.isChecked && switchNotificationLike.isChecked && switchNotificationFollow.isChecked) {
+                switchNotificationAll.isChecked = true
+            }
+
+            // 각 알림 switch check를 모두 false로 변경 시
+            if (!switchNotificationComment.isChecked || !switchNotificationLike.isChecked || !switchNotificationFollow.isChecked) {
+                switchNotificationAll.isChecked = false
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification_setting, container, false)
+    // 전체 알림 switch 변경 시
+    fun changeSwitchAll(view: View) {
+        if (binding.switchNotificationAll.isChecked) {
+            isCheckedNotification(b1 = true, b2 = true, b3 = true)
+        } else {
+            isCheckedNotification(b1 = false, b2 = false, b3 = false)
+        }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NotificationSettingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NotificationSettingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun isCheckedNotification(b1: Boolean, b2: Boolean, b3: Boolean) {
+        with(binding) {
+            switchNotificationComment.isChecked = b1
+            switchNotificationLike.isChecked = b2
+            switchNotificationFollow.isChecked = b3
+        }
     }
 }

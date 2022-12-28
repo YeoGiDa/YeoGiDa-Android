@@ -93,4 +93,9 @@
     <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <!-- Switch -->
+    <style name="ColorSwitchStyle">
+        <item name="colorControlActivated">@color/main_blue</item>
+    </style>
 </resources>

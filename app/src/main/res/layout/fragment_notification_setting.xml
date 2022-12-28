@@ -5,22 +5,15 @@
 
     <data>
 
-        <variable
-            name="view"
-            type="com.starters.yeogida.presentation.mypage.SettingFragment" />
-
-        <variable
-            name="viewModel"
-            type="com.starters.yeogida.presentation.mypage.SettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.mypage.SettingFragment">
+        tools:context=".presentation.mypage.NotificationSettingFragment">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_setting"
+            android:id="@+id/tb_notification_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="0dp"
@@ -36,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/noto_sans_regular"
-                android:text="@string/mypage_setting"
+                android:text="@string/mypage_alarm_setting"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -58,24 +51,16 @@
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_setting" />
+            app:layout_constraintTop_toBottomOf="@id/tb_notification_setting" />
 
         <LinearLayout
             android:id="@+id/layout_setting_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{view::moveToNotificationSetting}"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view9">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_notification" />
 
             <TextView
                 android:layout_width="0dp"
@@ -84,16 +69,18 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/mypage_alarm_setting"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/notification_setting_all"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <ImageView
+            <androidx.appcompat.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
+                android:checked="true"
+                android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
 
@@ -115,13 +102,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view4">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_notice" />
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -129,16 +109,17 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/mypage_notice"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/notification_setting_like"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <ImageView
+            <androidx.appcompat.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
+                android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
 
@@ -160,13 +141,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view5">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_support" />
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -174,16 +148,17 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/mypage_center"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/notification_setting_follow"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <ImageView
+            <androidx.appcompat.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
+                android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
 
@@ -200,18 +175,10 @@
             android:id="@+id/layout_setting_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.logoutUser() }"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view6">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_logout" />
 
             <TextView
                 android:layout_width="0dp"
@@ -220,16 +187,17 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:text="@string/mypage_logout"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/notification_setting_comment"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <ImageView
+            <androidx.appcompat.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
+                android:theme="@style/ColorSwitchStyle" />
 
         </LinearLayout>
 
@@ -241,52 +209,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_setting_logout" />
-
-        <LinearLayout
-            android:id="@+id/layout_setting_withdraw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="@{ () -> viewModel.showWithDrawDialog() }"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view7">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/ic_withdraw" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="1"
-                android:text="@string/mypage_withdraw"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_next" />
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view8"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_setting_withdraw" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -14,6 +14,7 @@ import com.starters.yeogida.databinding.FragmentHomeBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
+import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
@@ -46,7 +47,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun initNetwork() {
-        val bestTripAdapter = TripAdapter()
+        val bestTripAdapter = TripAdapter { tripId: Long ->
+            moveToTrip(tripId)
+        }
         binding.rvBestMonthlyTrip.adapter = bestTripAdapter
 
         YeogidaClient.homeService.getMonthlyBest().customEnqueue(
@@ -65,7 +68,9 @@ class HomeFragment : Fragment() {
             }
         )
 
-        val recentTripAdapter = TripAdapter()
+        val recentTripAdapter = TripAdapter{ tripId: Long->
+            moveToTrip(tripId)
+        }
         binding.rvRecentTrip.adapter = recentTripAdapter
         CoroutineScope(Dispatchers.IO).launch {
             YeogidaClient.homeService.getRecentTrip(
@@ -79,6 +84,12 @@ class HomeFragment : Fragment() {
                 }
             )
         }
+    }
+
+    private fun moveToTrip(tripId: Long) {
+        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        intent.putExtra("tripId", tripId)
+        startActivity(intent)
     }
 
     fun moveToMyPage(view: View) {

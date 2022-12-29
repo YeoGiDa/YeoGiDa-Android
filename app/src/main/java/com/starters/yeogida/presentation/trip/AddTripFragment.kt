@@ -129,10 +129,10 @@ class AddTripFragment : Fragment() {
         }
 
     private fun moveToAroundPlace(tripId: Long) {
-        val intent = Intent(activity, PlaceActivity::class.java)
+        val intent = Intent(requireContext(), PlaceActivity::class.java)
         intent.putExtra("tripId", tripId)
         startActivity(intent)
-        (activity as AddTripActivity).finish()
+        requireActivity().finish()
     }
 
     // 여행지 추가 api 연결

@@ -29,7 +29,9 @@ class LikeTripAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is LikeTripViewHolder) {
-            holder.bind(likeTripList[position])
+            likeTripList[position]?.let {
+                holder.bind(likeTripList[position])
+            }
 
             if (itemClick != null) {
                 holder.itemView.findViewById<ImageButton>(R.id.btn_like).setOnClickListener {

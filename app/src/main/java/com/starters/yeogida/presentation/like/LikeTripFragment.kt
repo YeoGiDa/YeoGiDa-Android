@@ -62,7 +62,9 @@ class LikeTripFragment : Fragment() {
         setSearchTextChangedListener(choice)
 
         setTripClickListener()
+        setMoveTop()
     }
+
 
     private fun initSearchView(choice: Int?) {
         choice?.let {
@@ -217,6 +219,7 @@ class LikeTripFragment : Fragment() {
         }
 
         withContext(Dispatchers.Main) {
+            initMoveTopView(regionList)
             setLikeAdapter(regionList)
         }
     }
@@ -252,6 +255,7 @@ class LikeTripFragment : Fragment() {
                             )
                         }
                         withContext(Dispatchers.Main) {
+                            initMoveTopView(RegionTripLists.all)
                             setLikeAdapter(RegionTripLists.all)
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
@@ -271,7 +275,6 @@ class LikeTripFragment : Fragment() {
             } else {
                 Log.e("choice", choice.toString())
                 Log.e("region", LikeTripObj.regionList[choice])
-
                 initRegionLikeTrip(LikeTripObj.regionList[choice])
             }
         }
@@ -361,6 +364,25 @@ class LikeTripFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun initMoveTopView(list: List<LikeTripData>) {
+        if (list.isEmpty()) {
+            binding.layoutLikeTripTop.visibility = View.GONE
+        } else {
+            binding.layoutLikeTripTop.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setMoveTop() {
+        binding.layoutLikeTripTop.setOnClickListener {
+            viewModel.onMoveTopClicked()
+        }
+
+        viewModel.moveTopEvent.observe(viewLifecycleOwner) {
+            Log.e("moveToTop", "맨 위로")
+            binding.svLikeTrip.smoothScrollTo(0, 0)
         }
     }
 }

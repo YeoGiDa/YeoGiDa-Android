@@ -72,6 +72,8 @@ class AroundPlaceFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        initTripData()
+        initPlaceList()
     }
 
     private fun getTripId() {
@@ -79,6 +81,7 @@ class AroundPlaceFragment : Fragment() {
         val args = requireActivity().intent?.extras?.let { AroundPlaceFragmentArgs.fromBundle(it) }
         args?.tripId?.let { tripId = it }
 
+        Log.e("tripId", tripId.toString())
         binding.tripId = tripId
 
         // 둘러보기 - 장소 상세 - 장소 목록 - 장소 추가
@@ -227,6 +230,7 @@ class AroundPlaceFragment : Fragment() {
                         when (response.code()) {
                             200 -> {
                                 isLike = false
+                                initTripData()
                             }
 
                             else -> {
@@ -251,6 +255,7 @@ class AroundPlaceFragment : Fragment() {
                         when (response.code()) {
                             201 -> {
                                 isLike = true
+                                initTripData()
                             }
 
                             else -> {
@@ -306,11 +311,17 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun moveToPlaceMap(view: View) {
-        findNavController().navigate(R.id.action_aroundPlace_to_placeMap, bundleOf("tripId" to tripId))
+        findNavController().navigate(
+            R.id.action_aroundPlace_to_placeMap,
+            bundleOf("tripId" to tripId)
+        )
     }
 
     fun moveToAddPlace(view: View) {
-        findNavController().navigate(R.id.action_aroundPlace_to_addPlace, bundleOf("tripId" to tripId))
+        findNavController().navigate(
+            R.id.action_aroundPlace_to_addPlace,
+            bundleOf("tripId" to tripId)
+        )
     }
 
     fun moveToTop(view: View) {

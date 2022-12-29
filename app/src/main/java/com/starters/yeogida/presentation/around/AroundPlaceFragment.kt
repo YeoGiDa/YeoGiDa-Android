@@ -98,10 +98,22 @@ class AroundPlaceFragment : Fragment() {
                 if (it.code == 200) {
                     binding.tripInfo = it.data
                     isLike = it.data!!.isLike
+                    isMyPost(it.data.memberId)
                     binding.executePendingBindings()
                 }
             }
         )
+    }
+
+    private fun isMyPost(id: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (dataStore.memberId.first() != id) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.ivAroundPlaceMore.visibility = View.GONE
+                    binding.btnAroundPlaceAdd.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun initBottomSheet() {
@@ -239,7 +251,6 @@ class AroundPlaceFragment : Fragment() {
                             }
                         }
                     }
-
                 }
             } else {
                 // 좋아요가 눌려있지 않을 때 -> 좋아요 하기

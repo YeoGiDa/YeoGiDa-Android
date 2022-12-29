@@ -286,7 +286,7 @@ class PlaceDetailFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
-    private fun setCustomDialog() {
+    private fun setDeleteCustomDialog() {
         CustomDialog(requireContext()).apply {
             showDialog()
             setTitle("정말 삭제하시겠습니까?")
@@ -306,6 +306,19 @@ class PlaceDetailFragment : Fragment() {
                         }
                     }
                 )
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
+            }
+        }
+    }
+
+    private fun setReportCustomDialog() {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("정말 신고하시겠습니까?")
+            setPositiveBtn("신고") {
                 dismissDialog()
             }
             setNegativeBtn("취소") {
@@ -339,9 +352,8 @@ class PlaceDetailFragment : Fragment() {
         val bottomSheetDialog = MoreBottomSheetFragment("detail", isMyPost) {
             when (it) {
                 "수정" -> requireContext().shortToast("준비중입니다.")
-                "삭제" -> {
-                    setCustomDialog()
-                }
+                "삭제" -> setDeleteCustomDialog()
+                "신고" -> setReportCustomDialog()
             }
         }
         bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)

@@ -41,6 +41,7 @@ class PlaceDetailFragment : Fragment() {
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
     private var tripId: Long = 0
+    private var isMyPost = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,8 +141,8 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun isMyPost(id: Long) {
-        if (memberId != id) {
-            binding.ivPlaceDetailMore.visibility = View.GONE
+        if (memberId == id) {
+            isMyPost = true
         }
     }
 
@@ -335,7 +336,7 @@ class PlaceDetailFragment : Fragment() {
     }
 
     fun showBottomSheet(view: View) {
-        val bottomSheetDialog = MoreBottomSheetFragment {
+        val bottomSheetDialog = MoreBottomSheetFragment("detail", isMyPost) {
             when (it) {
                 "수정" -> requireContext().shortToast("준비중입니다.")
                 "삭제" -> {

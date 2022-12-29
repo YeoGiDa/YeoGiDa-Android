@@ -70,22 +70,25 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun setUserProfileClicked() {
-        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            CoroutineScope(Dispatchers.IO).launch {
-                val myMemberId = dataStore.memberId.first()
-                if (myMemberId != memberId) {
-                    Intent(requireContext(), UserProfileActivity::class.java).apply {
-                        putExtra("memberId", memberId)
-                        startActivity(this)
-                    }
-                } else {
-                    Intent(requireContext(), MyPageActivity::class.java).apply {
-                        putExtra("memberId", memberId)
-                        startActivity(this)
+        viewModel.openUserProfileEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { memberId ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    val myMemberId = dataStore.memberId.first()
+                    if (myMemberId != memberId) {
+                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                            putExtra("memberId", memberId)
+                            startActivity(this)
+                        }
+                    } else {
+                        Intent(requireContext(), MyPageActivity::class.java).apply {
+                            putExtra("memberId", memberId)
+                            startActivity(this)
+                        }
                     }
                 }
             }
-        })
+        )
     }
 
     private fun initAuthorization() {
@@ -120,6 +123,7 @@ class PlaceDetailFragment : Fragment() {
                             if (data.placeImgs[0].imgUrl == "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png") {
                                 binding.viewpagerPlaceToolbar.visibility = View.GONE
                             }
+                            isMyPost(data.memberId)
                             setToolbar(data.placeImgs)
                         }
                     }
@@ -129,10 +133,15 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun setToolbar(placeImages: List<PlaceImg>) {
-
         with(binding.viewpagerPlaceToolbar) {
             adapter = PlaceDetailPhotoAdapter(placeImages)
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
+        }
+    }
+
+    private fun isMyPost(id: Long) {
+        if (memberId != id) {
+            binding.ivPlaceDetailMore.visibility = View.GONE
         }
     }
 

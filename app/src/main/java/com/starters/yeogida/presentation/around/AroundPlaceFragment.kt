@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -146,7 +147,6 @@ class AroundPlaceFragment : Fragment() {
                             layoutAroundPlaceTop.visibility = View.GONE
                             btnAroundPlaceSort.visibility = View.INVISIBLE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
-                            ivAroundPlaceMap.visibility = View.INVISIBLE
                         }
                     } else {
                         responseData.data?.let { data ->
@@ -155,7 +155,6 @@ class AroundPlaceFragment : Fragment() {
                                 layoutAroundPlaceTop.visibility = View.VISIBLE
                                 btnAroundPlaceSort.visibility = View.VISIBLE
                                 layoutAroundPlaceEmpty.visibility = View.GONE
-                                ivAroundPlaceMap.visibility = View.VISIBLE
                             }
                             aroundPlaceAdapter.aroundPlaceList.addAll(
                                 data.placeList
@@ -294,7 +293,14 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
-    private fun setCustomDialog() {
+    private fun moveToPlaceMap() {
+        findNavController().navigate(
+            R.id.action_aroundPlace_to_placeMap,
+            bundleOf("tripId" to tripId)
+        )
+    }
+
+    private fun setDeleteCustomDialog() {
         CustomDialog(requireContext()).apply {
             showDialog()
             setTitle("정말 삭제하시겠습니까?")
@@ -324,23 +330,29 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
+    private fun setReportCustomDialog() {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("정말 신고하시겠습니까?")
+            setPositiveBtn("신고") {
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
+            }
+        }
+    }
+
     fun showBottomSheet(view: View) {
         val bottomSheetDialog = MoreBottomSheetFragment("trip", isMyPost) {
             when (it) {
                 "수정" -> requireContext().shortToast("준비중입니다.")
-                "삭제" -> {
-                    setCustomDialog()
-                }
+                "삭제" -> setDeleteCustomDialog()
+                "신고" -> setReportCustomDialog()
+                "장소 지도로 보기" -> moveToPlaceMap()
             }
         }
         bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
-    }
-
-    fun moveToPlaceMap(view: View) {
-        findNavController().navigate(
-            R.id.action_aroundPlace_to_placeMap,
-            bundleOf("tripId" to tripId)
-        )
     }
 
     fun moveToAddPlace(view: View) {

@@ -2,6 +2,7 @@ package com.starters.yeogida.data.api
 
 import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.data.remote.request.LoginRequestData
+import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.LoginResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
@@ -9,6 +10,7 @@ import com.starters.yeogida.data.remote.response.ValidateTokenResponseData
 import com.starters.yeogida.data.remote.response.userProfile.UserProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -45,4 +47,11 @@ interface UserService {
         @Header("Authorization") bearerToken: String,
         @Path("findMemberId") memberId: Long
     ): Response<BaseResponse<UserProfileResponse>>
+
+    // 신고하기
+    @POST("report")
+    fun postReport(
+        @Header("Authorization") bearerToken: String,
+        @Body body: ReportRequest
+    ): Call<BaseResponse<Any>>
 }

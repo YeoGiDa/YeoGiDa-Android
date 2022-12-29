@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -334,11 +335,32 @@ class UserProfileFragment : Fragment() {
         }
     }
 
+    private fun initReportNetwork() {
+        val reportRequest = ReportRequest(
+            "MEMBER",
+            memberId
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.userService.postReport(
+                dataStore.userBearerToken.first(),
+                reportRequest
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 200) {
+                        requireContext().shortToast("유저를 신고했습니다.")
+                    }
+                }
+            )
+        }
+    }
+
     fun setReportDialog(view: View) {
         CustomDialog(requireContext()).apply {
             showDialog()
             setTitle("정말 신고하시겠습니까?")
             setPositiveBtn("신고") {
+                initReportNetwork()
                 dismissDialog()
             }
             setNegativeBtn("취소") {

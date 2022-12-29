@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="view"
-            type="com.starters.yeogida.presentation.like.LikeTripFragment" />
+            name="viewModel"
+            type="com.starters.yeogida.presentation.like.LikeTripViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,12 +16,13 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/sv_like_trip"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -63,26 +64,28 @@
                     android:id="@+id/rv_trip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/et_like_trip_search"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_like_trip" />
+                    app:layout_constraintBottom_toTopOf="@+id/layout_like_trip_top"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_like_trip_search"
+                    tools:listitem="@layout/item_user_trip" />
 
                 <LinearLayout
                     android:id="@+id/layout_like_trip_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="24dp"
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_gray100_17"
-                    android:onClick="@{view::moveToTop}"
+                    android:clickable="true"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingTop="8dp"
@@ -90,8 +93,7 @@
                     android:paddingBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_trip">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"

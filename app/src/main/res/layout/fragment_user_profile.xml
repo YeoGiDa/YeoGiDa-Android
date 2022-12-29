@@ -239,7 +239,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/iv_user_profile_like"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/iv_user_profile_like"
-                    tools:text="12" />
+                    tools:text="1234" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_user_profile_empty"
@@ -247,10 +247,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_user_profile_trip_title"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/tv_user_profile_trip_title">
 
                     <ImageView
                         android:id="@+id/iv_around_place_empty"
@@ -289,13 +289,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="12dp"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btn_user_profile_sort"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_user_profile_trip_title">
+                    app:layout_constraintBottom_toBottomOf="@id/btn_user_profile_sort"
+                    app:layout_constraintTop_toTopOf="@id/btn_user_profile_sort">
 
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroup"
@@ -321,13 +321,12 @@
                     android:minHeight="0dp"
                     android:paddingStart="10dp"
                     android:paddingTop="8dp"
-                    android:paddingEnd="10dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@id/rv_user_profile_trip"
-                    app:layout_constraintEnd_toEndOf="@id/rv_user_profile_trip"
-                    app:layout_constraintTop_toBottomOf="@+id/sv_user_profile_chip"
+                    app:layout_constraintEnd_toEndOf="@id/tv_user_profile_trip_like_count"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_user_profile_trip_like_count"
                     tools:text="인기순" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -341,6 +340,7 @@
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toTopOf="@+id/layout_user_profile_top"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_user_profile_sort"
@@ -351,10 +351,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="24dp"
                     android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_gray100_17"
-                    android:onClick="@{view::moveToTop}"
+                    android:clickable="true"
+                    android:onClick="@{() -> viewModel.onMoveTopClicked()}"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingTop="8dp"
@@ -362,8 +363,7 @@
                     android:paddingBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rv_user_profile_trip">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"

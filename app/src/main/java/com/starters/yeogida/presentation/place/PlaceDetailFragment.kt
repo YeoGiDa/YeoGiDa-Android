@@ -21,6 +21,7 @@ import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
@@ -70,10 +71,21 @@ class PlaceDetailFragment : Fragment() {
 
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            Intent(requireContext(), UserProfileActivity::class.java).apply {
-                putExtra("memberId", memberId)
-                startActivity(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                val myMemberId = dataStore.memberId.first()
+                if (myMemberId != memberId) {
+                    Intent(requireContext(), UserProfileActivity::class.java).apply {
+                        putExtra("memberId", memberId)
+                        startActivity(this)
+                    }
+                } else {
+                    Intent(requireContext(), MyPageActivity::class.java).apply {
+                        putExtra("memberId", memberId)
+                        startActivity(this)
+                    }
+                }
             }
+
         })
     }
 

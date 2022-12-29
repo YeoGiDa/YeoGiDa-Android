@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
@@ -58,19 +60,28 @@ class UserProfileFragment : Fragment() {
 
         getMemberId()
         setOnBackPressed()
-        initUserProfile()
+        // initUserProfile()
         setOnFollowBtnClicked()
 
         setTripAdapter()
         setOnTripClicked()
-        initUserTripList()
+        // initUserTripList()
         initBottomSheet()
         initChipClickListener()
+
+        setMoveTop()
+    }
+
+    private fun setMoveTop() {
+        viewModel.moveTopEvent.observe(viewLifecycleOwner) {
+            binding.svUserProfile.smoothScrollTo(0, 0)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         initUserProfile()
+        initUserTripList()
     }
 
     private fun setOnTripClicked() {
@@ -320,6 +331,27 @@ class UserProfileFragment : Fragment() {
     }
 
     fun moveToTop(view: View) {
-        binding.svUserProfile.smoothScrollTo(0, 0)
+
+    }
+
+    fun RecyclerView.anchorSmoothScrollToPosition(position: Int, anchorPosition: Int = 3) {
+        layoutManager?.apply {
+            when (this) {
+                is LinearLayoutManager -> {
+                    val topItem = findFirstVisibleItemPosition()
+                    val distance = topItem - position
+                    val anchorItem = when {
+                        distance > anchorPosition -> position + anchorPosition
+                        distance < -anchorPosition -> position - anchorPosition
+                        else -> topItem
+                    }
+                    if (anchorItem != topItem) scrollToPosition(anchorItem)
+                    post {
+                        smoothScrollToPosition(position)
+                    }
+                }
+                else -> smoothScrollToPosition(position)
+            }
+        }
     }
 }

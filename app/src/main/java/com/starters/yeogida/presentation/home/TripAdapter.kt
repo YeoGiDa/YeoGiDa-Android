@@ -32,6 +32,7 @@ class TripAdapter(val itemClick: (Long) -> Unit) : RecyclerView.Adapter<Recycler
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: TripListData) {
             binding.trip = data
+            binding.executePendingBindings()
         }
     }
 }

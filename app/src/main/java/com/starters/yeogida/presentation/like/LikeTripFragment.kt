@@ -62,6 +62,7 @@ class LikeTripFragment : Fragment() {
         setSearchTextChangedListener(choice)
 
         setTripClickListener()
+        setMoveTop()
     }
 
 
@@ -374,7 +375,14 @@ class LikeTripFragment : Fragment() {
         }
     }
 
-    fun moveToTop(view: View) {
-        binding.svLikeTrip.smoothScrollTo(0, 0)
+    private fun setMoveTop() {
+        binding.layoutLikeTripTop.setOnClickListener {
+            viewModel.onMoveTopClicked()
+        }
+
+        viewModel.moveTopEvent.observe(viewLifecycleOwner) {
+            Log.e("moveToTop", "맨 위로")
+            binding.svLikeTrip.smoothScrollTo(0, 0)
+        }
     }
 }

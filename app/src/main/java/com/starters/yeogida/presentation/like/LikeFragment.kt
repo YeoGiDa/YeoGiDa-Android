@@ -45,9 +45,6 @@ class LikeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-
-        regionList.clear()
-        getRegionData()
     }
 
     private fun getRegionData() {

@@ -11,7 +11,7 @@ import com.starters.yeogida.data.local.SortData
 import com.starters.yeogida.databinding.FragmentBottomSheetSortBinding
 import com.starters.yeogida.presentation.common.SortAdapter
 
-class MoreBottomSheetFragment(val itemClick: (String) -> Unit) :
+class MoreBottomSheetFragment(val type: String, val isMyPost: Boolean, val itemClick: (String) -> Unit) :
     BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomSheetSortBinding
 
@@ -37,12 +37,29 @@ class MoreBottomSheetFragment(val itemClick: (String) -> Unit) :
         }
         binding.tvBottomSheetTitle.text = "메뉴"
         binding.rvSort.adapter = sortAdapter
-        sortAdapter.sortList.addAll(
-            listOf(
-                SortData("수정"),
-                SortData("삭제")
+        if (isMyPost) {
+            sortAdapter.sortList.addAll(
+                listOf(
+                    SortData("수정"),
+                    SortData("삭제")
+                )
             )
-        )
+        } else {
+            if (type == "trip") {
+                sortAdapter.sortList.addAll(
+                    listOf(
+                        SortData("장소 지도로 보기"),
+                        SortData("신고")
+                    )
+                )
+            } else {
+                sortAdapter.sortList.addAll(
+                    listOf(
+                        SortData("신고")
+                    )
+                )
+            }
+        }
         sortAdapter.notifyDataSetChanged()
     }
 }

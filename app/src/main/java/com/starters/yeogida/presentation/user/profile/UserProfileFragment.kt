@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -17,8 +18,10 @@ import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.around.TripSortBottomSheetFragment
+import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +60,7 @@ class UserProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.view = this
 
         getMemberId()
         setOnBackPressed()
@@ -330,27 +334,15 @@ class UserProfileFragment : Fragment() {
         }
     }
 
-    fun moveToTop(view: View) {
-
-    }
-
-    fun RecyclerView.anchorSmoothScrollToPosition(position: Int, anchorPosition: Int = 3) {
-        layoutManager?.apply {
-            when (this) {
-                is LinearLayoutManager -> {
-                    val topItem = findFirstVisibleItemPosition()
-                    val distance = topItem - position
-                    val anchorItem = when {
-                        distance > anchorPosition -> position + anchorPosition
-                        distance < -anchorPosition -> position - anchorPosition
-                        else -> topItem
-                    }
-                    if (anchorItem != topItem) scrollToPosition(anchorItem)
-                    post {
-                        smoothScrollToPosition(position)
-                    }
-                }
-                else -> smoothScrollToPosition(position)
+    fun setReportDialog(view: View) {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("정말 신고하시겠습니까?")
+            setPositiveBtn("신고") {
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
             }
         }
     }

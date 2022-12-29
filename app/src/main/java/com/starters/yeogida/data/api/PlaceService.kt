@@ -64,4 +64,11 @@ interface PlaceService {
         @PartMap postPlaceRequest: HashMap<String, RequestBody>,
         @Part imgUrls: List<MultipartBody.Part>
     ): Response<BaseResponse<PlaceDetailResponse>>
+
+    // 장소 삭제
+    @DELETE("places/{placeId}")
+    fun deletePlace(
+        @Header("Authorization") token: String,
+        @Path("placeId") placeId: Long
+    ): Call<BaseResponse<Any>>
 }

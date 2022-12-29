@@ -40,10 +40,13 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.view = this
-        initNetwork()
         setUserProfileClicked()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initNetwork()
     }
 
     private fun initNetwork() {

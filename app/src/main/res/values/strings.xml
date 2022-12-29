@@ -138,4 +138,5 @@
     <string name="user_profile_trip_count_title">여행</string>
 
     <string name="item_trip_like_user_title">좋아요</string>
+    <string name="user_profile_trip_empty">유저가 작성한 여행지가 없어요.</string>
 </resources>

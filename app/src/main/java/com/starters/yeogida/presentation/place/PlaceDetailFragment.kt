@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.data.remote.request.place.CommentRequest
 import com.starters.yeogida.data.remote.response.CommentData
 import com.starters.yeogida.data.remote.response.place.PlaceImg
@@ -315,10 +316,25 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun setReportCustomDialog() {
+        val reportRequest = ReportRequest(
+            "PLACE",
+            placeId
+        )
         CustomDialog(requireContext()).apply {
             showDialog()
-            setTitle("정말 신고하시겠습니까?")
+            setTitle("장소를 신고하시겠습니까?")
             setPositiveBtn("신고") {
+                // 장소 신고 api
+                YeogidaClient.userService.postReport(
+                    token,
+                    reportRequest
+                ).customEnqueue(
+                    onSuccess = {
+                        if (it.code == 200) {
+                            requireContext().shortToast("장소를 신고했습니다.")
+                        }
+                    }
+                )
                 dismissDialog()
             }
             setNegativeBtn("취소") {

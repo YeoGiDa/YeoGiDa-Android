@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.mypage.MyPageViewModel" />
+
+        <variable
+            name="trip"
+            type="com.starters.yeogida.data.remote.response.mypage.MyTrip" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rectangle_border_gray200_12"
+        android:onClick="@{() -> viewModel.onTripClicked(trip.tripId)}">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_trip"
+            imageUrl="@{trip.imgUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedBig"
+            tools:src="@drawable/ic_place" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="18dp"
+            android:fontFamily="@font/noto_sans_bold"
+            android:text="@{trip.title}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_trip"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="일이삼사오육칠팔구십" />
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:text="@{trip.subTitle}"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/iv_trip"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            tools:text="일이삼사오육칠팔구십" />
+
+        <TextView
+            android:id="@+id/tv_trip_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:text="@{trip.nickname}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_trip_place_count"
+            app:layout_constraintStart_toEndOf="@id/iv_trip"
+            app:layout_constraintTop_toTopOf="@id/tv_trip_place_count"
+            tools:text="닉네임" />
+
+        <ImageView
+            android:id="@+id/iv_trip_like_count"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_like"
+            app:layout_constraintBottom_toBottomOf="@id/tv_trip_like_count"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/tv_trip_like_count"
+            app:layout_constraintTop_toTopOf="@+id/tv_trip_like_count" />
+
+        <TextView
+            android:id="@+id/tv_trip_like_count"
+            count="@{trip.heartCount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_trip_place_count"
+            app:layout_constraintEnd_toStartOf="@+id/iv_trip_place_count"
+            app:layout_constraintTop_toTopOf="@id/tv_trip_place_count"
+            tools:text="99" />
+
+        <ImageView
+            android:id="@+id/iv_trip_place_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/ic_place_gray"
+            app:layout_constraintBottom_toBottomOf="@id/tv_trip_place_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_trip_place_count"
+            app:layout_constraintTop_toTopOf="@id/tv_trip_place_count" />
+
+        <TextView
+            android:id="@+id/tv_trip_place_count"
+            count="@{trip.placeCount}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_subtitle"
+            tools:text="99" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

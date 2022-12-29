@@ -2,6 +2,7 @@ package com.starters.yeogida.data.api
 
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.mypage.MyProfileResponse
+import com.starters.yeogida.data.remote.response.mypage.MyTripResponse
 import com.starters.yeogida.data.remote.response.mypage.NotificationListResponse
 import retrofit2.Call
 import retrofit2.Response
@@ -20,4 +21,10 @@ interface MyPageService {
     suspend fun getMyProfile(
         @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<MyProfileResponse>>
+
+    // 내가 작성한 여행지
+    @GET("trips/my")
+    suspend fun getMyTrip(
+        @Header("Authorization") bearerToken: String
+    ): Response<BaseResponse<MyTripResponse>>
 }

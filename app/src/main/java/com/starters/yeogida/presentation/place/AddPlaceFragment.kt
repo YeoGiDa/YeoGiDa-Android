@@ -26,6 +26,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -52,8 +58,9 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import kotlin.properties.Delegates
 
-class AddPlaceFragment : Fragment(), PlaceImageClickListener {
+class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback {
     private lateinit var binding: FragmentAddPlaceBinding
     private val viewModel: AddPlaceViewModel by viewModels()
 
@@ -72,10 +79,12 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
     private var placeAddress: String? = null
     private var placeStar: Float? = null
     private var placeReviewContent: String? = null
-    private var placeLongitude: Double? = null
-    private var placeLatitude: Double? = null
+    private var placeLongitude by Delegates.notNull<Double>()
+    private var placeLatitude by Delegates.notNull<Double>()
     private var placeTag: String? = null
     private var placeImageFileList = mutableListOf<File?>()
+    private lateinit var mMap: GoogleMap
+    private lateinit var mView: MapView
 
     private val placeResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -105,6 +114,15 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
                         placeLongitude = latLng.longitude
                     }
 
+                    // 지도에 마커 찍기
+                    binding.mapViewAddPlace.visibility = View.VISIBLE
+                    val center = LatLng(placeLatitude, placeLongitude)
+                    mView.getMapAsync {
+                        it.moveCamera(CameraUpdateFactory.newLatLng(center))
+                        it.moveCamera(CameraUpdateFactory.zoomTo(18f))
+                    }
+                    mMap.addMarker(MarkerOptions().position(center))
+
                     activeSubmitButton()
                 }
 
@@ -118,6 +136,10 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
             }
         }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -127,6 +149,10 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.view = this
+
+        mView = binding.mapViewAddPlace
+        mView.onCreate(savedInstanceState)
+        mView.getMapAsync(this)
 
         getTripId()
         setOnBackPressed() // 뒤로가기 리스너
@@ -536,5 +562,35 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener {
                 dismissDialog()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mView.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mView.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mView.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mView.onLowMemory()
+    }
+
+    override fun onDestroy() {
+        mView.onDestroy()
+        super.onDestroy()
     }
 }

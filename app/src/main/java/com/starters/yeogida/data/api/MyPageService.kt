@@ -1,6 +1,7 @@
 package com.starters.yeogida.data.api
 
 import com.starters.yeogida.data.remote.response.BaseResponse
+import com.starters.yeogida.data.remote.response.mypage.MyPlaceResponse
 import com.starters.yeogida.data.remote.response.mypage.MyProfileResponse
 import com.starters.yeogida.data.remote.response.mypage.MyTripResponse
 import com.starters.yeogida.data.remote.response.mypage.NotificationListResponse
@@ -27,4 +28,10 @@ interface MyPageService {
     suspend fun getMyTrip(
         @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<MyTripResponse>>
+
+    // 내가 댓글남긴 장소 목록
+    @GET("places/commented")
+    suspend fun getMyCommentedPlace(
+        @Header("Authorization") bearerToken: String
+    ): Response<BaseResponse<MyPlaceResponse>>
 }

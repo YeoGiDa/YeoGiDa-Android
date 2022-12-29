@@ -54,6 +54,7 @@ class MyTripFragment : Fragment() {
         })
     }
 
+
     override fun onResume() {
         super.onResume()
         getMyTripData()
@@ -72,18 +73,34 @@ class MyTripFragment : Fragment() {
                         tripList = data.tripList
 
                         Log.e("tripList", tripList.toString())
-
-                        withContext(Dispatchers.Main) {
-                            initAdapter()
-                            binding.rvMyTrip.adapter?.notifyDataSetChanged()
-                        }
                     }
                 }
                 else -> {}
             }
 
+            withContext(Dispatchers.Main) {
+                initAdapter()
+                initView()
+                binding.rvMyTrip.adapter?.notifyDataSetChanged()
+            }
         }
     }
+
+    private fun initView() {
+        with(binding) {
+            if (tripList.isEmpty()) {
+                layoutMyTripEmpty.visibility = View.VISIBLE
+                layoutMyTripTop.visibility = View.GONE
+                etSearchMyPlace.visibility = View.GONE
+
+            } else {
+                layoutMyTripEmpty.visibility = View.GONE
+                layoutMyTripTop.visibility = View.VISIBLE
+                etSearchMyPlace.visibility = View.VISIBLE
+            }
+        }
+    }
+
 
     private fun setOnBackPressed() {
         binding.tbMyPlace.setNavigationOnClickListener {

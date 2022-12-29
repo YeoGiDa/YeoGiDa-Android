@@ -66,7 +66,7 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
-                android:id="@+id/iv_around_place_empty"
+                android:id="@+id/iv_like_trip_empty"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="80dp"
@@ -80,7 +80,7 @@
                 app:tint="@color/main_blue" />
 
             <TextView
-                android:id="@+id/tv_around_place_empty"
+                android:id="@+id/tv_like_trip_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -92,7 +92,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_around_place_empty" />
+                app:layout_constraintTop_toBottomOf="@id/iv_like_trip_empty" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

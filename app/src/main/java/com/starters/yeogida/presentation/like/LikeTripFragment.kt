@@ -268,7 +268,6 @@ class LikeTripFragment : Fragment() {
     }
 
     private fun initAdapter(choice: Int?) {
-
         choice?.let {
             if (choice == 0) {
                 initLikeTrip()

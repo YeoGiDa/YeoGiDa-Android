@@ -290,7 +290,24 @@ class AroundPlaceFragment : Fragment() {
             showDialog()
             setTitle("정말 삭제하시겠습니까?")
             setPositiveBtn("삭제") {
-                dismissDialog()
+                CoroutineScope(Dispatchers.IO).launch {
+                    YeogidaClient.tripService.deleteTrip(
+                        dataStore.userBearerToken.first(),
+                        tripId
+                    ).customEnqueue(
+                        onSuccess = {
+                            when (it.code) {
+                                200 -> {
+                                    requireContext().shortToast("여행지가 삭제되었습니다.")
+                                    (activity as PlaceActivity).finish()
+                                }
+                                // TODO: 에러 처리 추가
+                                else -> requireContext().shortToast("에러입니다.")
+                            }
+                        }
+                    )
+                    dismissDialog()
+                }
             }
             setNegativeBtn("취소") {
                 dismissDialog()

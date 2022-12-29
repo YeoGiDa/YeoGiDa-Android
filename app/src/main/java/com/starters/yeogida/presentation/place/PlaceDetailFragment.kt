@@ -281,6 +281,21 @@ class PlaceDetailFragment : Fragment() {
             showDialog()
             setTitle("정말 삭제하시겠습니까?")
             setPositiveBtn("삭제") {
+                YeogidaClient.placeService.deletePlace(
+                    token,
+                    placeId
+                ).customEnqueue(
+                    onSuccess = {
+                        when (it.code) {
+                            200 -> {
+                                requireContext().shortToast("장소가 삭제되었습니다.")
+                                findNavController().navigateUp()
+                            }
+                            // TODO: 에러 처리 추가
+                            else -> requireContext().shortToast("에러입니다.")
+                        }
+                    }
+                )
                 dismissDialog()
             }
             setNegativeBtn("취소") {

@@ -21,7 +21,6 @@ import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
-import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
@@ -85,7 +84,6 @@ class PlaceDetailFragment : Fragment() {
                     }
                 }
             }
-
         })
     }
 
@@ -230,14 +228,14 @@ class PlaceDetailFragment : Fragment() {
     }
 
     private fun initDeleteDialog(commentId: Long) {
-        setCustomDialog("정말 삭제하시겠습니까?", "삭제", commentId)
+        setCommentCustomDialog("정말 삭제하시겠습니까?", "삭제", commentId)
     }
 
     private fun initReportDialog(commentId: Long) {
-        setCustomDialog("정말 신고하시겠습니까?", "신고", commentId)
+        setCommentCustomDialog("정말 신고하시겠습니까?", "신고", commentId)
     }
 
-    private fun setCustomDialog(title: String, positive: String, commentId: Long) {
+    private fun setCommentCustomDialog(title: String, positive: String, commentId: Long) {
         CustomDialog(requireContext()).apply {
             showDialog()
             setTitle(title)
@@ -277,6 +275,19 @@ class PlaceDetailFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
+    private fun setCustomDialog() {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("정말 삭제하시겠습니까?")
+            setPositiveBtn("삭제") {
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
+            }
+        }
+    }
+
     // 댓글 추가 api
     fun sendComment(view: View) {
         val commentRequest = CommentRequest(
@@ -296,5 +307,17 @@ class PlaceDetailFragment : Fragment() {
                 }
             }
         )
+    }
+
+    fun showBottomSheet(view: View) {
+        val bottomSheetDialog = MoreBottomSheetFragment {
+            when (it) {
+                "수정" -> requireContext().shortToast("준비중입니다.")
+                "삭제" -> {
+                    setCustomDialog()
+                }
+            }
+        }
+        bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
     }
 }

@@ -16,8 +16,10 @@ import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
+import com.starters.yeogida.presentation.place.MoreBottomSheetFragment
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
@@ -281,6 +283,31 @@ class AroundPlaceFragment : Fragment() {
                 initPlaceList()
             }
         }
+    }
+
+    private fun setCustomDialog() {
+        CustomDialog(requireContext()).apply {
+            showDialog()
+            setTitle("정말 삭제하시겠습니까?")
+            setPositiveBtn("삭제") {
+                dismissDialog()
+            }
+            setNegativeBtn("취소") {
+                dismissDialog()
+            }
+        }
+    }
+
+    fun showBottomSheet(view: View) {
+        val bottomSheetDialog = MoreBottomSheetFragment {
+            when (it) {
+                "수정" -> requireContext().shortToast("준비중입니다.")
+                "삭제" -> {
+                    setCustomDialog()
+                }
+            }
+        }
+        bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
     }
 
     fun moveToPlaceMap(view: View) {

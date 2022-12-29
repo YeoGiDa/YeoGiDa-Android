@@ -234,21 +234,6 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            android:id="@+id/iv_around_place_map"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:onClick="@{view::moveToPlaceMap}"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_map"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintEnd_toStartOf="@id/btn_around_place_like"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ImageView
                             android:id="@+id/iv_around_place_more"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -256,9 +241,9 @@
                             android:onClick="@{view::showBottomSheet}"
                             android:padding="4dp"
                             android:src="@drawable/ic_more"
-                            app:layout_constraintBottom_toBottomOf="@id/iv_around_place_map"
+                            app:layout_constraintBottom_toBottomOf="@id/btn_around_place_like"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/iv_around_place_map" />
+                            app:layout_constraintTop_toTopOf="@id/btn_around_place_like" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

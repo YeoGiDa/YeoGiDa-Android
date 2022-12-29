@@ -62,7 +62,7 @@
 
     <!-- Mypage Fragment -->
     <string name="mypage">마이페이지</string>
-    <string name="mypage_follow">팔로우</string>
+    <string name="mypage_follow">팔로워</string>
     <string name="mypage_trip">여행지</string>
     <string name="mypage_following">팔로잉</string>
     <string name="mypage_like">좋아요</string>

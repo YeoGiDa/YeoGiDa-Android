@@ -259,6 +259,7 @@ class PlaceDetailFragment : Fragment() {
                     }
                     "신고" -> {
                         initReportCommentNetwork(commentId)
+                        dismissDialog()
                     }
                 }
             }

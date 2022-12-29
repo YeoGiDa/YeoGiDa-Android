@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
@@ -333,13 +334,34 @@ class AroundPlaceFragment : Fragment() {
     private fun setReportCustomDialog() {
         CustomDialog(requireContext()).apply {
             showDialog()
-            setTitle("정말 신고하시겠습니까?")
+            setTitle("여행지를 신고하시겠습니까?")
             setPositiveBtn("신고") {
+                initReportNetwork()
                 dismissDialog()
             }
             setNegativeBtn("취소") {
                 dismissDialog()
             }
+        }
+    }
+
+    private fun initReportNetwork() {
+        val reportRequest = ReportRequest(
+            "TRIP",
+            tripId
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.userService.postReport(
+                dataStore.userBearerToken.first(),
+                reportRequest
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 200) {
+                        requireContext().shortToast("여행지를 신고했습니다.")
+                    }
+                }
+            )
         }
     }
 

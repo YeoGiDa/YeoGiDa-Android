@@ -37,6 +37,7 @@ class AroundPlaceFragment : Fragment() {
     private var sortValue: String = "id"
     private var tagValue: String = "nothing"
     private var tripId: Long = 0
+    private var isMyPost = false
 
     private val tripService = YeogidaClient.tripService
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
@@ -107,11 +108,8 @@ class AroundPlaceFragment : Fragment() {
 
     private fun isMyPost(id: Long) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (dataStore.memberId.first() != id) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    binding.ivAroundPlaceMore.visibility = View.GONE
-                    binding.btnAroundPlaceAdd.visibility = View.GONE
-                }
+            if (dataStore.memberId.first() == id) {
+                isMyPost = true
             }
         }
     }
@@ -327,7 +325,7 @@ class AroundPlaceFragment : Fragment() {
     }
 
     fun showBottomSheet(view: View) {
-        val bottomSheetDialog = MoreBottomSheetFragment {
+        val bottomSheetDialog = MoreBottomSheetFragment("trip", isMyPost) {
             when (it) {
                 "수정" -> requireContext().shortToast("준비중입니다.")
                 "삭제" -> {

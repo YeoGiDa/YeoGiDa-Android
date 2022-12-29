@@ -76,5 +76,10 @@ interface TripService {
         @Path("tripId") tripId: Long
     ): Response<BaseResponse<TripLikeUserResponse>>
 
-
+    // 여행지 삭제
+    @DELETE("trips/{tripId}")
+    fun deleteTrip(
+        @Header("Authorization") token: String,
+        @Path("tripId") tripId: Long
+    ): Call<BaseResponse<Any>>
 }

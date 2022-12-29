@@ -40,7 +40,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="10dp"
+            android:paddingBottom="80dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,18 +90,31 @@
                     app:layout_constraintStart_toEndOf="@+id/tv_add_place_name_title"
                     app:layout_constraintTop_toTopOf="@+id/tv_add_place_name_title" />
 
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView_add_place"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_add_place_tag_title"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_add_place_name"
+                    app:layout_constraintStart_toStartOf="@+id/tv_add_place_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_name" />
+
                 <TextView
                     android:id="@+id/tv_add_place_tag_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="12dp"
                     android:fontFamily="@font/noto_sans_regular"
                     android:text="@string/add_place_tag_title"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_add_place_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/mapView_add_place" />
 
                 <TextView
                     android:id="@+id/tv_add_place_tag_star"

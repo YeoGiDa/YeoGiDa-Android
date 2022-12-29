@@ -222,7 +222,7 @@
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginTop="12dp"
-                            android:layout_marginEnd="50dp"
+                            android:layout_marginEnd="4dp"
                             android:layout_marginBottom="10dp"
                             android:background="@drawable/selector_btn_like"
                             android:clickable="true"
@@ -230,7 +230,7 @@
                             android:onClick="@{() -> viewModel.onLikeBtnClicked(tripId)}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/iv_around_place_more"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
@@ -253,12 +253,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="12dp"
-                            android:padding="4dp"
                             android:onClick="@{view::showBottomSheet}"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/iv_around_place_map"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_more"
                             app:layout_constraintBottom_toBottomOf="@id/iv_around_place_map"
-                            android:src="@drawable/ic_more"/>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/iv_around_place_map" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

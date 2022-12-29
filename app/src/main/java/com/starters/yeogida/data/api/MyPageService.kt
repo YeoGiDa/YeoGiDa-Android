@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Query
 
 interface MyPageService {
     // 알림 목록
@@ -34,4 +35,11 @@ interface MyPageService {
     suspend fun getMyCommentedPlace(
         @Header("Authorization") bearerToken: String
     ): Response<BaseResponse<MyPlaceResponse>>
+
+    // 내가 작성한 여행지 검색
+    @GET("trips/my/search")
+    suspend fun searchMyTrip(
+        @Header("Authorization") bearerToken: String,
+        @Query("keyword") searchText: String
+    ): Response<BaseResponse<MyTripResponse>>
 }

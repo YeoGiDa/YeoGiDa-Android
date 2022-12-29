@@ -2,7 +2,8 @@ package com.starters.yeogida.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 class MyTripFragment : Fragment() {
     private lateinit var binding: FragmentMyTripBinding
@@ -42,7 +44,60 @@ class MyTripFragment : Fragment() {
         initTripClickListener()
         getMyTripData()
 
+        initSearchListener()
+
+
+
         return binding.root
+    }
+
+    private fun initSearchListener() {
+        binding.etSearchMyPlace.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val searchText = binding.etSearchMyPlace.text.toString()
+
+                if (isValidSearchText(searchText)) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response = myPageService.searchMyTrip(
+                            dataStore.userBearerToken.first(),
+                            searchText
+                        )
+
+                        when (response.code()) {
+                            200 -> {
+                                response.body()?.data?.let { data ->
+                                    tripList = data.tripList
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    initAdapter()
+                                    initTopButtonView()
+                                    binding.rvMyTrip.adapter?.notifyDataSetChanged()
+                                }
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                } else if (searchText == "") {
+                    getMyTripData()
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+    }
+
+    private fun isValidSearchText(searchText: String): Boolean {
+        val regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,10}\$"
+        val pattern = Pattern.compile(regex)
+
+        val matcher = pattern.matcher(searchText)
+
+        return matcher.matches()
     }
 
     private fun initTripClickListener() {
@@ -72,7 +127,6 @@ class MyTripFragment : Fragment() {
                     response.body()?.data?.let { data ->
                         tripList = data.tripList
 
-                        Log.e("tripList", tripList.toString())
                     }
                 }
                 else -> {}
@@ -82,6 +136,16 @@ class MyTripFragment : Fragment() {
                 initAdapter()
                 initView()
                 binding.rvMyTrip.adapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun initTopButtonView() {
+        with(binding) {
+            if (tripList.isEmpty()) {
+                layoutMyTripTop.visibility = View.GONE
+            } else {
+                layoutMyTripTop.visibility = View.VISIBLE
             }
         }
     }

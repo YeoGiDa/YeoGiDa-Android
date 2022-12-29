@@ -180,6 +180,7 @@ class UserProfileFragment : Fragment() {
                             for (region in regionSet) {
                                 addRegionChip(region)
                             }
+                            initTripListView()
                             binding.btnUserProfileSort.text = "최신순"
                             binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
                         }
@@ -212,6 +213,7 @@ class UserProfileFragment : Fragment() {
                                 "id" -> binding.btnUserProfileSort.text = "최신순"
                                 "heart" -> binding.btnUserProfileSort.text = "인기순"
                             }
+                            initTripListView()
                             binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
 
                         }
@@ -299,5 +301,25 @@ class UserProfileFragment : Fragment() {
             }
         })
 
+    }
+
+    private fun initTripListView() {
+        if (tripList.isEmpty()) {
+            binding.layoutUserProfileTop.visibility = View.GONE
+            binding.btnUserProfileSort.visibility = View.GONE
+            binding.svUserProfileChip.visibility = View.GONE
+
+            binding.layoutUserProfileEmpty.visibility = View.VISIBLE
+        } else {
+            binding.layoutUserProfileTop.visibility = View.VISIBLE
+            binding.btnUserProfileSort.visibility = View.VISIBLE
+            binding.svUserProfileChip.visibility = View.VISIBLE
+
+            binding.layoutUserProfileEmpty.visibility = View.GONE
+        }
+    }
+
+    fun moveToTop(view: View) {
+        binding.svUserProfile.smoothScrollTo(0, 0)
     }
 }

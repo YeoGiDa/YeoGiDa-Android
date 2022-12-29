@@ -64,6 +64,7 @@ class LikeTripFragment : Fragment() {
         setTripClickListener()
     }
 
+
     private fun initSearchView(choice: Int?) {
         choice?.let {
             when (choice) {
@@ -217,6 +218,7 @@ class LikeTripFragment : Fragment() {
         }
 
         withContext(Dispatchers.Main) {
+            initMoveTopView(regionList)
             setLikeAdapter(regionList)
         }
     }
@@ -252,6 +254,7 @@ class LikeTripFragment : Fragment() {
                             )
                         }
                         withContext(Dispatchers.Main) {
+                            initMoveTopView(RegionTripLists.all)
                             setLikeAdapter(RegionTripLists.all)
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
@@ -271,7 +274,6 @@ class LikeTripFragment : Fragment() {
             } else {
                 Log.e("choice", choice.toString())
                 Log.e("region", LikeTripObj.regionList[choice])
-
                 initRegionLikeTrip(LikeTripObj.regionList[choice])
             }
         }
@@ -362,5 +364,17 @@ class LikeTripFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun initMoveTopView(list: List<LikeTripData>) {
+        if (list.isEmpty()) {
+            binding.layoutLikeTripTop.visibility = View.GONE
+        } else {
+            binding.layoutLikeTripTop.visibility = View.VISIBLE
+        }
+    }
+
+    fun moveToTop(view: View) {
+        binding.svLikeTrip.smoothScrollTo(0, 0)
     }
 }

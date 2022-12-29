@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="view"
+            type="com.starters.yeogida.presentation.user.profile.UserProfileFragment" />
+
+        <variable
             name="userProfile"
             type="com.starters.yeogida.data.remote.response.userProfile.UserProfileResponse" />
 
@@ -54,14 +58,14 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
-            app:layout_constraintTop_toBottomOf="@+id/appbar_user_profile"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/sv_user_profile"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appbar_user_profile">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -237,24 +241,67 @@
                     app:layout_constraintTop_toTopOf="@id/iv_user_profile_like"
                     tools:text="12" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_user_profile_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_user_profile_trip_title"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_around_place_empty"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="80dp"
+                        android:layout_marginEnd="80dp"
+                        android:padding="20dp"
+                        android:src="@drawable/ic_like_trip_empty"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/main_blue" />
+
+                    <TextView
+                        android:id="@+id/tv_around_place_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:text="@string/user_profile_trip_empty"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_around_place_empty" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <HorizontalScrollView
                     android:id="@+id/sv_user_profile_chip"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:nestedScrollingEnabled="false"
                     android:layout_marginStart="12dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="12dp"
+                    android:nestedScrollingEnabled="false"
                     android:scrollbars="none"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_user_profile_trip_title">
 
                     <com.google.android.material.chip.ChipGroup
-                        android:overScrollMode="always"
                         android:id="@+id/chipGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:overScrollMode="always"
                         app:chipSpacingHorizontal="12dp"
                         app:singleSelection="true" />
 
@@ -291,14 +338,52 @@
                     android:layout_marginTop="14dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:orientation="vertical"
                     android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/btn_user_profile_sort"
                     tools:listitem="@layout/item_user_trip" />
+
+                <LinearLayout
+                    android:id="@+id/layout_user_profile_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/rectangle_fill_gray100_17"
+                    android:onClick="@{view::moveToTop}"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="12dp"
+                    android:paddingBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_user_profile_trip">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:gravity="center"
+                        android:text="@string/around_place_top"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:src="@drawable/ic_up" />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -247,15 +247,18 @@ class PlaceDetailFragment : Fragment() {
         setCommentCustomDialog("정말 신고하시겠습니까?", "신고", commentId)
     }
 
-    private fun setCommentCustomDialog(title: String, positive: String, commentId: Long) {
+    private fun setCommentCustomDialog(title: String, type: String, commentId: Long) {
         CustomDialog(requireContext()).apply {
             showDialog()
             setTitle(title)
-            setPositiveBtn(positive) {
-                when (positive) {
+            setPositiveBtn(type) {
+                when (type) {
                     "삭제" -> {
                         initDeleteCommentNetwork(commentId)
                         dismissDialog()
+                    }
+                    "신고" -> {
+                        initReportCommentNetwork(commentId)
                     }
                 }
             }
@@ -277,6 +280,25 @@ class PlaceDetailFragment : Fragment() {
                     initCommentNetwork()
                 } else {
                     requireContext().shortToast("댓글 삭제에 실패했습니다.")
+                }
+            }
+        )
+    }
+
+    // 댓글 신고 api
+    private fun initReportCommentNetwork(commentId: Long) {
+        val reportRequest = ReportRequest(
+            "COMMENT",
+            commentId
+        )
+
+        YeogidaClient.userService.postReport(
+            token,
+            reportRequest
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    requireContext().shortToast("댓글을 신고했습니다.")
                 }
             }
         )

@@ -76,7 +76,7 @@ class AroundPlaceFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initTripData()
-        initPlaceList()
+        initPlaceResumeList()
     }
 
     private fun getTripId() {
@@ -150,6 +150,50 @@ class AroundPlaceFragment : Fragment() {
             onSuccess = { responseData ->
                 if (responseData.code == 200) {
                     if (tagValue == "nothing" && sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
+                        with(binding) {
+                            scrollViewAroundPlaceTag.visibility = View.GONE
+                            rvAroundPlace.visibility = View.GONE
+                            layoutAroundPlaceTop.visibility = View.GONE
+                            btnAroundPlaceSort.visibility = View.INVISIBLE
+                            layoutAroundPlaceEmpty.visibility = View.VISIBLE
+                            isEmpty = true
+                        }
+                    } else {
+                        responseData.data?.let { data ->
+                            with(binding) {
+                                scrollViewAroundPlaceTag.visibility = View.VISIBLE
+                                rvAroundPlace.visibility = View.VISIBLE
+                                layoutAroundPlaceTop.visibility = View.VISIBLE
+                                btnAroundPlaceSort.visibility = View.VISIBLE
+                                layoutAroundPlaceEmpty.visibility = View.GONE
+                            }
+                            aroundPlaceAdapter.aroundPlaceList.addAll(
+                                data.placeList
+                            )
+                            aroundPlaceAdapter.notifyDataSetChanged()
+                        }
+                        when (sortValue) {
+                            "id" -> binding.btnAroundPlaceSort.text = "최신순"
+                            "star" -> binding.btnAroundPlaceSort.text = "별점순"
+                            "comment" -> binding.btnAroundPlaceSort.text = "댓글 많은순"
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    private fun initPlaceResumeList() {
+        val aroundPlaceAdapter = AroundPlaceAdapter(viewModel)
+        binding.rvAroundPlace.adapter = aroundPlaceAdapter
+        YeogidaClient.placeService.getPlaceTagList(
+            tripId,
+            tagValue,
+            sortValue
+        ).customEnqueue(
+            onSuccess = { responseData ->
+                if (responseData.code == 200) {
+                    if (responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
                             scrollViewAroundPlaceTag.visibility = View.GONE
                             rvAroundPlace.visibility = View.GONE

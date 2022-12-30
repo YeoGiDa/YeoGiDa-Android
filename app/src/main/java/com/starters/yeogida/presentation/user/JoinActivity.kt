@@ -32,6 +32,7 @@ import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.SignUpResponseData
 import com.starters.yeogida.databinding.ActivityJoinBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.shortToast
@@ -64,6 +65,8 @@ class JoinActivity : AppCompatActivity() {
     private lateinit var userNum: String
     private var userNickname: String? = null
     private var userProfileImageUrl: String? = null
+
+    private lateinit var progressDialog: CustomProgressDialog
 
     private val PERMISSION_ALBUM = 101
     private val REQUEST_STORAGE = 1000
@@ -112,6 +115,8 @@ class JoinActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join)
         binding.viewModel = joinViewModel
         binding.lifecycleOwner = this
+
+        progressDialog = CustomProgressDialog(this)
 
         initIntent()
         setNicknameFilter()
@@ -273,7 +278,8 @@ class JoinActivity : AppCompatActivity() {
                 "imgUrl", imageFile?.name ?: "", requestFile
             )
 
-            // TODO. API 통신 ProgressBar
+            progressDialog.showDialog()
+
             // 회원가입
             CoroutineScope(Dispatchers.IO).launch {
                 val signUpResponse = userService.addUser(
@@ -319,16 +325,20 @@ class JoinActivity : AppCompatActivity() {
                             Log.e(
                                 "SignUp/memberId", dataStore.memberId.first().toString()
                             )
+
+                            progressDialog.dismissDialog()
                             startMain()
                         }
                     }
                     else -> {
+                        progressDialog.dismissDialog()
                         Log.e("loginResponse/Error", loginResponse.message())
                     }
                 }
             }
             400 -> {
                 Log.d("Join/signUpResponseCode", "400")
+                progressDialog.dismissDialog()
 
                 // 닉네임 중복
                 if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
@@ -339,10 +349,12 @@ class JoinActivity : AppCompatActivity() {
                         }
                     }
                 } else {
+                    progressDialog.dismissDialog()
                     Log.e("signUpResponse", "$signUpResponse")
                 }
             }
             else -> {
+                progressDialog.dismissDialog()
                 Log.e("signUpResponse", "회원가입 실패")
             }
         }

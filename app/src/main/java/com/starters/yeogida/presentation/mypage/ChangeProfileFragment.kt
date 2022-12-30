@@ -33,6 +33,7 @@ import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentChangeProfileBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -56,6 +57,9 @@ class ChangeProfileFragment : Fragment() {
 
     private val myPageService = YeogidaClient.myPageService
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
+
+    private lateinit var progressDialog: CustomProgressDialog
+    private lateinit var mContext: Context
 
     private var isProfilePhotoChanged = false       // 기존 프로필 사진에서 변경되었는지
     private var currentNickname = ""   // 기존 닉네임
@@ -96,6 +100,11 @@ class ChangeProfileFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -109,6 +118,8 @@ class ChangeProfileFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
+
+        progressDialog = CustomProgressDialog(mContext)
 
         getOriginUserData()
         enableSubmitButton()
@@ -244,6 +255,8 @@ class ChangeProfileFragment : Fragment() {
     private fun setSubmitButtonListener() {
         binding.btnSubmit.setOnClickListener {
 
+            progressDialog.showDialog()
+
             CoroutineScope(Dispatchers.IO).launch {
 
                 val nickname = binding.etNick.text.toString()
@@ -276,6 +289,7 @@ class ChangeProfileFragment : Fragment() {
                         withContext(Dispatchers.Main) {
                             requireContext().shortToast("정보가 수정되었습니다.")
                             findNavController().navigateUp()
+                            progressDialog.dismissDialog()
                         }
                     }
                     400 -> {
@@ -285,9 +299,14 @@ class ChangeProfileFragment : Fragment() {
                                     View.VISIBLE  // 중복된다는 경고 문구 보이기.
                                 etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
                             }
+                            progressDialog.dismissDialog()
                         }
                     }
-                    else -> {}
+                    else -> {
+                        withContext(Dispatchers.Main) {
+                            progressDialog.dismissDialog()
+                        }
+                    }
                 }
             }
         }

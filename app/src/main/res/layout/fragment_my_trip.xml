@@ -82,7 +82,7 @@
                         android:fontFamily="@font/noto_sans_regular"
                         android:gravity="center"
                         android:paddingBottom="20dp"
-                        android:text="@string/my_comment_empty"
+                        android:text="@string/my_trip_empty"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         app:layout_constraintEnd_toEndOf="parent"

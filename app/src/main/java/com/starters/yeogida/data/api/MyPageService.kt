@@ -5,11 +5,11 @@ import com.starters.yeogida.data.remote.response.mypage.MyPlaceResponse
 import com.starters.yeogida.data.remote.response.mypage.MyProfileResponse
 import com.starters.yeogida.data.remote.response.mypage.MyTripResponse
 import com.starters.yeogida.data.remote.response.mypage.NotificationListResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface MyPageService {
     // 알림 목록
@@ -42,4 +42,13 @@ interface MyPageService {
         @Header("Authorization") bearerToken: String,
         @Query("keyword") searchText: String
     ): Response<BaseResponse<MyTripResponse>>
+
+    // 회원 정보 수정
+    @Multipart
+    @PUT("members/update")
+    suspend fun changeMyProfile(
+        @Header("Authorization") bearerToken: String,
+        @Part imgUrl: MultipartBody.Part,
+        @PartMap putNicknameRequest: HashMap<String, RequestBody>
+    ): Response<BaseResponse<Any>>
 }

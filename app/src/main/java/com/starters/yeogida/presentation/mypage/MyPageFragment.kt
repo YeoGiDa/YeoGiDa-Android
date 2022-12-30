@@ -46,7 +46,6 @@ class MyPageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initMyProfile()
-
     }
 
     private fun initMyProfile() {
@@ -92,5 +91,9 @@ class MyPageFragment : Fragment() {
 
     fun moveToSetting(view: View) {
         findNavController().navigate(R.id.action_myPage_to_setting)
+    }
+
+    fun moveToChangeProfile(view: View) {
+        findNavController().navigate(R.id.action_mypage_to_changeProfile)
     }
 }

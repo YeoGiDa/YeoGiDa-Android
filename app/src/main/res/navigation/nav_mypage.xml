@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_myPage_to_setting"
             app:destination="@id/navigation_setting" />
+        <action
+            android:id="@+id/action_mypage_to_changeProfile"
+            app:destination="@id/changeProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_my_comment_place"
@@ -52,4 +55,9 @@
         android:name="com.starters.yeogida.presentation.mypage.NotificationSettingFragment"
         android:label="NotificationSettingFragment"
         tools:layout="@layout/fragment_notification_setting" />
+    <fragment
+        android:id="@+id/changeProfileFragment"
+        android:name="com.starters.yeogida.presentation.mypage.ChangeProfileFragment"
+        android:label="fragment_change_profile"
+        tools:layout="@layout/fragment_change_profile" />
 </navigation>

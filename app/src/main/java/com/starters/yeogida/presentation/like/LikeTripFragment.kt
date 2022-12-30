@@ -71,11 +71,9 @@ class LikeTripFragment : Fragment() {
             when (choice) {
                 0 -> {
                     binding.etLikeTripSearch.visibility = View.VISIBLE
-                    binding.ivLikeTripSearch.visibility = View.VISIBLE
                 }
                 else -> {
                     binding.etLikeTripSearch.visibility = View.GONE
-                    binding.ivLikeTripSearch.visibility = View.GONE
                 }
             }
         }
@@ -268,7 +266,6 @@ class LikeTripFragment : Fragment() {
     }
 
     private fun initAdapter(choice: Int?) {
-
         choice?.let {
             if (choice == 0) {
                 initLikeTrip()

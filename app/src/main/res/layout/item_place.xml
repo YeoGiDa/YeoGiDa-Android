@@ -11,7 +11,7 @@
 
         <variable
             name="place"
-            type="com.starters.yeogida.data.remote.response.place.PlaceData" />
+            type="com.starters.yeogida.data.remote.response.common.PlaceData" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

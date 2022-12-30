@@ -102,7 +102,9 @@ class PlaceDetailFragment : Fragment() {
 
     private fun initPlaceData() {
         placeId = requireArguments().getLong("placeId")
-        if (requireArguments().getString("type") == "comment_alarm") {
+        if (requireArguments().getString("type") == "comment_alarm" ||
+            requireArguments().getString("type") == "my_comment"
+        ) {
             setOnBackPressed(false)
         }
         Log.e("PlaceDetail/placeId", placeId.toString())

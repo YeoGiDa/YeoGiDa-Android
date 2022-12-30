@@ -50,13 +50,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_my_trip_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_my_trip_empty"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="80dp"
+                        android:layout_marginEnd="80dp"
+                        android:padding="20dp"
+                        android:src="@drawable/ic_like_trip_empty"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/main_blue" />
+
+                    <TextView
+                        android:id="@+id/tv_my_trip_empty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:gravity="center"
+                        android:paddingBottom="20dp"
+                        android:text="@string/my_trip_empty"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/iv_my_trip_empty" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <EditText
+                    android:visibility="gone"
                     android:id="@+id/et_search_my_place"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginEnd="16dp"
                     android:background="@drawable/selector_et_blue"
                     android:drawableRight="@drawable/ic_search"
                     android:fontFamily="@font/noto_sans_regular"
@@ -80,18 +123,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/layout_my_comment_top"
+                    app:layout_constraintBottom_toTopOf="@id/layout_my_trip_top"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_search_my_place"
                     tools:listitem="@layout/item_like_trip" />
 
                 <LinearLayout
-                    android:id="@+id/layout_my_comment_top"
+                    android:visibility="gone"
+                    android:id="@+id/layout_my_trip_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"

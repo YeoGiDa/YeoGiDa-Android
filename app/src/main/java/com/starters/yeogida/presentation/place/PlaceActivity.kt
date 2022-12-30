@@ -1,11 +1,8 @@
 package com.starters.yeogida.presentation.place
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.ActivityPlaceBinding
@@ -31,10 +28,13 @@ class PlaceActivity : AppCompatActivity() {
                 R.id.action_aroundPlace_to_placeDetail,
                 bundleOf("placeId" to intent.getLongExtra("placeId", 0))
             )
-        } else if (intent.getStringExtra("type") == "comment_alarm") { // 알림 목록 - 댓글에서 이동
+        } else if (intent.getStringExtra("type") == "comment_alarm" || intent.getStringExtra("type") == "my_comment") { // 알림 목록 - 댓글에서 이동
             navController?.navigate(
                 R.id.action_aroundPlace_to_placeDetail,
-                bundleOf("placeId" to intent.getLongExtra("placeId", 0), "type" to "comment_alarm")
+                bundleOf(
+                    "placeId" to intent.getLongExtra("placeId", 0),
+                    "type" to intent.getStringExtra("type")
+                )
             )
         }
     }

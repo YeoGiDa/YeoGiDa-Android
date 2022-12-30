@@ -62,7 +62,7 @@
 
     <!-- Mypage Fragment -->
     <string name="mypage">마이페이지</string>
-    <string name="mypage_follow">팔로우</string>
+    <string name="mypage_follow">팔로워</string>
     <string name="mypage_trip">여행지</string>
     <string name="mypage_following">팔로잉</string>
     <string name="mypage_like">좋아요</string>
@@ -139,4 +139,7 @@
 
     <string name="item_trip_like_user_title">좋아요</string>
     <string name="user_profile_trip_empty">유저가 작성한 여행지가 없어요.</string>
+    <string name="my_comment_empty">아직 댓글을 남긴 장소가 없어요.\n 장소에 댓글을 남기면 여기서 확인할 수 있어요.</string>
+    <string name="change_profile_title">프로필 변경</string>
+    <string name="my_trip_empty">아직 작성한 여행지가 없어요.\n여행지를 추가해보세요.</string>
 </resources>

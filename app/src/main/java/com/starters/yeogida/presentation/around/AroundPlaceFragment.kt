@@ -114,6 +114,10 @@ class AroundPlaceFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             if (dataStore.memberId.first() == id) {
                 isMyPost = true
+            } else {
+                CoroutineScope(Dispatchers.Main).launch {
+                    binding.btnAroundPlaceAdd.visibility = View.GONE
+                }
             }
         }
     }

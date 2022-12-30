@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.starters.yeogida.YeogidaApplication
-import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.follow.FollowUserData
-import com.starters.yeogida.data.remote.response.follow.FollowerUserResponse
-import com.starters.yeogida.data.remote.response.follow.FollowingUserResponse
 import com.starters.yeogida.databinding.FragmentFollowBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
@@ -26,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 import java.util.regex.Pattern
 
 class FollowFragment : Fragment() {
@@ -98,7 +94,8 @@ class FollowFragment : Fragment() {
 
                                 when (response.code()) {
                                     200 -> {
-                                        setFollowerList(response)
+                                        val followerList = response.body()?.data?.followerList
+                                        setFollowerList(followerList)
                                     }
                                     else -> {
                                         Log.e("searchFollow", response.toString())
@@ -117,7 +114,8 @@ class FollowFragment : Fragment() {
 
                                 when (response.code()) {
                                     200 -> {
-                                        setFollowingList(response)
+                                        val followingList = response.body()?.data?.followingList
+                                        setFollowingList(followingList)
                                     }
                                     else -> {
                                         Log.e("searchFollow", response.toString())
@@ -166,7 +164,8 @@ class FollowFragment : Fragment() {
             )
             when (followerUserResponse.code()) {
                 200 -> {
-                    setFollowerList(followerUserResponse)
+                    val followerList = followerUserResponse.body()?.data?.followerList
+                    setFollowerList(followerList)
                 }
 
                 else -> {
@@ -177,22 +176,10 @@ class FollowFragment : Fragment() {
         }
     }
 
-    private suspend fun setFollowerList(followerUserResponse: Response<BaseResponse<FollowerUserResponse>>) {
-        val followerList = followerUserResponse.body()?.data?.followerList
-
+    private suspend fun setFollowerList(followerList: List<FollowUserData>?) {
         followerList?.let {
-            with(FollowLists.follower) {
-                clear()
-                for (i in followerList.indices) {
-                    add(
-                        FollowUserData(
-                            followerList[i].memberId,
-                            followerList[i].nickname,
-                            followerList[i].imgUrl
-                        )
-                    )
-                }
-            }
+            FollowLists.follower.clear()
+            FollowLists.follower.addAll(followerList)
         }
 
         withContext(Dispatchers.Main) {
@@ -211,7 +198,8 @@ class FollowFragment : Fragment() {
 
             when (followingUserResponse.code()) {
                 200 -> {
-                    setFollowingList(followingUserResponse)
+                    val followingList = followingUserResponse.body()?.data?.followingList
+                    setFollowingList(followingList)
                 }
                 else -> {
                     Log.e("FollowerResponse", "팔로잉 목록 불러오기 실패 $followingUserResponse")
@@ -221,23 +209,12 @@ class FollowFragment : Fragment() {
         }
     }
 
-    private suspend fun setFollowingList(followingUserResponse: Response<BaseResponse<FollowingUserResponse>>) {
-        val followingList = followingUserResponse.body()?.data?.followingList
-
+    private suspend fun setFollowingList(followingList: List<FollowUserData>?) {
         followingList?.let {
-            with(FollowLists.following) {
-                clear()
-                for (i in followingList.indices) {
-                    add(
-                        FollowUserData(
-                            followingList[i].memberId,
-                            followingList[i].nickname,
-                            followingList[i].imgUrl
-                        )
-                    )
-                }
-            }
+            FollowLists.following.clear()
+            FollowLists.following.addAll(followingList)
         }
+
         withContext(Dispatchers.Main) {
             binding.rvFollow.adapter?.notifyDataSetChanged()
         }

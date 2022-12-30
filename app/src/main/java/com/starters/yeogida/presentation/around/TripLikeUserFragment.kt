@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.around
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,10 +30,17 @@ class TripLikeUserFragment : Fragment() {
 
     private val userList = mutableListOf<TripLikeUserData>()
 
+    private lateinit var mContext: Context
+
     private val tripService = YeogidaClient.tripService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -90,13 +98,13 @@ class TripLikeUserFragment : Fragment() {
 
                 if (myMemberId != memberId) {
                     withContext(Dispatchers.Main) {
-                        Intent(requireContext(), UserProfileActivity::class.java).apply {
+                        Intent(mContext, UserProfileActivity::class.java).apply {
                             putExtra("memberId", memberId)
                             startActivity(this)
                         }
                     }
                 } else {
-                    Intent(requireContext(), MyPageActivity::class.java).apply {
+                    Intent(mContext, MyPageActivity::class.java).apply {
                         putExtra("memberId", memberId)
                         startActivity(this)
                     }

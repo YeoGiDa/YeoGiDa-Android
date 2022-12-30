@@ -56,13 +56,16 @@ class LikeTripFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        setTripClickListener()
+        setMoveTop()
+    }
+
+    override fun onResume() {
+        super.onResume()
         val choice = arguments?.getInt(REGION_CATEGORY_ITEM)
         initAdapter(choice)
         initSearchView(choice)
         setSearchTextChangedListener(choice)
-
-        setTripClickListener()
-        setMoveTop()
     }
 
 
@@ -115,6 +118,7 @@ class LikeTripFragment : Fragment() {
                                             )
                                         }
                                         withContext(Dispatchers.Main) {
+                                            initMoveTopView(RegionTripLists.all)
                                             setLikeAdapter(RegionTripLists.all)
                                             binding.rvTrip.adapter?.notifyDataSetChanged()
                                         }
@@ -182,10 +186,6 @@ class LikeTripFragment : Fragment() {
                                 else -> fetchList(jeju, list)
                             }
                         }
-
-                        withContext(Dispatchers.Main) {
-                            binding.rvTrip.adapter?.notifyDataSetChanged()
-                        }
                     }
                 }
 
@@ -219,6 +219,7 @@ class LikeTripFragment : Fragment() {
         withContext(Dispatchers.Main) {
             initMoveTopView(regionList)
             setLikeAdapter(regionList)
+            binding.rvTrip.adapter?.notifyDataSetChanged()
         }
     }
 

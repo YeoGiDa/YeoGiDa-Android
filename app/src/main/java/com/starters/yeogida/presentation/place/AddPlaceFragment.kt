@@ -86,6 +86,8 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
     private lateinit var mMap: GoogleMap
     private lateinit var mView: MapView
 
+    private lateinit var mContext: Context
+
     private val placeResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
@@ -112,16 +114,18 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
 
                         placeLatitude = latLng.latitude
                         placeLongitude = latLng.longitude
-                    }
 
-                    // 지도에 마커 찍기
-                    binding.mapViewAddPlace.visibility = View.VISIBLE
-                    val center = LatLng(placeLatitude, placeLongitude)
-                    mView.getMapAsync {
-                        it.moveCamera(CameraUpdateFactory.newLatLng(center))
-                        it.moveCamera(CameraUpdateFactory.zoomTo(18f))
+                        // 지도에 마커 찍기
+                        binding.mapViewAddPlace.visibility = View.VISIBLE
+                        val center = LatLng(placeLatitude, placeLongitude)
+
+                        mView.getMapAsync {
+                            it.moveCamera(CameraUpdateFactory.newLatLng(center))
+                            it.moveCamera(CameraUpdateFactory.zoomTo(18f))
+                        }
+                        mMap.clear()
+                        mMap.addMarker(MarkerOptions().position(center))
                     }
-                    mMap.addMarker(MarkerOptions().position(center))
 
                     activeSubmitButton()
                 }
@@ -135,6 +139,11 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
                 }
             }
         }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
@@ -152,7 +161,14 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
 
         mView = binding.mapViewAddPlace
         mView.onCreate(savedInstanceState)
+        mView.onResume()
         mView.getMapAsync(this)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         getTripId()
         setOnBackPressed() // 뒤로가기 리스너
@@ -165,7 +181,6 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
         setPlaceSearchListener() // 장소 이름
 
         setOnSubmitButtonClicked() // 완료 버튼 클릭 시, 주소 값, 태그 값
-        return binding.root
     }
 
     private fun getTripId() {

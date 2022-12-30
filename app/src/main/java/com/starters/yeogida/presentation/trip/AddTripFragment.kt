@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.trip
 
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAddTripBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.presentation.common.ImageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.ImageUtil
@@ -28,6 +30,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -39,6 +42,9 @@ class AddTripFragment : Fragment() {
     private lateinit var binding: FragmentAddTripBinding
     private var imageFile: File? = null
 
+    private lateinit var mContext: Context
+    private lateinit var progressDialog: CustomProgressDialog
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,10 +53,16 @@ class AddTripFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_trip, container, false)
         binding.view = this
 
+        progressDialog = CustomProgressDialog(mContext)
         initBottomSheet()
         initEditText()
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     private fun initBottomSheet() {
@@ -137,6 +149,8 @@ class AddTripFragment : Fragment() {
 
     // 여행지 추가 api 연결
     fun postTrip(view: View) {
+        progressDialog.showDialog()
+
         fun String?.toPlainRequestBody() =
             requireNotNull(this).toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -171,6 +185,10 @@ class AddTripFragment : Fragment() {
                     }
                 }
             )
+
+            withContext(Dispatchers.Main) {
+                progressDialog.dismissDialog()
+            }
         }
     }
 

@@ -44,6 +44,7 @@ class AroundPlaceFragment : Fragment() {
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private var isLike: Boolean = false    // 여행지 좋아요 여부
+    private var isEmpty = false // 장소가 없을 때
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,14 +151,17 @@ class AroundPlaceFragment : Fragment() {
                 if (responseData.code == 200) {
                     if (tagValue == "nothing" && sortValue == "id" && responseData.data?.placeList?.isEmpty() == true) {
                         with(binding) {
+                            scrollViewAroundPlaceTag.visibility = View.GONE
                             rvAroundPlace.visibility = View.GONE
                             layoutAroundPlaceTop.visibility = View.GONE
                             btnAroundPlaceSort.visibility = View.INVISIBLE
                             layoutAroundPlaceEmpty.visibility = View.VISIBLE
+                            isEmpty = true
                         }
                     } else {
                         responseData.data?.let { data ->
                             with(binding) {
+                                scrollViewAroundPlaceTag.visibility = View.VISIBLE
                                 rvAroundPlace.visibility = View.VISIBLE
                                 layoutAroundPlaceTop.visibility = View.VISIBLE
                                 btnAroundPlaceSort.visibility = View.VISIBLE
@@ -377,7 +381,13 @@ class AroundPlaceFragment : Fragment() {
                 "수정" -> requireContext().shortToast("준비중입니다.")
                 "삭제" -> setDeleteCustomDialog()
                 "신고" -> setReportCustomDialog()
-                "장소 지도로 보기" -> moveToPlaceMap()
+                "장소 지도로 보기" -> {
+                    if (isEmpty) {
+                        requireContext().shortToast("작성된 장소가 없습니다.")
+                    } else {
+                        moveToPlaceMap()
+                    }
+                }
             }
         }
         bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)

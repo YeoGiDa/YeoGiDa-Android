@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -94,18 +93,21 @@ class AroundPlaceFragment : Fragment() {
     }
 
     private fun initTripData() {
-        YeogidaClient.tripService.getTripInfo(
-            tripId
-        ).customEnqueue(
-            onSuccess = {
-                if (it.code == 200) {
-                    binding.tripInfo = it.data
-                    isLike = it.data!!.isLike
-                    isMyPost(it.data.memberId)
-                    binding.executePendingBindings()
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.tripService.getTripInfo(
+                dataStore.userBearerToken.first(),
+                tripId
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 200) {
+                        binding.tripInfo = it.data
+                        isLike = it.data!!.isLike       // 서버에서 좋아요 여부 받아오기
+                        isMyPost(it.data.memberId)
+                        binding.executePendingBindings()
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 
     private fun isMyPost(id: Long) {

@@ -25,6 +25,7 @@ interface TripService {
     // 장소 목록 - 여행지 조회
     @GET("{tripId}/places/tripInfo")
     fun getTripInfo(
+        @Header("Authorization") bearerToken: String,
         @Path("tripId") tripId: Long
     ): Call<BaseResponse<TripInfoResponse>>
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YeoGida</string>
+    <string name="app_name">여기다</string>
 
     <!-- Unit -->
     <string name="unit_int">%d</string>

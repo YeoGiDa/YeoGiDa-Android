@@ -23,6 +23,10 @@ class CustomProgressDialog(context: Context) : Dialog(context) {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialog.setCancelable(false)
+    }
+
+    fun showDialog() {
+        dialog.show()
 
         val progressImageView = dialog.findViewById<ImageView>(R.id.iv_progress)
 
@@ -32,10 +36,6 @@ class CustomProgressDialog(context: Context) : Dialog(context) {
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
             .override(1200, 1200)
             .into(progressImageView!!)
-    }
-
-    fun showDialog() {
-        dialog.show()
     }
 
     fun dismissDialog() {

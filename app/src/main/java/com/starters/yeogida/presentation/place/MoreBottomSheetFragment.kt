@@ -40,6 +40,7 @@ class MoreBottomSheetFragment(val type: String, val isMyPost: Boolean, val itemC
         if (isMyPost) {
             sortAdapter.sortList.addAll(
                 listOf(
+                    SortData("장소 지도로 보기"),
                     SortData("수정"),
                     SortData("삭제")
                 )

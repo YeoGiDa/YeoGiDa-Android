@@ -8,9 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
@@ -193,6 +190,7 @@ class UserProfileFragment : Fragment() {
                         }
 
                         withContext(Dispatchers.Main) {
+                            binding.chipGroup.removeAllViews()  // ChipGroup 내에 있던 기존 칩 제거
                             for (region in regionSet) {
                                 addRegionChip(region)
                             }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "561814321023",
+    "project_id": "yeogida-552d2",
+    "storage_bucket": "yeogida-552d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561814321023:android:a7500d8c1cbbe9170b0c4a",
+        "android_client_info": {
+          "package_name": "com.starters.yeogida"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "561814321023-i76ehcmmsrcdfpidv4b17sm5gnjtrutr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsGysPpc2nMaU52Kn6qMdNSf4q8DLaDNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "561814321023-i76ehcmmsrcdfpidv4b17sm5gnjtrutr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

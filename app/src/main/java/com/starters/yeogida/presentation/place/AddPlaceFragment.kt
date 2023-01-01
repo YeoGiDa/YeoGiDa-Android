@@ -43,6 +43,7 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentAddPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.presentation.common.ImageActivity
 import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.shortToast
@@ -87,6 +88,8 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
     private lateinit var mView: MapView
 
     private lateinit var mContext: Context
+
+    private lateinit var progressDialog: CustomProgressDialog
 
     private val placeResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -170,6 +173,8 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        progressDialog = CustomProgressDialog(mContext)
+
         getTripId()
         setOnBackPressed() // 뒤로가기 리스너
 
@@ -249,6 +254,8 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
     private fun setOnSubmitButtonClicked() {
         // TODO. 완료 버튼 클릭 시 API 연결
         binding.btnAddPlaceSubmit.setOnClickListener {
+            progressDialog.showDialog()
+
             placeReviewContent = binding.etAddPlaceReview.text.toString() // 리뷰 내용
 
             val requestTitle = placeTitle?.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -332,19 +339,29 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
                                 R.id.action_aroundPlace_to_placeDetail,
                                 bundleOf("placeId" to response.body()?.data?.placeId)
                             )
+                            progressDialog.dismissDialog()
                         }
                     }
 
                     403 -> {
                         Log.e("AddPlace/Error", response.toString())
+                        withContext(Dispatchers.Main) {
+                            progressDialog.dismissDialog()
+                        }
                     }
 
                     404 -> { // 여행지가 존재하지 않을 경우
                         Log.e("AddPlace/Error", response.toString())
+                        withContext(Dispatchers.Main) {
+                            progressDialog.dismissDialog()
+                        }
                     }
 
                     else -> {
                         Log.e("AddPlace/Error", response.toString())
+                        withContext(Dispatchers.Main) {
+                            progressDialog.dismissDialog()
+                        }
                     }
                 }
             }

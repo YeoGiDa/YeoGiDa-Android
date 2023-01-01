@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -35,6 +34,7 @@ import com.starters.yeogida.databinding.FragmentChangeProfileBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.util.ImageUtil
+import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +47,6 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.io.FileOutputStream
 import java.util.regex.Pattern
 
 class ChangeProfileFragment : Fragment() {
@@ -390,7 +389,7 @@ class ChangeProfileFragment : Fragment() {
                         bitmap: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
-                        saveImage(bitmap)
+                        initImageFile(bitmap)
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {}
@@ -398,31 +397,11 @@ class ChangeProfileFragment : Fragment() {
         }
     }
 
-    internal fun saveImage(image: Bitmap) {
-        val savedImagePath: String
-
-        val imageFileName = System.currentTimeMillis().toString() + ".jpg"
-        val storageDir = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            ).toString() + "/Folder Name"
-        )
-        var success = true
-        if (!storageDir.exists()) {
-            success = storageDir.mkdirs()
-        }
-        if (success) {
-            val saveFile = File(storageDir, imageFileName)
-            savedImagePath = saveFile.absolutePath
-            try {
-                val fOut = FileOutputStream(saveFile)
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
-                fOut.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            imageFile = File(savedImagePath)
+    private fun initImageFile(bitmap: Bitmap) {
+        val uri = UriUtil.bitmapToUri(mContext, bitmap, "")
+        uri?.let {
+            imageFile = UriUtil.toFile(mContext, uri)
+            mContext.contentResolver.delete(uri, null, null) // Uri에 해당되는 값 갤러리에서 제거.
         }
     }
 }

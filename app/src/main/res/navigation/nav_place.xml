@@ -9,7 +9,11 @@
         android:id="@+id/navigation_place_detail"
         android:name="com.starters.yeogida.presentation.place.PlaceDetailFragment"
         android:label="PlaceDetailFragment"
-        tools:layout="@layout/fragment_place_detail" />
+        tools:layout="@layout/fragment_place_detail">
+        <action
+            android:id="@+id/action_place_detail_to_editPlace"
+            app:destination="@id/editPlaceFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_around_place"
         tools:layout="@layout/fragment_around_place"
@@ -58,5 +62,10 @@
         android:id="@+id/userProfileFragment"
         android:name="com.starters.yeogida.presentation.user.profile.UserProfileFragment"
         android:label="UserProfileFragment" />
+    <fragment
+        tools:layout="@layout/fragment_edit_place"
+        android:id="@+id/editPlaceFragment"
+        android:name="com.starters.yeogida.presentation.place.EditPlaceFragment"
+        android:label="EditPlaceFragment" />
 
 </navigation>

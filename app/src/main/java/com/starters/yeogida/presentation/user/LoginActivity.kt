@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.MainActivity
 import com.starters.yeogida.R
@@ -29,9 +30,68 @@ class LoginActivity : AppCompatActivity() {
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
-            Log.e("카카오 로그인", "로그인 실패 $error")
+            when {
+                error.toString() == AuthErrorCause.AccessDenied.toString() -> {
+                    Log.d("에러", "접근이 거부 됨(동의 취소)")
+                }
+                error.toString() == AuthErrorCause.InvalidClient.toString() -> {
+                    Log.d("에러", "유효하지 않는 앱")
+                }
+                error.toString() == AuthErrorCause.InvalidGrant.toString() -> {
+                    Log.d("에러", "인증 수단이 유효하지 않아 인증할 수 없는 상태")
+                }
+                error.toString() == AuthErrorCause.InvalidRequest.toString() -> {
+                    Log.d("에러", "요청 파라미터 오류")
+                }
+                error.toString() == AuthErrorCause.InvalidScope.toString() -> {
+                    Log.d("에러", "유효하지 않은 scope ID")
+                }
+                error.toString() == AuthErrorCause.Misconfigured.toString() -> {
+                    Log.d("에러", "설정이 올바르지 않음(android key hash)")
+                }
+                error.toString() == AuthErrorCause.ServerError.toString() -> {
+                    Log.d("에러", "서버 내부 에러")
+                }
+                error.toString() == AuthErrorCause.Unauthorized.toString() -> {
+                    Log.d("에러", "앱이 요청 권한이 없음")
+                }
+                else -> { // Unknown
+                    Log.d("에러", "기타 에러")
+                }
+            }
         } else if (token != null) {
             Log.e("카카오 로그인", "로그인 성공 ${token.accessToken}")
+            Log.e("카카오 로그인", "accessToken : ${token.accessToken}")
+            Log.e("카카오 로그인", "refreshToken : ${token.refreshToken}")
+
+            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                if (error != null) {
+                    Log.e("카카오 로그인", "토큰 정보 보기 실패", error)
+                } else if (tokenInfo != null) {
+                    Log.i(
+                        "카  카오 로그인",
+                        "토큰 정보 보기 성공" +
+                                "\n회원번호: ${tokenInfo.id}" +
+                                "\n만료시간: ${tokenInfo.expiresIn} 초" +
+                                "\n앱 ID : ${tokenInfo.appId}"
+                    )
+
+                    UserApiClient.instance.me { user, error ->
+                        user?.kakaoAccount?.let { userAccount ->
+
+                            val email = userAccount.email.toString()
+                            val userNum = tokenInfo.id.toString()
+                            val nickname = userAccount.profile?.nickname
+                            val profileImageUrl = userAccount.profile?.profileImageUrl
+
+                            CoroutineScope(Dispatchers.Main).launch {
+                                postLogin(email, userNum, nickname, profileImageUrl)
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -44,43 +104,27 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginWithKakaoTalk() {
-        UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-            if (error != null) {
-                Log.e("카카오 로그인", "로그인 실패", error)
-            } else if (token != null) {
-                Log.e("카카오 로그인", "accessToken : ${token.accessToken}")
-                Log.e("카카오 로그인", "refreshToken : ${token.refreshToken}")
-
-                UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-                    if (error != null) {
-                        Log.e("카카오 로그인", "토큰 정보 보기 실패", error)
-                    } else if (tokenInfo != null) {
-                        Log.i(
-                            "카카오 로그인",
-                            "토큰 정보 보기 성공" +
-                                "\n회원번호: ${tokenInfo.id}" +
-                                "\n만료시간: ${tokenInfo.expiresIn} 초" +
-                                "\n앱 ID : ${tokenInfo.appId}"
-                        )
-
-                        UserApiClient.instance.me { user, error ->
-                            user?.kakaoAccount?.let { userAccount ->
-
-                                val email = userAccount.email.toString()
-                                val userNum = tokenInfo.id.toString()
-                                val nickname = userAccount.profile?.nickname
-                                val profileImageUrl = userAccount.profile?.profileImageUrl
-
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    postLogin(email, userNum, nickname, profileImageUrl)
-                                }
-                            }
-                        }
-                    }
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+            OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("token", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
                 }
+
+                // Get new FCM registration token
+                fcmToken = task.result
+
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                    UserApiClient.instance.loginWithKakaoTalk(this, callback = mCallback)
+                } else {
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                }
+
+                // Log and toast
+                Log.d("token", "FCM Token is $fcmToken")
             }
-        }
+        )
     }
 
     private suspend fun postLogin(
@@ -164,28 +208,5 @@ class LoginActivity : AppCompatActivity() {
             )
         )
         finish()
-    }
-
-    private fun getFCMToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w("token", "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                // Get new FCM registration token
-                fcmToken = task.result
-
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                    loginWithKakaoTalk()
-                } else {
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                }
-
-                // Log and toast
-                Log.d("token", "FCM Token is $fcmToken")
-            }
-        )
     }
 }

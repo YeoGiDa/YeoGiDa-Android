@@ -276,7 +276,6 @@ class ChangeProfileFragment : Fragment() {
 
                 Log.e("partImg", partImg.toString())
 
-                // TODO. API 통신 ProgressBar
                 val response = myPageService.changeMyProfile(
                     dataStore.userBearerToken.first(),
                     partImg,
@@ -389,7 +388,7 @@ class ChangeProfileFragment : Fragment() {
                         bitmap: Bitmap,
                         transition: Transition<in Bitmap>?
                     ) {
-                        initImageFile(bitmap)
+                        bitmapToImageFile(bitmap)
                     }
 
                     override fun onLoadCleared(placeholder: Drawable?) {}
@@ -397,7 +396,7 @@ class ChangeProfileFragment : Fragment() {
         }
     }
 
-    private fun initImageFile(bitmap: Bitmap) {
+    private fun bitmapToImageFile(bitmap: Bitmap) {
         val uri = UriUtil.bitmapToUri(mContext, bitmap, "")
         uri?.let {
             imageFile = UriUtil.toFile(mContext, uri)

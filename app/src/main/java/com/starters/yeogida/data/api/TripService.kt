@@ -83,4 +83,14 @@ interface TripService {
         @Header("Authorization") token: String,
         @Path("tripId") tripId: Long
     ): Call<BaseResponse<Any>>
+
+    // 여행지 수정
+    @Multipart
+    @PUT("trips/{tripId}")
+    suspend fun editTrip(
+        @Header("Authorization") token: String,
+        @Path("tripId") tripId: Long,
+        @PartMap editTripRequest: HashMap<String, RequestBody>,
+        @Part imgUrl: MultipartBody.Part
+    ): Response<BaseResponse<Any>>
 }

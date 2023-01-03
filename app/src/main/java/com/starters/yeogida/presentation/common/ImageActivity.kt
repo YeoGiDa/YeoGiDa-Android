@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.common
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
@@ -18,13 +19,19 @@ class ImageActivity : AppCompatActivity() {
         binding.view = this
 
         initImageView()
-
         setContentView(binding.root)
     }
 
     private fun initImageView() {
         val uri = intent.getStringExtra("imageUri")
-        Glide.with(this).load(uri?.toUri()).into(binding.ivImage)
+        val imgUrl = intent.getStringExtra("imgUrl")
+
+        if (uri != null) {
+            Glide.with(this).load(uri?.toUri()).into(binding.ivImage)
+        } else if (imgUrl != null) {
+            Log.e("imgUrl", imgUrl)
+            Glide.with(this).load(imgUrl).into(binding.ivImage)
+        }
     }
 
     fun close(view: View) {

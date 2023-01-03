@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.around
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.ReportRequest
+import com.starters.yeogida.data.remote.response.trip.TripInfoResponse
 import com.starters.yeogida.databinding.FragmentAroundPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
@@ -22,6 +24,7 @@ import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.place.MoreBottomSheetFragment
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.presentation.trip.PlaceSortBottomSheetFragment
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
@@ -45,6 +48,8 @@ class AroundPlaceFragment : Fragment() {
 
     private var isLike: Boolean = false    // 여행지 좋아요 여부
     private var isEmpty = false // 장소가 없을 때
+
+    private lateinit var mContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,6 +76,11 @@ class AroundPlaceFragment : Fragment() {
         initBottomSheet()
         initChipClickListener()
         setOpenPlaceDetail()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onResume() {
@@ -419,10 +429,40 @@ class AroundPlaceFragment : Fragment() {
         }
     }
 
+    private fun editTrip() {
+        CoroutineScope(Dispatchers.IO).launch {
+            YeogidaClient.tripService.getTripInfo(
+                dataStore.userBearerToken.first(),
+                tripId
+            ).customEnqueue(
+                onSuccess = {
+                    if (it.code == 200) {
+                        it.data?.let { tripInfo ->
+                            startEdit(tripInfo)
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    private fun startEdit(tripInfo: TripInfoResponse) {
+        Intent(mContext, AddTripActivity::class.java).apply {
+            putExtra("type", "edit")
+            putExtra("region", tripInfo.region)
+            putExtra("tripId", tripId)
+            putExtra("title", tripInfo.title)
+            putExtra("subTitle", tripInfo.subTitle)
+            putExtra("imgUrl", tripInfo.imgUrl)
+
+            startActivity(this)
+        }
+    }
+
     fun showBottomSheet(view: View) {
         val bottomSheetDialog = MoreBottomSheetFragment("trip", isMyPost) {
             when (it) {
-                "수정" -> requireContext().shortToast("준비중입니다.")
+                "수정" -> editTrip()
                 "삭제" -> setDeleteCustomDialog()
                 "신고" -> setReportCustomDialog()
                 "장소 지도로 보기" -> {

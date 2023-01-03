@@ -7,6 +7,7 @@ data class TripInfoResponse(
     @SerializedName("member_imgUrl") val profileImgUrl: String,
     val nickname: String,
     @SerializedName("trip_like_check") val isLike: Boolean,
+    val region: String,
     val title: String,
     val subTitle: String,
     val imgUrl: String,

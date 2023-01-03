@@ -20,14 +20,17 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.kakao.sdk.user.UserApiClient
 import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.common.TokenData
 import com.starters.yeogida.databinding.FragmentAddTripBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.presentation.common.ImageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.user.LoginActivity
 import com.starters.yeogida.util.ImageUtil
 import com.starters.yeogida.util.UriUtil
 import com.starters.yeogida.util.customEnqueue
@@ -278,23 +281,100 @@ class AddTripFragment : Fragment() {
             "imgUrl", imageFile?.name ?: "", requestFile
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.tripService.postTrip(
-                YeogidaApplication.getInstance().getDataStore().userBearerToken.first(),
-                tripImg,
-                textHashMap
-            ).customEnqueue(
-                onSuccess = { responseData ->
-                    if (responseData.code == 201) {
-                        responseData.data?.tripId?.let { tripId -> moveToAroundPlace(tripId) }
+        if (type == "edit") {
+            CoroutineScope(Dispatchers.IO).launch {
+                val dataStore = YeogidaApplication.getInstance().getDataStore()
+                val response = YeogidaClient.tripService.editTrip(
+                    dataStore.userBearerToken.first(),
+                    tripId,
+                    textHashMap,
+                    tripImg
+                )
+
+                when (response.code()) {
+                    200 -> {
+                        withContext(Dispatchers.Main) {
+                            requireActivity().finish()
+                            requireActivity().shortToast("수정이 완료되었습니다.")
+                        }
+                    }
+                    400 -> {
+                        withContext(Dispatchers.Main) {
+                            requireActivity().shortToast("대표 이미지가 없습니다.")
+                        }
+                    }
+                    403 -> {
+                        val accessToken = dataStore.userAccessToken.first()
+                        val refreshToken = dataStore.userRefreshToken.first()
+                        val response = YeogidaClient.userService.validateToken(
+                            TokenData(
+                                accessToken,
+                                refreshToken
+                            )
+                        )
+
+                        when (response.code()) {
+                            200 -> {}
+                            201 -> {
+                                response.body()?.data?.let { data ->
+                                    val newAccessToken = data.newAccessToken
+                                    dataStore.saveUserToken(newAccessToken, refreshToken)
+                                }
+                            }
+                            403 -> {
+                                dataStore.saveIsLogin(false)
+                                dataStore.removeUserToken()
+
+                                Intent(mContext, LoginActivity::class.java).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    startActivity(this)
+                                }
+                            }
+
+                            404 -> {
+                                dataStore.saveIsLogin(false)
+                                dataStore.removeUserToken()
+                                UserApiClient.instance.unlink { }
+
+                                Intent(mContext, LoginActivity::class.java).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    startActivity(this)
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                    else -> {
+                        Log.e("EditTrip", "${response.code()}")
                     }
                 }
-            )
 
-            withContext(Dispatchers.Main) {
-                progressDialog.dismissDialog()
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismissDialog()
+                }
+            }
+        } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                YeogidaClient.tripService.postTrip(
+                    YeogidaApplication.getInstance().getDataStore().userBearerToken.first(),
+                    tripImg,
+                    textHashMap
+                ).customEnqueue(
+                    onSuccess = { responseData ->
+                        if (responseData.code == 201) {
+                            responseData.data?.tripId?.let { tripId -> moveToAroundPlace(tripId) }
+                        }
+                    }
+                )
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismissDialog()
+                }
             }
         }
+
     }
 
     // 갤러리 창 연결

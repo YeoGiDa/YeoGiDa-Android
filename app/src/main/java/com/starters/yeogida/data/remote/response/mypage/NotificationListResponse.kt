@@ -8,7 +8,10 @@ data class NotificationData(
     val nickname: String,
     val imgUrl: String,
     val alarmType: String,
-    val targetId: Long,
+    val followerId: Long,
+    val tripId: Long,
+    val placeId: Long,
+    val commentId: Long,
     val text: String,
     val createdTime: String
 )

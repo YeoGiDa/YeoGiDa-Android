@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.mypage
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,8 +40,8 @@ class AlarmFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        val notificationAdapter = NotificationAdapter { type: String, targetId: Long ->
-            moveToPage(type, targetId)
+        val notificationAdapter = NotificationAdapter { type: String, followerId: Long, placeId: Long, tripId: Long  ->
+            moveToPage(type, followerId, placeId, tripId)
         }
         binding.rvNotification.adapter = notificationAdapter
 
@@ -64,24 +65,23 @@ class AlarmFragment : Fragment() {
         }
     }
 
-    private fun moveToPage(type: String, targetId: Long) {
+    private fun moveToPage(type: String, followerId: Long, placeId: Long, tripId: Long) {
         when (type) {
             "NEW_FOLLOW" -> {
                 val intent = Intent(requireContext(), UserProfileActivity::class.java)
-                intent.putExtra("memberId", targetId)
+                intent.putExtra("memberId", followerId)
                 startActivity(intent)
             }
             "NEW_COMMENT" -> {
                 val intent = Intent(requireContext(), PlaceActivity::class.java)
                 intent.putExtra("type", "comment_alarm")
-                intent.putExtra("placeId", targetId)
+                intent.putExtra("placeId", placeId)
                 startActivity(intent)
             }
-            // ok
             "NEW_HEART" -> {
                 val intent = Intent(requireContext(), PlaceActivity::class.java)
                 intent.putExtra("type", "heart")
-                intent.putExtra("tripId", targetId)
+                intent.putExtra("tripId", tripId)
                 startActivity(intent)
             }
             else -> {}

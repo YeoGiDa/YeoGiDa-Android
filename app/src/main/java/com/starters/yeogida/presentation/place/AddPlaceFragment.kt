@@ -121,7 +121,6 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
                         // 지도에 마커 찍기
                         binding.mapViewAddPlace.visibility = View.VISIBLE
                         val center = LatLng(placeLatitude, placeLongitude)
-
                         mView.getMapAsync {
                             it.moveCamera(CameraUpdateFactory.newLatLng(center))
                             it.moveCamera(CameraUpdateFactory.zoomTo(18f))
@@ -150,6 +149,10 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mView.getMapAsync {
+            it.moveCamera(CameraUpdateFactory.newLatLng(LatLng(37.335887, 126.584063)))
+            it.moveCamera(CameraUpdateFactory.zoomTo(18f))
+        }
     }
 
     override fun onCreateView(

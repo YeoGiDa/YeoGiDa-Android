@@ -93,6 +93,7 @@
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
+                    android:onClick="@{view::moveToMoreTraveler}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_traveler_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_traveler_title"
@@ -134,6 +135,7 @@
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
+                    android:onClick="@{view::moveToMoreMonthlyTrip}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_monthly_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_monthly_trip" />
@@ -168,6 +170,20 @@
                     tools:listitem="@layout/item_home_trip" />
 
                 <TextView
+                    android:id="@+id/tv_home_recent_trip_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:gravity="center"
+                    android:textColor="@color/gray_600"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_recent_trip" />
+
+                <TextView
                     android:id="@+id/tv_more_recent_trip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -176,6 +192,7 @@
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
+                    android:onClick="@{view::moveToMoreRecentTrip}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_recent_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_recent_trip" />

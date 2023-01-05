@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -71,7 +73,7 @@ class HomeFragment : Fragment() {
             }
         )
 
-        val recentTripAdapter = TripAdapter{ tripId: Long->
+        val recentTripAdapter = TripAdapter { tripId: Long ->
             moveToTrip(tripId)
         }
         binding.rvRecentTrip.adapter = recentTripAdapter
@@ -83,6 +85,13 @@ class HomeFragment : Fragment() {
                     if (it.code == 200) {
                         it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
                         recentTripAdapter.notifyDataSetChanged()
+                    }
+                },
+                onError = {
+                    if (it.message == "No one Follow Error!") {
+                        binding.tvHomeRecentTripEmpty.text = "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
+                    } else if (it.message == "Trip NotFound Error") {
+                        binding.tvHomeRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요!"
                     }
                 }
             )
@@ -128,5 +137,17 @@ class HomeFragment : Fragment() {
                 }
             }
         )
+    }
+
+    fun moveToMoreTraveler(view: View) {
+        startActivity(Intent(requireContext(), MoreTravelerActivity::class.java))
+    }
+
+    fun moveToMoreMonthlyTrip(view: View) {
+        startActivity(Intent(requireContext(), MoreMonthlyTripActivity::class.java))
+    }
+
+    fun moveToMoreRecentTrip(view: View) {
+        startActivity(Intent(requireContext(), MoreRecentTripActivity::class.java))
     }
 }

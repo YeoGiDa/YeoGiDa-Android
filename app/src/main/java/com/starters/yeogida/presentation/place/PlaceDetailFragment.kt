@@ -276,7 +276,6 @@ class PlaceDetailFragment : Fragment() {
     // 댓글 삭제 api
     private fun initDeleteCommentNetwork(commentId: Long) {
         YeogidaClient.placeService.deleteComment(
-            token,
             commentId
         ).customEnqueue(
             onSuccess = {
@@ -320,7 +319,6 @@ class PlaceDetailFragment : Fragment() {
             setTitle("정말 삭제하시겠습니까?")
             setPositiveBtn("삭제") {
                 YeogidaClient.placeService.deletePlace(
-                    token,
                     placeId
                 ).customEnqueue(
                     onSuccess = {
@@ -377,7 +375,6 @@ class PlaceDetailFragment : Fragment() {
         )
 
         YeogidaClient.placeService.postComment(
-            token,
             placeId,
             commentRequest
         ).customEnqueue(

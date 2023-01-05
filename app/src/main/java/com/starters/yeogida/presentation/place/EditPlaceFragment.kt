@@ -172,7 +172,6 @@ class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 Log.e("EditPlace", dataStore.userBearerToken.first())
                 val response = placeService.editPlace(
-                    dataStore.userBearerToken.first(),
                     placeId,
                     partMap,
                     requestPlaceImages

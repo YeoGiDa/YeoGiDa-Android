@@ -23,6 +23,7 @@ import com.starters.yeogida.data.remote.response.place.PlaceImg
 import com.starters.yeogida.databinding.FragmentPlaceDetailBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
@@ -40,6 +41,9 @@ class PlaceDetailFragment : Fragment() {
     private val viewModel: PlaceViewModel by viewModels()
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
+    private lateinit var progressDialog: CustomProgressDialog
+    private lateinit var mContext: Context
+
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
     private var tripId: Long = 0
@@ -47,6 +51,11 @@ class PlaceDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -61,6 +70,8 @@ class PlaceDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        progressDialog = CustomProgressDialog(mContext)
 
         binding.view = this
         binding.btnCommentSubmit.isEnabled = false
@@ -366,6 +377,7 @@ class PlaceDetailFragment : Fragment() {
 
     // 댓글 추가 api
     fun sendComment(view: View) {
+        progressDialog.showDialog()
         val commentRequest = CommentRequest(
             binding.etPlaceDetailComment.text.toString()
         )
@@ -379,8 +391,11 @@ class PlaceDetailFragment : Fragment() {
                     initCommentNetwork()
                     binding.etPlaceDetailComment.text.clear()
                     softKeyboardHide()
+                    progressDialog.dismissDialog()
                 }
-            }
+            }, onFail = {
+            progressDialog.dismissDialog()
+        }
         )
     }
 

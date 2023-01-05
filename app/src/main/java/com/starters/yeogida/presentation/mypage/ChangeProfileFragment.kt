@@ -397,7 +397,7 @@ class ChangeProfileFragment : Fragment() {
     }
 
     private fun bitmapToImageFile(bitmap: Bitmap) {
-        val uri = UriUtil.bitmapToUri(mContext, bitmap, "")
+        val uri = UriUtil.bitmapToCompressedUri(mContext, bitmap, "")
         uri?.let {
             imageFile = UriUtil.toFile(mContext, uri)
             mContext.contentResolver.delete(uri, null, null) // Uri에 해당되는 값 갤러리에서 제거.

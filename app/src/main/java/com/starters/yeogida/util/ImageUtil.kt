@@ -45,8 +45,8 @@ object ImageUtil {
             }
 
             // Determine how much to scale down the image
-            val targetW: Int = 1000 //in pixel
-            val targetH: Int = 1000 //in pixel
+            val targetW: Int = 1024
+            val targetH: Int = 1024
             val scaleFactor: Int = Math.min(outWidth / targetW, outHeight / targetH)
 
             // Decode the image file into a Bitmap sized to fill the View
@@ -63,11 +63,19 @@ object ImageUtil {
                 val resizedBitmap =
                     Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, false)
 
-                val compressedUri = UriUtil.bitmapToUri(context, resizedBitmap, fileName)
+                val compressedUri = UriUtil.bitmapToCompressedUri(context, resizedBitmap, fileName)
 
                 compressedUri?.let { compressedUri ->
-                    imageFile = UriUtil.toFile(context, compressedUri)
-                    contentResolver.delete(compressedUri, null, null)   // Uri에 해당되는 값 갤러리에서 제거.
+                    UriUtil.toFile(context, compressedUri)?.let {
+                        if (it.exists()) {
+                            imageFile = it
+                            contentResolver.delete(
+                                compressedUri,
+                                null,
+                                null
+                            )   // Uri에 해당되는 값 갤러리에서 제거.
+                        }
+                    }
 
                     return imageFile
                 }
@@ -75,4 +83,6 @@ object ImageUtil {
         }
         return imageFile
     }
+
+    //
 }

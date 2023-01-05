@@ -341,7 +341,7 @@
                     android:layout_marginBottom="16dp"
                     android:nestedScrollingEnabled="false"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    tools:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toTopOf="@+id/layout_user_profile_top"
                     app:layout_constraintEnd_toEndOf="parent"

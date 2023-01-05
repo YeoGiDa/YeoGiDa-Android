@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="imageFile"
+            type="java.io.File" />
+
+        <variable
+            name="clickListener"
+            type="com.starters.yeogida.presentation.place.PlaceEditImageClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_item_add_place_img"
+            imageFile="@{imageFile}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:onClick="@{() -> clickListener.openImageScreen(imageFile)}"
+            android:padding="0.5dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedBig"
+            app:strokeColor="@color/gray_200"
+            app:strokeWidth="1dp"
+            tools:src="@drawable/ic_app" />
+
+        <ImageView
+            android:id="@+id/iv_item_add_place_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_fill_white_border"
+            android:onClick="@{() -> clickListener.deleteImage(imageFile)}"
+            android:padding="-4dp"
+            android:src="@drawable/ic_x"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

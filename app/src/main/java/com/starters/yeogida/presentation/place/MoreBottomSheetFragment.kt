@@ -38,13 +38,22 @@ class MoreBottomSheetFragment(val type: String, val isMyPost: Boolean, val itemC
         binding.tvBottomSheetTitle.text = "메뉴"
         binding.rvSort.adapter = sortAdapter
         if (isMyPost) {
-            sortAdapter.sortList.addAll(
-                listOf(
-                    SortData("장소 지도로 보기"),
-                    SortData("수정"),
-                    SortData("삭제")
+            if (type == "trip") {
+                sortAdapter.sortList.addAll(
+                    listOf(
+                        SortData("장소 지도로 보기"),
+                        SortData("수정"),
+                        SortData("삭제")
+                    )
                 )
-            )
+            } else {
+                sortAdapter.sortList.addAll(
+                    listOf(
+                        SortData("수정"),
+                        SortData("삭제")
+                    )
+                )
+            }
         } else {
             if (type == "trip") {
                 sortAdapter.sortList.addAll(

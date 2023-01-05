@@ -180,6 +180,7 @@ class AroundPlaceFragment : Fragment() {
                                 data.placeList
                             )
                             aroundPlaceAdapter.notifyDataSetChanged()
+                            isEmpty = false
                         }
                         when (sortValue) {
                             "id" -> binding.btnAroundPlaceSort.text = "최신순"
@@ -224,6 +225,7 @@ class AroundPlaceFragment : Fragment() {
                                 data.placeList
                             )
                             aroundPlaceAdapter.notifyDataSetChanged()
+                            isEmpty = false
                         }
                         when (sortValue) {
                             "id" -> binding.btnAroundPlaceSort.text = "최신순"

@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
@@ -23,7 +24,6 @@ import com.starters.yeogida.util.customEnqueue
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -47,7 +47,8 @@ class UserProfileFragment : Fragment() {
     private var isFollow = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false)
@@ -87,12 +88,15 @@ class UserProfileFragment : Fragment() {
     }
 
     private fun setOnTripClicked() {
-        viewModel.openAroundPlaceEvent.observe(viewLifecycleOwner, EventObserver { tripId ->
-            Intent(requireContext(), PlaceActivity::class.java).apply {
-                putExtra("tripId", tripId)
-                startActivity(this)
+        viewModel.openAroundPlaceEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { tripId ->
+                Intent(requireContext(), PlaceActivity::class.java).apply {
+                    putExtra("tripId", tripId)
+                    startActivity(this)
+                }
             }
-        })
+        )
     }
 
     private fun getMemberId() {
@@ -122,9 +126,11 @@ class UserProfileFragment : Fragment() {
 
     private fun addRegionChip(region: String) {
         with(binding.chipGroup) {
-            addView(Chip(requireContext(), null, R.attr.regionChipStyle).apply {
-                text = region
-            })
+            addView(
+                Chip(requireContext(), null, R.attr.regionChipStyle).apply {
+                    text = region
+                }
+            )
         }
     }
 
@@ -151,7 +157,6 @@ class UserProfileFragment : Fragment() {
     private fun initUserProfile() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = userService.getUserProfile(
-                dataStore.userBearerToken.first(),
                 memberId
             )
 
@@ -190,7 +195,7 @@ class UserProfileFragment : Fragment() {
                         }
 
                         withContext(Dispatchers.Main) {
-                            binding.chipGroup.removeAllViews()  // ChipGroup 내에 있던 기존 칩 제거
+                            binding.chipGroup.removeAllViews() // ChipGroup 내에 있던 기존 칩 제거
                             for (region in regionSet) {
                                 addRegionChip(region)
                             }
@@ -201,7 +206,6 @@ class UserProfileFragment : Fragment() {
                     }
                 }
                 else -> {
-
                 }
             }
         }
@@ -229,90 +233,89 @@ class UserProfileFragment : Fragment() {
                             }
                             initTripListView()
                             binding.rvUserProfileTrip.adapter?.notifyDataSetChanged()
-
                         }
                     }
                 }
                 else -> {
-
                 }
             }
         }
     }
 
-
     private fun setOnFollowBtnClicked() {
-        viewModel.followUserEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            if (isFollow) {
-                // 이미 팔로우가 되어있을 경우 눌렸을 때 -> 팔로우 취소
-                with(binding.btnUserProfileFollow) {
-                    isSelected = false
-                    text = "팔로우"
-                    setTextColor(resources.getColor(R.color.white, null))
-                }
+        viewModel.followUserEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { memberId ->
+                if (isFollow) {
+                    // 이미 팔로우가 되어있을 경우 눌렸을 때 -> 팔로우 취소
+                    with(binding.btnUserProfileFollow) {
+                        isSelected = false
+                        text = "팔로우"
+                        setTextColor(resources.getColor(R.color.white, null))
+                    }
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val response = followService.deleteFollowing(
-                        memberId
-                    )
-                    withContext(Dispatchers.Main) {
-                        when (response.code()) {
-                            200 -> {
-                                // 팔로우 취소 성공
-                                isFollow = false
-                                initUserProfile()
-                            }
-
-                            else -> {
-                                Log.e("deleteFollowing", "$response")
-                                with(binding.btnUserProfileFollow) {
-                                    isSelected = true
-                                    text = "팔로잉"
-                                    setTextColor(resources.getColor(R.color.black, null))
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response = followService.deleteFollowing(
+                            memberId
+                        )
+                        withContext(Dispatchers.Main) {
+                            when (response.code()) {
+                                200 -> {
+                                    // 팔로우 취소 성공
+                                    isFollow = false
+                                    initUserProfile()
                                 }
-                                initUserProfile()
-                                requireContext().shortToast("팔로우 취소 실패")
+
+                                else -> {
+                                    Log.e("deleteFollowing", "$response")
+                                    with(binding.btnUserProfileFollow) {
+                                        isSelected = true
+                                        text = "팔로잉"
+                                        setTextColor(resources.getColor(R.color.black, null))
+                                    }
+                                    initUserProfile()
+                                    requireContext().shortToast("팔로우 취소 실패")
+                                }
                             }
                         }
                     }
-                }
-            } else {
-                // 팔로우가 안되어 있는 경우 눌렸을 때 -> 팔로우 추가
-                with(binding.btnUserProfileFollow) {
-                    isSelected = true
-                    text = "팔로잉"
-                    setTextColor(resources.getColor(R.color.black, null))
-                }
+                } else {
+                    // 팔로우가 안되어 있는 경우 눌렸을 때 -> 팔로우 추가
+                    with(binding.btnUserProfileFollow) {
+                        isSelected = true
+                        text = "팔로잉"
+                        setTextColor(resources.getColor(R.color.black, null))
+                    }
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val response = followService.addFollowing(
-                        memberId
-                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val response = followService.addFollowing(
+                            memberId
+                        )
 
-                    withContext(Dispatchers.Main) {
-                        when (response.code()) {
-                            200 -> {
-                                // 팔로우 추가 성공
-                                isFollow = true
-                                initUserProfile()
-                            }
-
-                            else -> {
-                                Log.e("addFollowing", "$response")
-                                with(binding.btnUserProfileFollow) {
-                                    isSelected = false
-                                    text = "팔로우"
-                                    setTextColor(resources.getColor(R.color.white, null))
+                        withContext(Dispatchers.Main) {
+                            when (response.code()) {
+                                200 -> {
+                                    // 팔로우 추가 성공
+                                    isFollow = true
+                                    initUserProfile()
                                 }
-                                initUserProfile()
-                                requireContext().shortToast("팔로우 추가 실패")
+
+                                else -> {
+                                    Log.e("addFollowing", "$response")
+                                    with(binding.btnUserProfileFollow) {
+                                        isSelected = false
+                                        text = "팔로우"
+                                        setTextColor(resources.getColor(R.color.white, null))
+                                    }
+                                    initUserProfile()
+                                    requireContext().shortToast("팔로우 추가 실패")
+                                }
                             }
                         }
                     }
                 }
             }
-        })
-
+        )
     }
 
     private fun initTripListView() {
@@ -337,18 +340,15 @@ class UserProfileFragment : Fragment() {
             memberId
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.userService.postReport(
-                dataStore.userBearerToken.first(),
-                reportRequest
-            ).customEnqueue(
-                onSuccess = {
-                    if (it.code == 200) {
-                        requireContext().shortToast("유저를 신고했습니다.")
-                    }
+        YeogidaClient.userService.postReport(
+            reportRequest
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    requireContext().shortToast("유저를 신고했습니다.")
                 }
-            )
-        }
+            }
+        )
     }
 
     fun setReportDialog(view: View) {

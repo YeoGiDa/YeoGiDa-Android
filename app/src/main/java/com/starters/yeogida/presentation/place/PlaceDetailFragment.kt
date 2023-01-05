@@ -40,7 +40,6 @@ class PlaceDetailFragment : Fragment() {
     private val viewModel: PlaceViewModel by viewModels()
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
-    private lateinit var token: String
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
     private var tripId: Long = 0
@@ -97,7 +96,6 @@ class PlaceDetailFragment : Fragment() {
 
     private fun initAuthorization() {
         CoroutineScope(Dispatchers.IO).launch {
-            token = dataStore.userBearerToken.first()
             memberId = dataStore.memberId.first()
         }
     }
@@ -297,7 +295,6 @@ class PlaceDetailFragment : Fragment() {
         )
 
         YeogidaClient.userService.postReport(
-            token,
             reportRequest
         ).customEnqueue(
             onSuccess = {
@@ -351,7 +348,6 @@ class PlaceDetailFragment : Fragment() {
             setPositiveBtn("신고") {
                 // 장소 신고 api
                 YeogidaClient.userService.postReport(
-                    token,
                     reportRequest
                 ).customEnqueue(
                     onSuccess = {

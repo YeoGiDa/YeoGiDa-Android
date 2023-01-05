@@ -263,7 +263,8 @@ class AroundPlaceFragment : Fragment() {
             viewLifecycleOwner,
             EventObserver { memberId ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+                    val myMemberId =
+                        YeogidaApplication.getInstance().getDataStore().memberId.first()
 
                     if (myMemberId != memberId) {
                         withContext(Dispatchers.Main) {
@@ -421,18 +422,15 @@ class AroundPlaceFragment : Fragment() {
             tripId
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.userService.postReport(
-                dataStore.userBearerToken.first(),
-                reportRequest
-            ).customEnqueue(
-                onSuccess = {
-                    if (it.code == 200) {
-                        requireContext().shortToast("여행지를 신고했습니다.")
-                    }
+        YeogidaClient.userService.postReport(
+            reportRequest
+        ).customEnqueue(
+            onSuccess = {
+                if (it.code == 200) {
+                    requireContext().shortToast("여행지를 신고했습니다.")
                 }
-            )
-        }
+            }
+        )
     }
 
     private fun editTrip() {

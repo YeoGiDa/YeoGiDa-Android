@@ -87,7 +87,7 @@ class SettingFragment : Fragment() {
     }
 
     private suspend fun withDrawUser(userAccessToken: String, userRefreshToken: String) {
-        val withDrawResponse = userService.withDrawUser(dataStore.userBearerToken.first())
+        val withDrawResponse = userService.withDrawUser()
         Log.e("withDrawUser", "$withDrawResponse")
 
         when (withDrawResponse.code()) {

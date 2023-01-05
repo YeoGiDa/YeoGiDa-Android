@@ -37,21 +37,17 @@ interface UserService {
 
     // 회원탈퇴
     @DELETE("members/delete")
-    suspend fun withDrawUser(
-        @Header("Authorization") bearerToken: String
-    ): Response<BaseResponse<Any>>
+    suspend fun withDrawUser(): Response<BaseResponse<Any>>
 
     // 유저 상세 불러오기
     @GET("follow/{findMemberId}/detail")
     suspend fun getUserProfile(
-        @Header("Authorization") bearerToken: String,
         @Path("findMemberId") memberId: Long
     ): Response<BaseResponse<UserProfileResponse>>
 
     // 신고하기
     @POST("report")
     fun postReport(
-        @Header("Authorization") bearerToken: String,
         @Body body: ReportRequest
     ): Call<BaseResponse<Any>>
 }

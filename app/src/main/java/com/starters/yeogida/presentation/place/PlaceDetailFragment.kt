@@ -44,7 +44,6 @@ class PlaceDetailFragment : Fragment() {
     private lateinit var progressDialog: CustomProgressDialog
     private lateinit var mContext: Context
 
-    private lateinit var token: String
     private var memberId by Delegates.notNull<Long>()
     private var placeId: Long = 0
     private var tripId: Long = 0
@@ -108,7 +107,6 @@ class PlaceDetailFragment : Fragment() {
 
     private fun initAuthorization() {
         CoroutineScope(Dispatchers.IO).launch {
-            token = dataStore.userBearerToken.first()
             memberId = dataStore.memberId.first()
         }
     }
@@ -287,7 +285,6 @@ class PlaceDetailFragment : Fragment() {
     // 댓글 삭제 api
     private fun initDeleteCommentNetwork(commentId: Long) {
         YeogidaClient.placeService.deleteComment(
-            token,
             commentId
         ).customEnqueue(
             onSuccess = {
@@ -309,7 +306,6 @@ class PlaceDetailFragment : Fragment() {
         )
 
         YeogidaClient.userService.postReport(
-            token,
             reportRequest
         ).customEnqueue(
             onSuccess = {
@@ -331,7 +327,6 @@ class PlaceDetailFragment : Fragment() {
             setTitle("정말 삭제하시겠습니까?")
             setPositiveBtn("삭제") {
                 YeogidaClient.placeService.deletePlace(
-                    token,
                     placeId
                 ).customEnqueue(
                     onSuccess = {
@@ -364,7 +359,6 @@ class PlaceDetailFragment : Fragment() {
             setPositiveBtn("신고") {
                 // 장소 신고 api
                 YeogidaClient.userService.postReport(
-                    token,
                     reportRequest
                 ).customEnqueue(
                     onSuccess = {
@@ -389,7 +383,6 @@ class PlaceDetailFragment : Fragment() {
         )
 
         YeogidaClient.placeService.postComment(
-            token,
             placeId,
             commentRequest
         ).customEnqueue(
@@ -401,10 +394,9 @@ class PlaceDetailFragment : Fragment() {
                     progressDialog.dismissDialog()
                 }
             }, onFail = {
-                progressDialog.dismissDialog()
-            }
+            progressDialog.dismissDialog()
+        }
         )
-
     }
 
     private fun editPlace() {

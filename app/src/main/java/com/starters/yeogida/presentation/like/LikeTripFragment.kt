@@ -90,7 +90,6 @@ class LikeTripFragment : Fragment() {
                     if (choice == 0) {
                         CoroutineScope(Dispatchers.IO).launch {
                             val response = tripService.searchLikeTrip(
-                                dataStore.userBearerToken.first(),
                                 searchText
                             )
 
@@ -155,7 +154,6 @@ class LikeTripFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.getRegionLikeTrip(
-                dataStore.userBearerToken.first(),
                 region
             )
 
@@ -226,9 +224,7 @@ class LikeTripFragment : Fragment() {
 
     private fun initLikeTrip() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = tripService.getLikeTrip(
-                dataStore.userBearerToken.first()
-            )
+            val response = tripService.getLikeTrip()
 
             when (response.code()) {
                 200 -> {
@@ -315,7 +311,6 @@ class LikeTripFragment : Fragment() {
         likeBtn.isSelected = true
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.postTripHeart(
-                dataStore.userBearerToken.first(),
                 likeTrip.tripId
             )
 
@@ -344,7 +339,6 @@ class LikeTripFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.deleteTripHeart(
-                dataStore.userBearerToken.first(),
                 likeTrip.tripId
             )
 

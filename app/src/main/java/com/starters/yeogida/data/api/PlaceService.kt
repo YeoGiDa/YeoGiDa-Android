@@ -43,7 +43,6 @@ interface PlaceService {
     // 댓글 작성
     @POST("{placeId}/comments")
     fun postComment(
-        @Header("Authorization") token: String,
         @Path("placeId") placeId: Long,
         @Body body: CommentRequest
     ): Call<BaseResponse<AddCommentResponse>>
@@ -51,7 +50,6 @@ interface PlaceService {
     // 댓글 삭제
     @DELETE("comments/{commentId}")
     fun deleteComment(
-        @Header("Authorization") token: String,
         @Path("commentId") commentId: Long
     ): Call<BaseResponse<Any>>
 
@@ -59,7 +57,6 @@ interface PlaceService {
     @Multipart
     @POST("{tripId}/places/save")
     suspend fun postPlace(
-        @Header("Authorization") token: String,
         @Path("tripId") tripId: Long,
         @PartMap postPlaceRequest: HashMap<String, RequestBody>,
         @Part imgUrls: List<MultipartBody.Part>
@@ -68,7 +65,6 @@ interface PlaceService {
     // 장소 삭제
     @DELETE("places/{placeId}")
     fun deletePlace(
-        @Header("Authorization") token: String,
         @Path("placeId") placeId: Long
     ): Call<BaseResponse<Any>>
 
@@ -76,7 +72,6 @@ interface PlaceService {
     @Multipart
     @PUT("places/{placeId}")
     suspend fun editPlace(
-        @Header("Authorization") token: String,
         @Path("placeId") placeId: Long,
         @PartMap editPlaceRequest: HashMap<String, RequestBody>,
         @Part imgUrl: List<MultipartBody.Part>

@@ -49,9 +49,7 @@ class LikeFragment : Fragment() {
 
     private fun getRegionData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = tripService.getLikeTrip(
-                dataStore.userBearerToken.first()
-            )
+            val response = tripService.getLikeTrip()
 
             Log.e("responseCode", response.code().toString())
             when (response.code()) {

@@ -3,8 +3,8 @@ package com.starters.yeogida.network
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.api.*
 import com.starters.yeogida.data.interceptor.AuthInterceptor
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -82,7 +82,8 @@ object YeogidaClient {
         Interceptor { chain ->
             with(chain) {
                 runBlocking {
-                    val token = YeogidaApplication.getInstance().getDataStore().userBearerToken.first()
+                    val token =
+                        YeogidaApplication.getInstance().getDataStore().userBearerToken.first()
                     val newRequest = request().newBuilder()
                         .addHeader(
                             "Authorization",

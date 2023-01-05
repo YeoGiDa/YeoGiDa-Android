@@ -3,12 +3,10 @@ package com.starters.yeogida.util
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.provider.MediaStore.Images.Media.getBitmap
 import java.io.File
 import java.io.OutputStream
 
@@ -30,21 +28,7 @@ object UriUtil {
         return "$name.$ext"
     }
 
-    fun toBitmap(context: Context, imageUri: Uri): Bitmap? {
-        var bitmap: Bitmap? = null
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            bitmap = ImageDecoder.decodeBitmap(
-                ImageDecoder.createSource(context.contentResolver, imageUri)
-            )
-        } else {
-            bitmap = getBitmap(context.contentResolver, imageUri)
-        }
-
-        return bitmap
-    }
-
-    fun bitmapToUri(context: Context, bitmap: Bitmap?, fileName: String): Uri? {
+    fun bitmapToCompressedUri(context: Context, bitmap: Bitmap?, fileName: String): Uri? {
         val filename = "${fileName}.jpg"
 
         //Output stream
@@ -58,7 +42,7 @@ object UriUtil {
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
                 put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                 }
             }
@@ -75,7 +59,7 @@ object UriUtil {
 
         fos?.use {
             //Finally writing the bitmap to the output stream that we opened
-            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, it)
         }
 
         return imageUri

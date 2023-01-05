@@ -71,4 +71,14 @@ interface PlaceService {
         @Header("Authorization") token: String,
         @Path("placeId") placeId: Long
     ): Call<BaseResponse<Any>>
+
+    // 장소 수정
+    @Multipart
+    @PUT("places/{placeId}")
+    suspend fun editPlace(
+        @Header("Authorization") token: String,
+        @Path("placeId") placeId: Long,
+        @PartMap editPlaceRequest: HashMap<String, RequestBody>,
+        @Part imgUrl: List<MultipartBody.Part>
+    ): Response<BaseResponse<Any>>
 }

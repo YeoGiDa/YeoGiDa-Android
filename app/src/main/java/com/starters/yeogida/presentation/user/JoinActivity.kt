@@ -420,7 +420,11 @@ class JoinActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val bitmap = convertUrlToBitmap(it)  // imageURL -> Bitmap
                 val profileImageUri =
-                    UriUtil.bitmapToUri(this@JoinActivity, bitmap, userNum) // Bitmap -> Uri
+                    UriUtil.bitmapToCompressedUri(
+                        this@JoinActivity,
+                        bitmap,
+                        userNum
+                    ) // Bitmap -> Uri
                 Log.e("profileImageURI", profileImageUri.toString())
 
                 withContext(Dispatchers.Main) {

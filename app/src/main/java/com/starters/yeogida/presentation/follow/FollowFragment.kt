@@ -232,12 +232,38 @@ class FollowFragment : Fragment() {
                 0 -> {
                     setFollowAdapter(FollowLists.follower, choice)
                     initFollowerData()
+                    setEmptyView(
+                        FollowLists.follower,
+                        "아직 회원님을 팔로우한 사람이 없어요!"
+                    )
                 }
                 1 -> {
                     setFollowAdapter(FollowLists.following, choice)
                     initFollowingData()
+                    setEmptyView(
+                        FollowLists.following,
+                        "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
+                    )
                 }
                 else -> {}
+            }
+        }
+    }
+
+    private fun setEmptyView(list: List<FollowUserData>, message: String) {
+        with(binding) {
+            if (list.isEmpty()) {
+                etSearch.visibility = View.GONE
+                ivFollowSearch.visibility = View.GONE
+                rvFollow.visibility = View.GONE
+                layoutFollowEmpty.visibility = View.VISIBLE
+                binding.tvFollowEmpty.text = message
+            } else {
+                etSearch.visibility = View.VISIBLE
+                ivFollowSearch.visibility = View.VISIBLE
+                rvFollow.visibility = View.VISIBLE
+                layoutFollowEmpty.visibility = View.GONE
+                binding.tvFollowEmpty.text = message
             }
         }
     }

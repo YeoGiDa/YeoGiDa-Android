@@ -59,7 +59,6 @@ class MyTripFragment : Fragment() {
                 if (isValidSearchText(searchText)) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val response = myPageService.searchMyTrip(
-                            dataStore.userBearerToken.first(),
                             searchText
                         )
 
@@ -118,9 +117,7 @@ class MyTripFragment : Fragment() {
 
     private fun getMyTripData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = myPageService.getMyTrip(
-                dataStore.userBearerToken.first()
-            )
+            val response = myPageService.getMyTrip()
 
             when (response.code()) {
                 200 -> {

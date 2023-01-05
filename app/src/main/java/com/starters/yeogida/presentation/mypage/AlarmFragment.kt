@@ -45,10 +45,7 @@ class AlarmFragment : Fragment() {
         }
         binding.rvNotification.adapter = notificationAdapter
 
-        CoroutineScope(Dispatchers.IO).launch {
-            YeogidaClient.myPageService.getNotificationList(
-                YeogidaApplication.getInstance().getDataStore().userBearerToken.first()
-            ).customEnqueue(
+            YeogidaClient.myPageService.getNotificationList().customEnqueue(
                 onSuccess = {
                     if (it.code == 200) {
                         it.data?.let { data -> notificationAdapter.notificationList.addAll(data.alarmList) }
@@ -56,7 +53,7 @@ class AlarmFragment : Fragment() {
                     }
                 }
             )
-        }
+
     }
 
     private fun initNavigation() {

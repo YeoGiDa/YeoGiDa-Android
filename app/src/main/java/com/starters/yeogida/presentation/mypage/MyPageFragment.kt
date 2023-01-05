@@ -50,9 +50,7 @@ class MyPageFragment : Fragment() {
 
     private fun initMyProfile() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = myPageService.getMyProfile(
-                dataStore.userBearerToken.first()
-            )
+            val response = myPageService.getMyProfile()
 
             when (response.code()) {
                 200 -> {

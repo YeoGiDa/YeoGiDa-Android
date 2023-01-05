@@ -328,7 +328,6 @@ class AddPlaceFragment : Fragment(), PlaceImageClickListener, OnMapReadyCallback
             val placeService = YeogidaClient.placeService
             CoroutineScope(Dispatchers.IO).launch {
                 val response = placeService.postPlace(
-                    dataStore.userBearerToken.first(),
                     tripId,
                     partMap,
                     requestPlaceImages

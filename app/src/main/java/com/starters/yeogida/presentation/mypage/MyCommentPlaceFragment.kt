@@ -70,9 +70,7 @@ class MyCommentPlaceFragment : Fragment() {
 
     private fun getMyCommentedPlace() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = YeogidaClient.myPageService.getMyCommentedPlace(
-                YeogidaApplication.getInstance().getDataStore().userBearerToken.first()
-            )
+            val response = YeogidaClient.myPageService.getMyCommentedPlace()
 
             when (response.code()) {
                 200 -> {

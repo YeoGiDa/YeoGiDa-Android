@@ -18,7 +18,5 @@ interface HomeService {
 
     // 팔로잉의 최근 게시글
     @GET("trips/follow/basic")
-    fun getRecentTrip(
-        @Header("Authorization") token: String
-    ): Call<BaseResponse<HomeTripResponseResponse>>
+    fun getRecentTrip(): Call<BaseResponse<HomeTripResponseResponse>>
 }

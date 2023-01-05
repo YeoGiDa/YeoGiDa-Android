@@ -287,7 +287,6 @@ class AddTripFragment : Fragment() {
             CoroutineScope(Dispatchers.IO).launch {
                 val dataStore = YeogidaApplication.getInstance().getDataStore()
                 val response = YeogidaClient.tripService.editTrip(
-                    dataStore.userBearerToken.first(),
                     tripId,
                     textHashMap,
                     tripImg
@@ -360,7 +359,6 @@ class AddTripFragment : Fragment() {
         } else {
             CoroutineScope(Dispatchers.IO).launch {
                 YeogidaClient.tripService.postTrip(
-                    YeogidaApplication.getInstance().getDataStore().userBearerToken.first(),
                     tripImg,
                     textHashMap
                 ).customEnqueue(

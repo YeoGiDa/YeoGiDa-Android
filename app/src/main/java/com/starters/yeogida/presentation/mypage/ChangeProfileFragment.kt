@@ -277,7 +277,6 @@ class ChangeProfileFragment : Fragment() {
                 Log.e("partImg", partImg.toString())
 
                 val response = myPageService.changeMyProfile(
-                    dataStore.userBearerToken.first(),
                     partImg,
                     partMap
                 )
@@ -351,9 +350,7 @@ class ChangeProfileFragment : Fragment() {
 
     private fun getOriginUserData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = myPageService.getMyProfile(
-                dataStore.userBearerToken.first()
-            )
+            val response = myPageService.getMyProfile()
 
             when (response.code()) {
                 200 -> {

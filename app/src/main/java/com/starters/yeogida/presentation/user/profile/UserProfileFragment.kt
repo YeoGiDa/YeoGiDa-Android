@@ -253,7 +253,6 @@ class UserProfileFragment : Fragment() {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val response = followService.deleteFollowing(
-                        dataStore.userBearerToken.first(),
                         memberId
                     )
                     withContext(Dispatchers.Main) {
@@ -287,7 +286,6 @@ class UserProfileFragment : Fragment() {
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val response = followService.addFollowing(
-                        dataStore.userBearerToken.first(),
                         memberId
                     )
 

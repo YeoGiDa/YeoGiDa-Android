@@ -56,7 +56,8 @@ class FollowFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFollowBinding.inflate(inflater, container, false)
@@ -88,7 +89,6 @@ class FollowFragment : Fragment() {
                             // 팔로워 검색
                             CoroutineScope(Dispatchers.IO).launch {
                                 val response = followService.searchFollower(
-                                    dataStore.userBearerToken.first(),
                                     searchText
                                 )
 
@@ -102,13 +102,11 @@ class FollowFragment : Fragment() {
                                     }
                                 }
                             }
-
                         }
                         1 -> {
                             // 팔로잉 검색
                             CoroutineScope(Dispatchers.IO).launch {
                                 val response = followService.searchFollowing(
-                                    dataStore.userBearerToken.first(),
                                     searchText
                                 )
 
@@ -159,9 +157,7 @@ class FollowFragment : Fragment() {
             val userBearerToken = dataStore.userBearerToken.first()
 
             // 팔로워 목록
-            val followerUserResponse = followService.getFollowerUser(
-                userBearerToken
-            )
+            val followerUserResponse = followService.getFollowerUser()
             when (followerUserResponse.code()) {
                 200 -> {
                     val followerList = followerUserResponse.body()?.data?.followerList
@@ -192,9 +188,7 @@ class FollowFragment : Fragment() {
             val userBearerToken = dataStore.userBearerToken.first()
 
             // 팔로잉 목록
-            val followingUserResponse = followService.getFollowingUser(
-                userBearerToken
-            )
+            val followingUserResponse = followService.getFollowingUser()
 
             when (followingUserResponse.code()) {
                 200 -> {
@@ -221,12 +215,15 @@ class FollowFragment : Fragment() {
     }
 
     private fun setOpenUserProfile() {
-        viewModel.openUserProfileEvent.observe(viewLifecycleOwner, EventObserver { memberId ->
-            Intent(requireContext(), UserProfileActivity::class.java).apply {
-                putExtra("memberId", memberId)
-                startActivity(this)
+        viewModel.openUserProfileEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { memberId ->
+                Intent(requireContext(), UserProfileActivity::class.java).apply {
+                    putExtra("memberId", memberId)
+                    startActivity(this)
+                }
             }
-        })
+        )
     }
 
     private fun setPage(choice: Int?) {
@@ -279,14 +276,13 @@ class FollowFragment : Fragment() {
                 val userBearerToken = dataStore.userBearerToken.first()
 
                 val response = followService.deleteFollower(
-                    userBearerToken,
                     user.memberId
                 )
 
                 when (response.code()) {
                     200 -> {
                         withContext(Dispatchers.Main) {
-                            FollowLists.follower.remove(user)   // 목록에서 삭제
+                            FollowLists.follower.remove(user) // 목록에서 삭제
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -301,14 +297,13 @@ class FollowFragment : Fragment() {
                 val userBearerToken = dataStore.userBearerToken.first()
 
                 val response = followService.deleteFollowing(
-                    userBearerToken,
                     user.memberId
                 )
 
                 when (response.code()) {
                     200 -> {
                         withContext(Dispatchers.Main) {
-                            FollowLists.following.remove(user)   // 목록에서 삭제
+                            FollowLists.following.remove(user) // 목록에서 삭제
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }

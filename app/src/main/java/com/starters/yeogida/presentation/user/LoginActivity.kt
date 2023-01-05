@@ -16,6 +16,7 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.databinding.ActivityLoginBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.CustomProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -27,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
     private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val userService = YeogidaClient.userService
     private lateinit var fcmToken: String
+    private lateinit var progressDialog: CustomProgressDialog
 
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -60,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         } else if (token != null) {
+            progressDialog.showDialog()
             Log.e("카카오 로그인", "로그인 성공 ${token.accessToken}")
             Log.e("카카오 로그인", "accessToken : ${token.accessToken}")
             Log.e("카카오 로그인", "refreshToken : ${token.refreshToken}")
@@ -98,6 +101,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+
+        progressDialog = CustomProgressDialog(this)
 
         binding.layoutLoginKakao.setOnClickListener {
             getFCMToken()
@@ -161,6 +166,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("Login/userMemberId", dataStore.memberId.first().toString())
 
                 withContext(Dispatchers.Main) {
+                    progressDialog.dismissDialog()
                     startMain()
                 }
             }
@@ -168,11 +174,13 @@ class LoginActivity : AppCompatActivity() {
                 Log.e("loginResponse", "$loginResponse")
 
                 withContext(Dispatchers.Main) {
+                    progressDialog.dismissDialog()
                     startJoin(email, userNum, nickname, profileImageUrl)
                 }
             }
             else -> {
                 Log.e("loginResponse/Error", loginResponse.message())
+                progressDialog.dismissDialog()
             }
         }
     }

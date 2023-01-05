@@ -103,6 +103,11 @@ class AddTripFragment : Fragment() {
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
     private fun setEditForm() {
         requireActivity().intent?.extras?.let { bundle ->
             with(bundle) {
@@ -170,10 +175,7 @@ class AddTripFragment : Fragment() {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }
+
 
     private fun initBottomSheet() {
         binding.tvAddTripRegion.setOnClickListener {
@@ -365,13 +367,12 @@ class AddTripFragment : Fragment() {
                     onSuccess = { responseData ->
                         if (responseData.code == 201) {
                             responseData.data?.tripId?.let { tripId -> moveToAroundPlace(tripId) }
+                            progressDialog.dismissDialog()
                         }
+                    }, onFail = {
+                        progressDialog.dismissDialog()
                     }
                 )
-
-                withContext(Dispatchers.Main) {
-                    progressDialog.dismissDialog()
-                }
             }
         }
 

@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.data.remote.request.place.CommentRequest
@@ -389,10 +391,17 @@ class PlaceDetailFragment : Fragment() {
         )
     }
 
+    private fun editPlace() {
+        findNavController().navigate(
+            R.id.action_place_detail_to_editPlace,
+            bundleOf("placeId" to placeId)
+        )
+    }
+
     fun showBottomSheet(view: View) {
         val bottomSheetDialog = MoreBottomSheetFragment("detail", isMyPost) {
             when (it) {
-                "수정" -> requireContext().shortToast("준비중입니다.")
+                "수정" -> editPlace()
                 "삭제" -> setDeleteCustomDialog()
                 "신고" -> setReportCustomDialog()
             }

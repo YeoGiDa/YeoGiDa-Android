@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import java.io.File
+import java.io.FileInputStream
 
 object ImageUtil {
     /**
@@ -82,6 +83,18 @@ object ImageUtil {
             }
         }
         return imageFile
+    }
+
+    fun filePathToBitmap(path: String?): Bitmap? {
+        return try {
+            val f = File(path)
+            val options = BitmapFactory.Options()
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888
+            BitmapFactory.decodeStream(FileInputStream(f), null, options)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     //

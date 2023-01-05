@@ -1,7 +1,5 @@
 package com.starters.yeogida.presentation.common
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,8 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.ActivityImageBinding
-import java.io.File
-import java.io.FileInputStream
+import com.starters.yeogida.util.ImageUtil
 
 class ImageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityImageBinding
@@ -32,15 +29,16 @@ class ImageActivity : AppCompatActivity() {
         val imgPath = intent.getStringExtra("filePath")
 
         if (uri != null) {
-            Glide.with(this).load(uri?.toUri()).into(binding.ivImage)
+            Glide.with(this)
+                .load(uri?.toUri())
+                .into(binding.ivImage)
         } else if (imgUrl != null) {
             Log.e("imgUrl", imgUrl)
-            Glide.with(this).load(imgUrl).into(binding.ivImage)
+            Glide.with(this)
+                .load(imgUrl)
+                .into(binding.ivImage)
         } else if (imgPath != null) {
-            val file = File(imgPath)
-            val options = BitmapFactory.Options()
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888
-            val bitmap = BitmapFactory.decodeStream(FileInputStream(file), null, options)
+            val bitmap = ImageUtil.filePathToBitmap(imgPath)
             binding.ivImage.setImageBitmap(bitmap)
         }
     }

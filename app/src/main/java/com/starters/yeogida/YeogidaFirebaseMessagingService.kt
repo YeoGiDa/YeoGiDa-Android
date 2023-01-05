@@ -1,6 +1,5 @@
 package com.starters.yeogida
 
-import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -91,12 +90,12 @@ class YeogidaFirebaseMessagingService : FirebaseMessagingService() {
         val channelId = "YeoGidia"
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.mipmap.sym_def_app_icon)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
             .setSound(soundUri)
             .setContentIntent(pendingIntent)
+            .setSmallIcon(R.drawable.noti_icon)
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

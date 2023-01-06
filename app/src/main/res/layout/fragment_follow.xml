@@ -66,7 +66,7 @@
             android:background="@drawable/selector_et_blue"
             android:drawableRight="@drawable/ic_search"
             android:fontFamily="@font/noto_sans_regular"
-            android:hint="유저 닉네임으로 검색해보세요."
+            android:hint="@string/follow_search_hint"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"

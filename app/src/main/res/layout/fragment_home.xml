@@ -30,13 +30,25 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/iv_trip_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:onClick="@{view::moveToSearchTrip}"
+            android:padding="4dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="@id/iv_setting"
+            app:layout_constraintEnd_toStartOf="@+id/iv_setting"
+            app:layout_constraintTop_toTopOf="@id/iv_setting" />
+
+        <ImageView
             android:id="@+id/iv_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:onClick="@{view::moveToMyPage}"
-            android:src="@drawable/ic_mypage"
             android:padding="4dp"
+            android:src="@drawable/ic_mypage"
             app:layout_constraintBottom_toBottomOf="@+id/tv_home_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_home_title" />
@@ -90,10 +102,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
+                    android:onClick="@{view::moveToMoreTraveler}"
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
-                    android:onClick="@{view::moveToMoreTraveler}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_traveler_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_traveler_title"
@@ -132,10 +144,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
+                    android:onClick="@{view::moveToMoreMonthlyTrip}"
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
-                    android:onClick="@{view::moveToMoreMonthlyTrip}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_best_monthly_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_best_monthly_trip" />
@@ -189,10 +201,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:fontFamily="@font/noto_sans_regular"
+                    android:onClick="@{view::moveToMoreRecentTrip}"
                     android:padding="4dp"
                     android:text="@string/home_more_text"
                     android:textSize="12sp"
-                    android:onClick="@{view::moveToMoreRecentTrip}"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_recent_trip"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_recent_trip" />

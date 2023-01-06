@@ -55,48 +55,37 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
+            tools:visibility="visible"
             android:visibility="gone"
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="38dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/selector_et_blue"
+            android:drawableRight="@drawable/ic_search"
             android:fontFamily="@font/noto_sans_regular"
-            android:hint="@string/follow_search_hint"
+            android:hint="유저 닉네임으로 검색해보세요."
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingStart="48dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:textCursorDrawable="@drawable/main_blue_cursor"
-            android:textSize="18sp"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="10dp"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/iv_follow_search"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="12dp"
-            android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="@id/et_search"
-            app:layout_constraintStart_toStartOf="@id/et_search"
-            app:layout_constraintTop_toTopOf="@id/et_search"
-            tools:visibility="gone" />
+        </EditText>
 
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="gone"
             android:id="@+id/rv_follow"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:orientation="vertical"
             android:padding="4dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

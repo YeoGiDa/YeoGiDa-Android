@@ -3,9 +3,15 @@ package com.starters.yeogida.presentation.user
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
@@ -30,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var fcmToken: String
     private lateinit var progressDialog: CustomProgressDialog
 
-    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+    private val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             when {
                 error.toString() == AuthErrorCause.AccessDenied.toString() -> {
@@ -97,6 +103,33 @@ class LoginActivity : AppCompatActivity() {
 
         }
     }
+    private val googleSignInResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleSignInResult(task)
+        } else {
+            Log.e("googleSignInResult", "${(result.resultCode == RESULT_CANCELED)}")
+        }
+    }
+
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
+        try {
+            val account = task.getResult(ApiException::class.java)
+
+            account?.let {
+                Log.e("handleSignInResult", "name : ${it.displayName}")
+                Log.e("handleSignInResult", "name : ${it.givenName}")
+                Log.e("handleSignInResult", "name : ${it.familyName}")
+                Log.e("handleSignInResult", "name : ${it.email}")
+                Log.e("handleSignInResult", "name : ${it.id}")
+                Log.e("handleSignInResult", "name : ${it.photoUrl}")
+            }
+        } catch (e: ApiException) {
+            Log.e("handleSignInResult", "signInResultFail : Code = ${e.statusCode}")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +139,32 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLoginKakao.setOnClickListener {
             getFCMToken()
+            kakaoLogin()
+        }
+
+        binding.btnLoginGoogle.setOnClickListener {
+            getFCMToken()
+            googleLogin()
+        }
+    }
+
+    private fun googleLogin() {
+        val signInOption = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestId()
+            .requestProfile()
+            .build()
+
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, signInOption)
+        val signIntent = mGoogleSignInClient.signInIntent
+        googleSignInResult.launch(signIntent)
+    }
+
+    private fun kakaoLogin() {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            UserApiClient.instance.loginWithKakaoTalk(this, callback = kakaoCallback)
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = kakaoCallback)
         }
     }
 
@@ -120,11 +179,6 @@ class LoginActivity : AppCompatActivity() {
                 // Get new FCM registration token
                 fcmToken = task.result
 
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                    UserApiClient.instance.loginWithKakaoTalk(this, callback = mCallback)
-                } else {
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                }
 
                 // Log and toast
                 Log.d("token", "FCM Token is $fcmToken")

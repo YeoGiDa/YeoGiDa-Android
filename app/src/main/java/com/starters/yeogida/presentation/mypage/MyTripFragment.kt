@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.response.mypage.MyTrip
 import com.starters.yeogida.databinding.FragmentMyTripBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -19,7 +18,6 @@ import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
@@ -28,7 +26,6 @@ class MyTripFragment : Fragment() {
     private lateinit var binding: FragmentMyTripBinding
     private val viewModel: MyPageViewModel by viewModels()
     private val myPageService = YeogidaClient.myPageService
-    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private var tripList = listOf<MyTrip>()
 
@@ -42,11 +39,7 @@ class MyTripFragment : Fragment() {
 
         setOnBackPressed()
         initTripClickListener()
-        getMyTripData()
-
         initSearchListener()
-
-
 
         return binding.root
     }
@@ -123,7 +116,6 @@ class MyTripFragment : Fragment() {
                 200 -> {
                     response.body()?.data?.let { data ->
                         tripList = data.tripList
-
                     }
                 }
                 else -> {}

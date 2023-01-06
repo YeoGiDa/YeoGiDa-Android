@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.response.follow.FollowUserData
 import com.starters.yeogida.databinding.FragmentFollowBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -20,7 +19,6 @@ import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
@@ -29,7 +27,6 @@ class FollowFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowBinding
     private val viewModel: FollowViewModel by viewModels()
-    private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val followService = YeogidaClient.followService
 
     companion object {
@@ -72,7 +69,6 @@ class FollowFragment : Fragment() {
         val choice = arguments?.getInt(FOLLOW_CATEGORY_ITEM)
         choice?.let {
             setPage(choice)
-            initFollowerData()
             setSearchTextChangedListener(choice)
             setOpenUserProfile()
         }
@@ -154,8 +150,6 @@ class FollowFragment : Fragment() {
 
     private fun initFollowerData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val userBearerToken = dataStore.userBearerToken.first()
-
             // 팔로워 목록
             val followerUserResponse = followService.getFollowerUser()
             when (followerUserResponse.code()) {
@@ -180,13 +174,15 @@ class FollowFragment : Fragment() {
 
         withContext(Dispatchers.Main) {
             binding.rvFollow.adapter?.notifyDataSetChanged()
+            setEmptyView(
+                FollowLists.follower,
+                "아직 회원님을 팔로우한 사람이 없어요!"
+            )
         }
     }
 
     private fun initFollowingData() {
         CoroutineScope(Dispatchers.IO).launch {
-            val userBearerToken = dataStore.userBearerToken.first()
-
             // 팔로잉 목록
             val followingUserResponse = followService.getFollowingUser()
 
@@ -211,6 +207,10 @@ class FollowFragment : Fragment() {
 
         withContext(Dispatchers.Main) {
             binding.rvFollow.adapter?.notifyDataSetChanged()
+            setEmptyView(
+                FollowLists.following,
+                "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
+            )
         }
     }
 
@@ -232,18 +232,10 @@ class FollowFragment : Fragment() {
                 0 -> {
                     setFollowAdapter(FollowLists.follower, choice)
                     initFollowerData()
-                    setEmptyView(
-                        FollowLists.follower,
-                        "아직 회원님을 팔로우한 사람이 없어요!"
-                    )
                 }
                 1 -> {
                     setFollowAdapter(FollowLists.following, choice)
                     initFollowingData()
-                    setEmptyView(
-                        FollowLists.following,
-                        "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
-                    )
                 }
                 else -> {}
             }
@@ -254,13 +246,11 @@ class FollowFragment : Fragment() {
         with(binding) {
             if (list.isEmpty()) {
                 etSearch.visibility = View.GONE
-                ivFollowSearch.visibility = View.GONE
                 rvFollow.visibility = View.GONE
                 layoutFollowEmpty.visibility = View.VISIBLE
                 binding.tvFollowEmpty.text = message
             } else {
                 etSearch.visibility = View.VISIBLE
-                ivFollowSearch.visibility = View.VISIBLE
                 rvFollow.visibility = View.VISIBLE
                 layoutFollowEmpty.visibility = View.GONE
                 binding.tvFollowEmpty.text = message
@@ -299,8 +289,6 @@ class FollowFragment : Fragment() {
         if (choice == 0) {
             // 팔로워 삭제
             CoroutineScope(Dispatchers.IO).launch {
-                val userBearerToken = dataStore.userBearerToken.first()
-
                 val response = followService.deleteFollower(
                     user.memberId
                 )
@@ -309,6 +297,10 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.follower.remove(user) // 목록에서 삭제
+                            setEmptyView(
+                                FollowLists.follower,
+                                "아직 회원님을 팔로우한 사람이 없어요!"
+                            )
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -320,8 +312,6 @@ class FollowFragment : Fragment() {
         } else {
             // 팔로잉 삭제
             CoroutineScope(Dispatchers.IO).launch {
-                val userBearerToken = dataStore.userBearerToken.first()
-
                 val response = followService.deleteFollowing(
                     user.memberId
                 )
@@ -330,6 +320,10 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.following.remove(user) // 목록에서 삭제
+                            setEmptyView(
+                                FollowLists.following,
+                                "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
+                            )
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }

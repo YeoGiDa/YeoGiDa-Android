@@ -16,6 +16,7 @@
         tools:context=".presentation.mypage.MyTripFragment">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_my_trip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -50,51 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/layout_my_trip_empty"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="100dp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <ImageView
-                        android:id="@+id/iv_my_trip_empty"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="80dp"
-                        android:layout_marginEnd="80dp"
-                        android:padding="20dp"
-                        android:src="@drawable/ic_like_trip_empty"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/main_blue" />
-
-                    <TextView
-                        android:id="@+id/tv_my_trip_empty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:fontFamily="@font/noto_sans_regular"
-                        android:gravity="center"
-                        android:paddingBottom="20dp"
-                        android:text="@string/my_trip_empty"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/iv_my_trip_empty" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
                 <EditText
-                    android:visibility="gone"
                     android:id="@+id/et_search_my_place"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -113,11 +70,11 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="10dp"
                     android:textSize="13sp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                </EditText>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible"></EditText>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_trip"
@@ -127,20 +84,20 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
+                    android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toTopOf="@id/layout_my_trip_top"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_search_my_place"
-                    tools:listitem="@layout/item_like_trip" />
+                    tools:listitem="@layout/item_like_trip"
+                    tools:visibility="visible" />
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:id="@+id/layout_my_trip_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_gray100_20"
                     android:onClick="@{view::moveToTop}"
                     android:orientation="horizontal"
@@ -148,9 +105,11 @@
                     android:paddingTop="8dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -176,6 +135,48 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_my_trip_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_my_trip_empty"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginEnd="80dp"
+                android:padding="20dp"
+                android:src="@drawable/ic_like_trip_empty"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/main_blue" />
+
+            <TextView
+                android:id="@+id/tv_my_trip_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:gravity="center"
+                android:paddingBottom="20dp"
+                android:text="@string/my_trip_empty"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_my_trip_empty" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_home_add"

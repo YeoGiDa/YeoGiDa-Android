@@ -15,6 +15,7 @@ import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.mypage.MyPageActivity
 import com.starters.yeogida.presentation.place.PlaceActivity
+import com.starters.yeogida.presentation.search.SearchActivity
 import com.starters.yeogida.presentation.trip.AddTripActivity
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.customEnqueue
@@ -109,12 +110,18 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 
+    fun moveToSearchTrip(view: View) {
+        val intent = Intent(activity, SearchActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun setUserProfileClicked() {
         viewModel.openUserProfileEvent.observe(
             viewLifecycleOwner,
             EventObserver { memberId ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    val myMemberId = YeogidaApplication.getInstance().getDataStore().memberId.first()
+                    val myMemberId =
+                        YeogidaApplication.getInstance().getDataStore().memberId.first()
 
                     if (myMemberId != memberId) {
                         withContext(Dispatchers.Main) {

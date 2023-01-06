@@ -21,9 +21,6 @@
         android:theme="@style/Theme.YeoGida"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.user.profile.UserProfileActivity"
-            android:exported="false" />
 
         <service
             android:name=".YeogidaFirebaseMessagingService"
@@ -115,8 +112,15 @@
         <activity
             android:name=".presentation.home.MoreTravelerActivity"
             android:exported="true" />
-        <activity android:name=".presentation.home.MoreRecentTripActivity"
+        <activity
+            android:name=".presentation.home.MoreRecentTripActivity"
             android:exported="true" />
+        <activity
+            android:name=".presentation.follow.SearchFriendActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.user.profile.UserProfileActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

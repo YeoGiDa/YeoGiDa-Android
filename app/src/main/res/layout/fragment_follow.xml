@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.follow.FollowFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,6 +98,19 @@
             app:layout_constraintTop_toBottomOf="@+id/et_search"
             tools:listitem="@layout/item_follow"
             tools:visibility="gone" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_search_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:onClick="@{view::moveToSearchFriend}"
+            android:src="@drawable/ic_add_friend"
+            app:backgroundTint="@color/white_blue"
+            app:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@null" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

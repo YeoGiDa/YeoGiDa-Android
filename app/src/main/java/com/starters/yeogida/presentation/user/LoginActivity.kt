@@ -104,7 +104,7 @@ class LoginActivity : AppCompatActivity() {
 
         progressDialog = CustomProgressDialog(this)
 
-        binding.layoutLoginKakao.setOnClickListener {
+        binding.btnLoginKakao.setOnClickListener {
             getFCMToken()
         }
     }

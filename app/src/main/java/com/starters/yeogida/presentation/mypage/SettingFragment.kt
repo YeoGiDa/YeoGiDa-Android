@@ -1,11 +1,13 @@
 package com.starters.yeogida.presentation.mypage
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -66,7 +68,7 @@ class SettingFragment : Fragment() {
     private fun setWithDrawDialog() {
         viewModel.withDrawDialogEvent.observe(viewLifecycleOwner) {
             // 다이얼로그 띄우기
-            val dialog = CustomDialog(requireContext()).apply {
+            CustomDialog(requireContext()).apply {
                 showDialog()
                 setTitle("정말 탈퇴하시겠습니까?")
 
@@ -212,5 +214,30 @@ class SettingFragment : Fragment() {
 
     fun moveToNotificationSetting(view: View) {
         findNavController().navigate(R.id.action_setting_to_notifacationSetting)
+    }
+
+    fun openNoticePage(view: View) {
+        openInternetSite("https://yeogida.notion.site/e55dcf152c2e435b9568d160fd986736")
+    }
+
+    fun openFAQPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/FAQ-0fa37561d18e4c90b048ef5fa30ce535")
+    }
+
+    fun openTermsPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/e1197727840a4ac0a382f53b43d371e6")
+    }
+
+    fun openLicensePage(view: View) {
+        openInternetSite("https://yeogida.notion.site/a27e0f8f23734dcfb95dfd428172a0cc")
+    }
+
+    fun openPersonalPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/dcbf68223c254d2990d9076bab1624ec")
+    }
+
+    private fun openInternetSite(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 }

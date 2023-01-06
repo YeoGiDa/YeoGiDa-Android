@@ -87,7 +87,7 @@
     <string name="notification_setting_comment">댓글 알림</string>
     <string name="setting_terms">이용약관</string>
     <string name="setting_opensource">오픈소스 라이센스</string>
-    <string name="setting_personal">개인 정보 처리방침</string>
+    <string name="setting_personal">개인정보 처리방침</string>
 
     <!-- Alarm Fragment -->
     <string name="alarm_empty">아직 알림이 없어요</string>

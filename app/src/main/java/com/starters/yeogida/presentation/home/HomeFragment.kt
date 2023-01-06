@@ -2,6 +2,7 @@ package com.starters.yeogida.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,8 +87,8 @@ class HomeFragment : Fragment() {
             onError = {
                 if (it.message == "No one Follow Error!") {
                     binding.tvHomeRecentTripEmpty.text = "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
-                } else if (it.message == "Trip NotFound Error") {
-                    binding.tvHomeRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요!"
+                } else if (it.message == "Trip NotFound Error!") {
+                    binding.tvHomeRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
                 }
             }
         )

@@ -6,8 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".presentation.follow.SearchFriendActivity">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_search_user"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_search_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/ic_back">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/search_user_title"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <EditText
-        android:id="@+id/et_search_my_place"
+        android:id="@+id/et_search_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -25,20 +54,19 @@
         android:paddingEnd="16dp"
         android:paddingBottom="10dp"
         android:textSize="13sp"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible"/>
+        app:layout_constraintTop_toBottomOf="@id/appbar_search_user" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_result"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        app:layout_constraintTop_toBottomOf="@id/et_search_my_place"
+        app:layout_constraintTop_toBottomOf="@id/et_search_user"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginTop="16dp"
         tools:listitem="@layout/item_trip_like_user"

@@ -3,6 +3,8 @@ package com.starters.yeogida.data.api
 import com.starters.yeogida.data.remote.response.BaseResponse
 import com.starters.yeogida.data.remote.response.follow.FollowerUserResponse
 import com.starters.yeogida.data.remote.response.follow.FollowingUserResponse
+import com.starters.yeogida.data.remote.response.trip.TripLikeUserResponse
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -44,4 +46,10 @@ interface FollowService {
     suspend fun searchFollowing(
         @Query("nickname") nickname: String
     ): Response<BaseResponse<FollowingUserResponse>>
+
+    // 전체 유저 검색
+    @GET("members/search")
+    fun getAllUser(
+        @Query("nickname") nickname: String
+    ): Call<BaseResponse<TripLikeUserResponse>>
 }

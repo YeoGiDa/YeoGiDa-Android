@@ -152,4 +152,7 @@
 
     <!-- Edit Place Fragment -->
     <string name="edit_place_title">장소 수정</string>
+
+    <!-- Search User Activity -->
+    <string name="search_user_title">유저 검색</string>
 </resources>

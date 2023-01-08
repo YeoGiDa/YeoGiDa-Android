@@ -294,6 +294,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     override fun onResume() {
         super.onResume()
         mView.onResume()
+        placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun onPause() {

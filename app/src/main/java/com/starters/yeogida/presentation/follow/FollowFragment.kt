@@ -58,6 +58,7 @@ class FollowFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFollowBinding.inflate(inflater, container, false)
+        binding.view = this
         return binding.root
     }
 
@@ -333,5 +334,9 @@ class FollowFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun moveToSearchFriend(view: View) {
+        startActivity(Intent(requireContext(), SearchFriendActivity::class.java))
     }
 }

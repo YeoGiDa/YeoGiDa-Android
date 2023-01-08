@@ -21,13 +21,11 @@
         android:theme="@style/Theme.YeoGida"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".presentation.search.SearchActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:exported="false" />
+
         <activity
             android:name=".presentation.user.profile.UserProfileActivity"
             android:exported="false" />
@@ -125,6 +123,12 @@
         <activity
             android:name=".presentation.home.MoreRecentTripActivity"
             android:exported="true" />
+        <activity
+            android:name=".presentation.follow.SearchFriendActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.user.profile.UserProfileActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

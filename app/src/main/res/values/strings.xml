@@ -85,6 +85,9 @@
     <string name="notification_setting_like">좋아요 알림</string>
     <string name="notification_setting_follow">팔로우 알림</string>
     <string name="notification_setting_comment">댓글 알림</string>
+    <string name="setting_terms">이용약관</string>
+    <string name="setting_opensource">오픈소스 라이센스</string>
+    <string name="setting_personal">개인정보 처리방침</string>
 
     <!-- Alarm Fragment -->
     <string name="alarm_empty">아직 알림이 없어요</string>
@@ -149,4 +152,7 @@
 
     <!-- Edit Place Fragment -->
     <string name="edit_place_title">장소 수정</string>
+
+    <!-- Search User Activity -->
+    <string name="search_user_title">유저 검색</string>
 </resources>

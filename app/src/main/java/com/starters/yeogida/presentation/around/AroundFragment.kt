@@ -177,6 +177,14 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         mMap.clear()
         mMap.isMyLocationEnabled = true
 
+        // 현재 위치 아이콘 위치 변경
+        val locationButton = (mView.findViewById<View>(Integer.parseInt("1")).parent as View).findViewById<View>(Integer.parseInt("2"))
+        val rlp = locationButton.layoutParams as (RelativeLayout.LayoutParams)
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0)
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE)
+        rlp.setMargins(0, 0, 30, 30)
+
         mMap.uiSettings.isMyLocationButtonEnabled = true
         // mMap.setPadding(20, -800, 20, 20)
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))

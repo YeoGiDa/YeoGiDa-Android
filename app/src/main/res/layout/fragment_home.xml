@@ -37,12 +37,10 @@
             android:onClick="@{view::moveToSearchTrip}"
             android:padding="4dp"
             android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="@id/iv_setting"
-            app:layout_constraintEnd_toStartOf="@+id/iv_setting"
-            app:layout_constraintTop_toTopOf="@id/iv_setting" />
+            app:layout_constraintBottom_toBottomOf="@id/tv_setting"
+            app:layout_constraintEnd_toStartOf="@+id/tv_setting"
+            app:layout_constraintTop_toTopOf="@id/tv_setting" />
 
-        <ImageView
-            android:id="@+id/iv_setting"
         <TextView
             android:id="@+id/tv_setting"
             android:layout_width="wrap_content"

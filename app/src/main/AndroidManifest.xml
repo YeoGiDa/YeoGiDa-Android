@@ -126,9 +126,6 @@
         <activity
             android:name=".presentation.follow.SearchFriendActivity"
             android:exported="true"/>
-        <activity
-            android:name=".presentation.user.profile.UserProfileActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

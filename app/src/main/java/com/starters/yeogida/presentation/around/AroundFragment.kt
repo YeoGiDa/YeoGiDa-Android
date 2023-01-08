@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -56,6 +57,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             it.moveCamera(CameraUpdateFactory.newLatLng(center))
             it.moveCamera(CameraUpdateFactory.zoomTo(7f))
         }
+        mView.getMapAsync(this)
 
         setPlaceBottomSheet()
 
@@ -63,7 +65,8 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     private fun startProcess() {
-        mView.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        updateLocation()
     }
 
     @SuppressLint("PotentialBehaviorOverride")
@@ -71,8 +74,6 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         mMap = googleMap
         getPlaceItem()
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        updateLocation()
         mMap.setOnMarkerClickListener(this)
         mMap.setOnMapClickListener {
             placeBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -175,8 +176,9 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             .build()
         mMap.clear()
         mMap.isMyLocationEnabled = true
+
         mMap.uiSettings.isMyLocationButtonEnabled = true
-        mMap.setPadding(20, 200, 20, 20)
+        // mMap.setPadding(20, -800, 20, 20)
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 

@@ -150,7 +150,6 @@ class JoinActivity : AppCompatActivity() {
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(this, "권한을 거부하였습니다.", Toast.LENGTH_SHORT).show()
                 } else {
-
                 }
             }
 
@@ -166,7 +165,6 @@ class JoinActivity : AppCompatActivity() {
             }
 
             else -> {
-
             }
         }
     }
@@ -211,7 +209,6 @@ class JoinActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
     }
 
@@ -344,7 +341,7 @@ class JoinActivity : AppCompatActivity() {
                 if (signUpResponse.message().toString() == "AlreadyExistsNickname Error!") {
                     withContext(Dispatchers.Main) {
                         with(binding) {
-                            tvWarnNickDescription.visibility = View.VISIBLE  // 중복된다는 경고 문구 보이기.
+                            tvWarnNickDescription.visibility = View.VISIBLE // 중복된다는 경고 문구 보이기.
                             etNick.setBackgroundResource(R.drawable.rectangle_border_red_10)
                         }
                     }
@@ -404,12 +401,12 @@ class JoinActivity : AppCompatActivity() {
         userNickname?.let {
             Log.d("JoinActivity", "닉네임 : $it")
             with(binding.etNick) {
-                requestFocus()  // Focusing 하기
+                requestFocus() // Focusing 하기
                 setText(it)
-                setSelection(length())  // 커서 끝으로
+                setSelection(length()) // 커서 끝으로
             }
 
-            showKeyboard()  // 키보드도 올라오게
+            showKeyboard() // 키보드도 올라오게
         }
     }
 
@@ -418,7 +415,7 @@ class JoinActivity : AppCompatActivity() {
             Log.d("JoinActivity", "사진 url : $it")
 
             CoroutineScope(Dispatchers.IO).launch {
-                val bitmap = convertUrlToBitmap(it)  // imageURL -> Bitmap
+                val bitmap = convertUrlToBitmap(it) // imageURL -> Bitmap
                 val profileImageUri =
                     UriUtil.bitmapToCompressedUri(
                         this@JoinActivity,
@@ -466,7 +463,6 @@ class JoinActivity : AppCompatActivity() {
                     BitmapFactory.decodeStream(input) // BitmapFactory의 메소드를 통해 InputStream으로부터 Bitmap을 만들어 준다.
                 connection.disconnect()
             }
-
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -485,7 +481,7 @@ class JoinActivity : AppCompatActivity() {
                 4. 정규식 패턴 ^[0-9] : 숫자 허용
                 5. 정규식 패턴 ^[ ] or ^[\\s] : 공백 허용
             */
-            val ps = Pattern.compile("^[ㄱ-ㅣ가-힣a-zA-Z0-9\\s]+$")
+            val ps = Pattern.compile("^[ㄱ-ㅣ가-힣a-zA-Z0-9\\u318D\\u119E\\u11A2\\u2022\\u2025a\\u00B7\\uFE55\\s]+$")
             if (!ps.matcher(source).matches()) {
                 ""
             } else source

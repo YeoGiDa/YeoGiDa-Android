@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
@@ -20,7 +19,6 @@ import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
@@ -28,7 +26,6 @@ import java.util.regex.Pattern
 class LikeTripFragment : Fragment() {
     private lateinit var binding: FragmentLikeTripBinding
     private val viewModel: LikeTripViewModel by viewModels()
-    private val dataStore = YeogidaApplication.getInstance().getDataStore()
     private val tripService = YeogidaClient.tripService
 
     companion object {

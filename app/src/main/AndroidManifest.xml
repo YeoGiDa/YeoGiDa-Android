@@ -22,6 +22,14 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+        <activity
+            android:name=".presentation.search.TripSearchActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.user.profile.UserProfileActivity"
+            android:exported="false" />
+
         <service
             android:name=".YeogidaFirebaseMessagingService"
             android:exported="false">
@@ -118,9 +126,6 @@
         <activity
             android:name=".presentation.follow.SearchFriendActivity"
             android:exported="true"/>
-        <activity
-            android:name=".presentation.user.profile.UserProfileActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

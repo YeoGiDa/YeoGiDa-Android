@@ -17,6 +17,8 @@
         <item name="appBarLayoutStyle">@style/AppbarStyle</item>
 
         <item name="regionChipStyle">@style/MyRegionChip</item>
+        <item name="recentSearchChipStyle">@style/RecentSearchChip</item>
+
     </style>
 
     <style name="AppbarStyle" parent="Widget.Design.AppBarLayout">

@@ -8,7 +8,7 @@ import com.starters.yeogida.databinding.ItemPopularKeywordBinding
 
 class PopularSearchAdapter(
     private val rankList: List<RankTrip>,
-
+    private val viewModel: SearchViewModel
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -29,6 +29,7 @@ class PopularSearchAdapter(
     inner class ItemPopularTripViewHolder(private val binding: ItemPopularKeywordBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(rankTrip: RankTrip, position: Int) {
+            binding.viewModel = viewModel
             binding.rank = position + 1
             binding.rankTrip = rankTrip
             binding.executePendingBindings()

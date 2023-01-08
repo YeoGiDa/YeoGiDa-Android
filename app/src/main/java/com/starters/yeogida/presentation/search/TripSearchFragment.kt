@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.data.remote.response.trip.RankTrip
 import com.starters.yeogida.databinding.FragmentTripSearchBinding
 import com.starters.yeogida.network.YeogidaClient
+import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,8 @@ class TripSearchFragment : Fragment() {
     private val searchService = YeogidaClient.searchService
 
     private val rankList = mutableListOf<RankTrip>()
+
+    private val viewModel: SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +51,10 @@ class TripSearchFragment : Fragment() {
         initRecentChip()
         initPopularKeyword()
         setSearchListener()
+
+        binding.tbTripSearch.setNavigationOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     private fun setSearchListener() {
@@ -78,6 +86,14 @@ class TripSearchFragment : Fragment() {
                 }
             }
         }
+
+        // viewModel Event 옵저빙
+        viewModel.popularKeywordClickedEvent.observe(
+            viewLifecycleOwner,
+            EventObserver { searchKeyword ->
+                moveToSearchResult(searchKeyword)
+                addRecentChip(searchKeyword)
+            })
     }
 
     private fun moveToSearchResult(searchKeyword: String) {
@@ -139,7 +155,7 @@ class TripSearchFragment : Fragment() {
 
     private fun setRankAdapter(rankList: List<RankTrip>) {
         with(binding.rvSearchTrip) {
-            adapter = PopularSearchAdapter(rankList)
+            adapter = PopularSearchAdapter(rankList, viewModel)
         }
     }
 

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.search.SearchViewModel" />
+
+        <variable
             name="rank"
             type="Integer" />
 
@@ -15,6 +19,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> viewModel.onKeywordClicked(rankTrip.searchKeyword)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

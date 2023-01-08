@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
+            android:visibility="gone"
             android:layout_marginEnd="16dp"
             android:background="@drawable/rectangle_fill_white_white_8"
             android:hint="@string/around_search_hint"

@@ -114,7 +114,7 @@
     <string name="alarm_title">알림</string>
 
     <!-- Around Fragment -->
-    <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
+    <string name="around_search_hint">둘러보고 싶은 지역이나 장소를 입력해보세요</string>
 
     <!-- Like Fragment -->
     <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>

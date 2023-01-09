@@ -268,13 +268,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="24dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/noto_sans_bold"
                     android:maxLines="1"
                     android:text="@string/around_place_description"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -1,19 +1,27 @@
 package com.starters.yeogida.presentation.trip
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -21,6 +29,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.kakao.sdk.user.UserApiClient
+import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
@@ -62,6 +71,10 @@ class AddTripFragment : Fragment() {
 
     private var selectedPicUri: Uri? = null
     private var originImgUrl: String? = null
+
+    private val PERMISSION_ALBUM = 101
+    private val REQUEST_STORAGE = 1000
+    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private val imageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -124,9 +137,9 @@ class AddTripFragment : Fragment() {
 
                         with(binding) {
                             tvAddTripTitle.text = "여행지 수정"
-                            tvAddTripRegion.text = region   // 지역
-                            etAddTripName.setText(title)     // 제목
-                            etAddTripSubtitle.setText(subTitle)   // 소제목
+                            tvAddTripRegion.text = region // 지역
+                            etAddTripName.setText(title) // 제목
+                            etAddTripSubtitle.setText(subTitle) // 소제목
 
                             imgUrl?.let {
                                 setPhotoVisibility(View.VISIBLE, View.VISIBLE, View.VISIBLE)
@@ -175,8 +188,6 @@ class AddTripFragment : Fragment() {
         }
     }
 
-
-
     private fun initBottomSheet() {
         binding.tvAddTripRegion.setOnClickListener {
             // binding.tvAddTripRegion.setBackgroundResource(R.drawable.rectangle_border_main_blue_10)
@@ -217,18 +228,17 @@ class AddTripFragment : Fragment() {
             if (type == "edit") {
                 btnAddTripNext.isEnabled =
                     !tvAddTripRegion.text.isNullOrEmpty() &&
-                            !etAddTripName.text.isNullOrEmpty() &&
-                            !etAddTripSubtitle.text.isNullOrEmpty() &&
-                            ivAddTripPhotoX.visibility == View.VISIBLE &&
-                            isChanged
+                    !etAddTripName.text.isNullOrEmpty() &&
+                    !etAddTripSubtitle.text.isNullOrEmpty() &&
+                    ivAddTripPhotoX.visibility == View.VISIBLE &&
+                    isChanged
             } else {
                 btnAddTripNext.isEnabled =
                     !tvAddTripRegion.text.isNullOrEmpty() &&
-                            !etAddTripName.text.isNullOrEmpty() &&
-                            !etAddTripSubtitle.text.isNullOrEmpty() &&
-                            ivAddTripPhotoX.visibility == View.VISIBLE
+                    !etAddTripName.text.isNullOrEmpty() &&
+                    !etAddTripSubtitle.text.isNullOrEmpty() &&
+                    ivAddTripPhotoX.visibility == View.VISIBLE
             }
-
         }
     }
 
@@ -368,21 +378,96 @@ class AddTripFragment : Fragment() {
                             progressDialog.dismissDialog()
                         }
                     }, onFail = {
-                        progressDialog.dismissDialog()
-                    }
+                    progressDialog.dismissDialog()
+                }
                 )
             }
         }
+    }
 
+    fun setOnGalleryClicked(view: View) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val isRejected = dataStore.imagePermissionIsRejected.first()
+
+            when {
+                ContextCompat.checkSelfPermission(
+                    mContext,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    withContext(Dispatchers.Main) {
+                        connectGallery()
+                        dataStore.saveIsImgPermissionRejected(false)
+                    }
+                }
+
+                isRejected -> {
+                    withContext(Dispatchers.Main) {
+                        showSettingDialog(mContext)
+                    }
+                }
+
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                    withContext(Dispatchers.Main) {
+                        showPermissionContextPopup(mContext)
+                    }
+                }
+
+                else -> {
+                    withContext(Dispatchers.Main) {
+                        requestPermissions(
+                            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                            REQUEST_STORAGE
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSettingDialog(context: Context) {
+        AlertDialog.Builder(context).apply {
+            setMessage("사진을 가져오려면 권한을 허용해주세요.")
+            setPositiveButton("설정으로 이동") { _, _ ->
+                Toast.makeText(
+                    context,
+                    "권한 허용을 위해 설정으로 이동합니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                val intent =
+                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        .setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID))
+                startActivity(intent)
+            }
+            create()
+            show()
+        }
+    }
+
+    private fun showPermissionContextPopup(context: Context) {
+        AlertDialog.Builder(context).apply {
+            setTitle("권한이 필요합니다.")
+            setMessage("앱에서 사진을 불러오기 위해 권한이 필요합니다.")
+            setPositiveButton("동의") { _, _ ->
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_ALBUM
+                )
+            }
+            setNegativeButton("취소") { _, _ -> }
+            create()
+            show()
+        }
     }
 
     // 갤러리 창 연결
-    fun connectGallery(view: View) {
+    private fun connectGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = MediaStore.Images.Media.CONTENT_TYPE
         imageResult.launch(intent)
     }
 
+    // 사진 전체 화면으로 보기
     fun setFullScreenImage(view: View) {
         val intent = Intent(activity, ImageActivity::class.java)
         if (selectedPicUri == null) {

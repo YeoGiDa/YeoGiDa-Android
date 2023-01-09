@@ -20,6 +20,7 @@ import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.databinding.ActivityLoginBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomProgressDialog
+import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -111,6 +112,14 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLoginKakao.setOnClickListener {
             getFCMToken()
+        }
+
+        binding.btnLoginNaver.setOnClickListener {
+            shortToast("구현 준비 중입니다")
+        }
+
+        binding.btnLoginGoogle.setOnClickListener {
+            shortToast("구현 준비 중입니다")
         }
     }
 

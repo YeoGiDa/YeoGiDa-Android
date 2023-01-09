@@ -1,6 +1,7 @@
 package com.starters.yeogida.presentation.user
 
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -102,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        initUnderLine()
         progressDialog = CustomProgressDialog(this)
 
         binding.btnLoginKakao.setOnClickListener {
@@ -216,5 +218,12 @@ class LoginActivity : AppCompatActivity() {
             )
         )
         finish()
+    }
+
+    private fun initUnderLine() {
+        with(binding) {
+            tvLoginTerms.paintFlags = tvLoginTerms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            tvLoginTermsPersonal.paintFlags = tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        }
     }
 }

@@ -64,6 +64,7 @@
     <string name="around_place_top">맨 위로</string>
     <string name="around_place_empty">아직 기록이 없어요 \n + 버튼을 눌러 기록을 추가해주세요.</string>
     <string name="around_place_description">장소 둘러보기</string>
+    <string name="around_place_map_title">장소 지도로 보기</string>
 
     <!-- Mypage Fragment -->
     <string name="mypage">마이페이지</string>

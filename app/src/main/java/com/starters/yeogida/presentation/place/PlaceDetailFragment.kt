@@ -135,6 +135,15 @@ class PlaceDetailFragment : Fragment() {
                         tripId = data.tripId
                         withContext(Dispatchers.Main) {
                             binding.place = data
+                            when (data.tag) {
+                                "식당" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_red_17)
+                                "카페" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_orange_17)
+                                "바" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_yellow_17)
+                                "관광지" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_green_17)
+                                "쇼핑" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_blue_17)
+                                "숙소" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_purple_17)
+                                "기타" -> binding.tvPlaceDetailTag.setBackgroundResource(R.drawable.rectangle_fill_gray200_17)
+                            }
                             if (data.placeImgs[0].imgUrl == "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png") {
                                 binding.viewpagerPlaceToolbar.visibility = View.GONE
                             }

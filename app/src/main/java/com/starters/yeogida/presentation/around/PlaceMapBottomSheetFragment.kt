@@ -43,6 +43,16 @@ class PlaceMapBottomSheetFragment(private val placeList: PlaceMapList) : BottomS
             placeList.tag,
             placeList.address
         )
+
+        when (placeList.tag) {
+            "식당" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_red_17)
+            "카페" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_orange_17)
+            "바" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_yellow_17)
+            "관광지" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_green_17)
+            "쇼핑" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_blue_17)
+            "숙소" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_pastel_purple_17)
+            "기타" -> binding.tvAroundPlaceMapTag.setBackgroundResource(R.drawable.rectangle_fill_gray200_17)
+        }
     }
 
     fun moveToDetail(view: View) {

@@ -9,7 +9,14 @@ class SearchViewModel : ViewModel() {
     private val _popularKeywordClickedEvent = MutableLiveData<Event<String>>()
     val popularKeywordClickedEvent: LiveData<Event<String>> = _popularKeywordClickedEvent
 
+    private val _openAroundPlaceEvent = MutableLiveData<Event<Long>>()
+    val openAroundPlaceEvent: LiveData<Event<Long>> = _openAroundPlaceEvent
+
     fun onKeywordClicked(searchKeyword: String) {
         _popularKeywordClickedEvent.value = Event(searchKeyword)
+    }
+
+    fun openAroundPlace(tripId: Long) {
+        _openAroundPlaceEvent.value = Event(tripId)
     }
 }

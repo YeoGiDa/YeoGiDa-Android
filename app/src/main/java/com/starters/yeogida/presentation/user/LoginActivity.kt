@@ -2,8 +2,10 @@ package com.starters.yeogida.presentation.user
 
 import android.content.Intent
 import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.tasks.OnCompleteListener
@@ -102,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.view = this
 
         initUnderLine()
         progressDialog = CustomProgressDialog(this)
@@ -220,10 +223,25 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
+    // 약관 밑줄
     private fun initUnderLine() {
         with(binding) {
             tvLoginTerms.paintFlags = tvLoginTerms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             tvLoginTermsPersonal.paintFlags = tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         }
+    }
+
+    // 인터넷 창 생성
+    private fun openInternetSite(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
+    fun openTermsPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/e1197727840a4ac0a382f53b43d371e6")
+    }
+
+    fun openPersonalPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/dcbf68223c254d2990d9076bab1624ec")
     }
 }

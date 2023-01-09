@@ -88,8 +88,11 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     // 장소들의 중심 좌표로 카메라 이동
     private fun initMapCamera(latitude: Double, longitude: Double) {
         val mLatLng = LatLng(latitude, longitude)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng))
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(11f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(mLatLng)
+            .zoom(12f)
+            .build()
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
     private fun initNavigation() {

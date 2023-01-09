@@ -14,8 +14,12 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
+import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.local.SearchKeyword
 import com.starters.yeogida.data.remote.response.trip.RankTrip
 import com.starters.yeogida.databinding.FragmentTripSearchBinding
 import com.starters.yeogida.network.YeogidaClient
@@ -25,11 +29,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.ZonedDateTime
 
 
 class TripSearchFragment : Fragment() {
     private lateinit var binding: FragmentTripSearchBinding
     private val searchService = YeogidaClient.searchService
+    private val dataBase = YeogidaApplication.getInstance().getDataBase()
 
     private val rankList = mutableListOf<RankTrip>()
 
@@ -56,9 +62,19 @@ class TripSearchFragment : Fragment() {
         initRecentChip()
         initPopularKeyword()
         setSearchListener()
+        setOnBackPressed()
+        setOnDeleteAllClickListener()
+    }
 
+    private fun setOnBackPressed() {
         binding.tbTripSearch.setNavigationOnClickListener {
             requireActivity().finish()
+        }
+    }
+
+    private fun setOnDeleteAllClickListener() {
+        binding.btnTripSearchRemoveAll.setOnClickListener {
+            deleteAllRecentChip()
         }
     }
 
@@ -96,12 +112,16 @@ class TripSearchFragment : Fragment() {
         viewModel.popularKeywordClickedEvent.observe(
             viewLifecycleOwner,
             EventObserver { searchKeyword ->
-                moveToSearchResult(searchKeyword)
-                addRecentChip(searchKeyword)
+                if (searchKeyword != "-") {
+                    moveToSearchResult(searchKeyword)
+                    addRecentChip(searchKeyword)
+                }
             })
     }
 
     private fun moveToSearchResult(searchKeyword: String) {
+        binding.etTripSearch.text.clear()
+
         findNavController().navigate(
             R.id.action_tripSearch_to_tripSearchResult,
             bundleOf("searchKeyword" to searchKeyword)
@@ -175,28 +195,72 @@ class TripSearchFragment : Fragment() {
         val dpWidth = getScreenWidth()
         with(binding.rvSearchTrip) {
             adapter = PopularSearchAdapter(rankList, viewModel, dpWidth)
+            layoutManager =
+                object : GridLayoutManager(requireContext(), 5, RecyclerView.HORIZONTAL, false) {
+                    override fun canScrollHorizontally(): Boolean {
+                        return false
+                    }
+                }
         }
     }
 
     private fun initRecentChip() {
-        with(binding.chipGroupRecent) {
-            // TODO. Room 에 있는 값 가져오기
-            addView(
-                Chip(requireContext(), null, R.attr.recentSearchChipStyle).apply {
-                    text = "test"
+        CoroutineScope(Dispatchers.IO).launch {
+            val keywordList = dataBase.searchKeywordDao().getAllRecentSearch()
+
+            withContext(Dispatchers.Main) {
+                with(binding.chipGroupRecent) {
+                    removeAllViews()    // 비우고
+                    // 받아온 값 추가하기
+                    for (keyword in keywordList) {
+                        addView(
+                            Chip(requireContext(), null, R.attr.recentSearchChipStyle).apply {
+                                text = keyword.keyword
+
+                                // 제거 버튼 클릭 시
+                                setOnCloseIconClickListener {
+                                    // 최근 검색어에서 제거
+                                    // removeView(this)
+                                    deleteRecentChip(text.toString())
+                                    removeView(this)
+                                }
+
+                                setOnClickListener {
+                                    // 검색 결과로 이동 + 제일 최근 검색어로 갱신
+                                    moveToSearchResult(text.toString())
+                                    addRecentChip(text.toString())
+                                }
+                            }
+                        )
+                    }
                 }
-            )
+            }
         }
     }
 
     private fun addRecentChip(searchKeyword: String) {
-        with(binding.chipGroupRecent) {
-            // TODO. 최대 10개만 가지고 있기, 10개 이상일때는 제일 오래된 거 지우고 넣기
-            addView(
-                Chip(requireContext(), null, R.attr.recentSearchChipStyle).apply {
-                    text = searchKeyword
-                }
+        CoroutineScope(Dispatchers.IO).launch {
+            dataBase.searchKeywordDao().insertKeyword(
+                SearchKeyword(
+                    searchKeyword,
+                    ZonedDateTime.now()
+                )
             )
+        }
+    }
+
+    private fun deleteRecentChip(searchKeyword: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataBase.searchKeywordDao().deleteKeyword(searchKeyword)
+        }
+    }
+
+    private fun deleteAllRecentChip() {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataBase.searchKeywordDao().deleteAllKeyword()
+            withContext(Dispatchers.Main) {
+                binding.chipGroupRecent.removeAllViews()
+            }
         }
     }
 }

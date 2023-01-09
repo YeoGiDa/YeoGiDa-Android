@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="view"
+            type="com.starters.yeogida.presentation.user.LoginActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,16 +120,16 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginStart="50dp"
-            android:paddingStart="26dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="50dp"
-            android:text="@string/login_kakao"
-            android:textAlignment="center"
-            android:textSize="16dp"
-            android:textColor="@color/black"
+            android:background="@drawable/rectangle_fill_kakao_yellow_12"
             android:fontFamily="@font/noto_sans_bold"
             android:gravity="center"
-            android:background="@drawable/rectangle_fill_kakao_yellow_12"
+            android:paddingStart="26dp"
+            android:text="@string/login_kakao"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_login_description" />
@@ -139,25 +142,25 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/img_kakao"
+            app:layout_constraintBottom_toBottomOf="@id/btn_login_kakao"
             app:layout_constraintStart_toStartOf="@id/btn_login_kakao"
-            app:layout_constraintTop_toTopOf="@id/btn_login_kakao"
-            app:layout_constraintBottom_toBottomOf="@id/btn_login_kakao" />
+            app:layout_constraintTop_toTopOf="@id/btn_login_kakao" />
 
         <TextView
             android:id="@+id/btn_login_naver"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginStart="50dp"
-            android:paddingStart="26dp"
-            android:textColor="@color/white"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="50dp"
-            android:text="@string/login_naver"
-            android:textAlignment="center"
-            android:textSize="16dp"
+            android:background="@drawable/rectangle_fill_naver_green_12"
             android:fontFamily="@font/noto_sans_bold"
             android:gravity="center"
-            android:background="@drawable/rectangle_fill_naver_green_12"
+            android:paddingStart="26dp"
+            android:text="@string/login_naver"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_login_kakao" />
@@ -170,9 +173,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/img_naver"
+            app:layout_constraintBottom_toBottomOf="@id/btn_login_naver"
             app:layout_constraintStart_toStartOf="@id/btn_login_naver"
-            app:layout_constraintTop_toTopOf="@id/btn_login_naver"
-            app:layout_constraintBottom_toBottomOf="@id/btn_login_naver" />
+            app:layout_constraintTop_toTopOf="@id/btn_login_naver" />
 
 
         <TextView
@@ -180,16 +183,16 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginStart="50dp"
-            android:paddingStart="10dp"
-            android:textColor="@color/black"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="50dp"
-            android:text="@string/login_google"
-            android:textAlignment="center"
-            android:textSize="16dp"
+            android:background="@drawable/rectangle_fill_white_12"
             android:fontFamily="@font/noto_sans_bold"
             android:gravity="center"
-            android:background="@drawable/rectangle_fill_white_12"
+            android:paddingStart="10dp"
+            android:text="@string/login_google"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_login_naver" />
@@ -202,64 +205,66 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/img_google"
+            app:layout_constraintBottom_toBottomOf="@id/btn_login_google"
             app:layout_constraintStart_toStartOf="@id/btn_login_google"
-            app:layout_constraintTop_toTopOf="@id/btn_login_google"
-            app:layout_constraintBottom_toBottomOf="@id/btn_login_google" />
+            app:layout_constraintTop_toTopOf="@id/btn_login_google" />
 
         <LinearLayout
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_login_google"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login_google">
 
             <TextView
                 android:id="@+id/tv_login_notice1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/login_notice1"
                 android:textColor="@color/white"
-                android:textSize="12dp"
-                android:text="@string/login_notice1" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_login_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_regular"
-                android:textColor="@color/white"
+                android:onClick="@{view::openTermsPage}"
                 android:paddingLeft="4dp"
-                android:textSize="12dp"
-                android:text="@string/login_notice2" />
+                android:text="@string/login_notice2"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_login_notice2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/login_notice3"
                 android:textColor="@color/white"
-                android:textSize="12dp"
-                android:text="@string/login_notice3" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_login_terms_personal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_regular"
-                android:textColor="@color/white"
+                android:onClick="@{view::openPersonalPage}"
                 android:paddingLeft="4dp"
-                android:textSize="12dp"
-                android:text="@string/login_notice4" />
+                android:text="@string/login_notice4"
+                android:textColor="@color/white"
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_login_notice3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/login_notice5"
                 android:textColor="@color/white"
-                android:textSize="12dp"
-                android:text="@string/login_notice5" />
+                android:textSize="12dp" />
 
         </LinearLayout>
 

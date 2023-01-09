@@ -119,6 +119,8 @@
 
         <item name="closeIconVisible">true</item>
         <item name="closeIcon">@drawable/ic_chip_close</item>
+        <item name="closeIconStartPadding">6dp</item>
+        <item name="closeIconEndPadding">6dp</item>
         <item name="closeIconTint">@color/main_blue</item>
         <item name="closeIconSize">10dp</item>
 

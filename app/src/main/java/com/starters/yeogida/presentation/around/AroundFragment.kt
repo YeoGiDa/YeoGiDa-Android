@@ -3,6 +3,7 @@ package com.starters.yeogida.presentation.around
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -52,7 +53,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
-    private lateinit var autocompleteFragment: AutocompleteSupportFragment
+    private lateinit var mContext: Context
 
     private var userList: ArrayList<ClusterPlace> = ArrayList()
 
@@ -79,8 +80,13 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
     private fun startProcess() {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext)
         updateLocation()
     }
 
@@ -141,7 +147,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 //    }
 
     private fun setUpClusterManager(mMap: GoogleMap, list: ArrayList<ClusterPlace>) {
-        val clusterManager = ClusterManager<ClusterPlace> (requireContext(), mMap)
+        val clusterManager = ClusterManager<ClusterPlace> (mContext, mMap)
         mMap.setOnCameraIdleListener(clusterManager)
         clusterManager.addItems(list)
         clusterManager.cluster()
@@ -251,7 +257,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     private fun moveToDetail(tripId: Long, placeId: Long) {
-        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        val intent = Intent(mContext, PlaceActivity::class.java)
         intent.putExtra("type", "around")
         intent.putExtra("tripId", tripId)
         intent.putExtra("placeId", placeId)
@@ -269,7 +275,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     private fun checkPermission() {
         var permittedAll = true
         for (permission in permissions) {
-            val result = ContextCompat.checkSelfPermission(requireContext(), permission)
+            val result = ContextCompat.checkSelfPermission(mContext, permission)
             if (result != PackageManager.PERMISSION_GRANTED) {
                 permittedAll = false
                 requestPermission()
@@ -287,7 +293,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     // 권한이 승인되지 않으면 한 번 더 확인
     private fun confirmAgain() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(mContext)
             .setTitle("권한 승인 확인")
             .setMessage("위치 관련 권한을 모두 승인하셔야 현재 위치 주변 장소를 확인할 수 있습니다. 권한 승인을 다시 하시겠습니까?")
             .setPositiveButton("네") { _, _ ->
@@ -356,7 +362,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             fields
         )
             .setCountry("KR")
-            .build(requireContext())
+            .build(mContext)
 
         placeResultLauncher.launch(intent)
     }

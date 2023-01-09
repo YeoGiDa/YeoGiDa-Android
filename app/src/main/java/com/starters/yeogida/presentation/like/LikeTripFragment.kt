@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.like
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -27,6 +28,7 @@ class LikeTripFragment : Fragment() {
     private lateinit var binding: FragmentLikeTripBinding
     private val viewModel: LikeTripViewModel by viewModels()
     private val tripService = YeogidaClient.tripService
+    private lateinit var mContext: Context
 
     companion object {
         val REGION_CATEGORY_ITEM = "region_category_item"
@@ -65,6 +67,10 @@ class LikeTripFragment : Fragment() {
         setSearchTextChangedListener(choice)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
 
     private fun initSearchView(choice: Int?) {
         choice?.let {
@@ -272,7 +278,7 @@ class LikeTripFragment : Fragment() {
     }
 
     private fun moveToAroundPlace(tripId: Long) {
-        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        val intent = Intent(mContext, PlaceActivity::class.java)
         intent.putExtra("tripId", tripId)
         startActivity(intent)
     }
@@ -314,14 +320,14 @@ class LikeTripFragment : Fragment() {
             when (response.code()) {
                 201 -> {
                     withContext(Dispatchers.Main) {
-                        requireContext().shortToast("좋아요를 추가하였습니다")
+                        mContext.shortToast("좋아요를 추가하였습니다")
                     }
                 }
                 else -> {
                     Log.e("LikeResponse/Error", response.message())
                     withContext(Dispatchers.Main) {
                         likeBtn.isSelected = true
-                        requireContext().shortToast("에러")
+                        mContext.shortToast("에러")
                     }
                 }
             }
@@ -342,14 +348,14 @@ class LikeTripFragment : Fragment() {
             when (response.code()) {
                 200 -> {
                     withContext(Dispatchers.Main) {
-                        requireContext().shortToast("좋아요를 취소하였습니다")
+                        mContext.shortToast("좋아요를 취소하였습니다")
                     }
                 }
                 else -> {
                     Log.e("LikeResponse/Error", response.message())
                     withContext(Dispatchers.Main) {
                         likeBtn.isSelected = true
-                        requireContext().shortToast("에러")
+                        mContext.shortToast("에러")
                     }
                 }
             }

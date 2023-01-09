@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.home
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import kotlinx.coroutines.withContext
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
+    private lateinit var mContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +50,11 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         initNetwork()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     private fun initNetwork() {
@@ -95,7 +102,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun moveToTrip(tripId: Long) {
-        val intent = Intent(requireContext(), PlaceActivity::class.java)
+        val intent = Intent(mContext, PlaceActivity::class.java)
         intent.putExtra("tripId", tripId)
         startActivity(intent)
     }
@@ -125,13 +132,13 @@ class HomeFragment : Fragment() {
 
                     if (myMemberId != memberId) {
                         withContext(Dispatchers.Main) {
-                            Intent(requireContext(), UserProfileActivity::class.java).apply {
+                            Intent(mContext, UserProfileActivity::class.java).apply {
                                 putExtra("memberId", memberId)
                                 startActivity(this)
                             }
                         }
                     } else {
-                        Intent(requireContext(), MyPageActivity::class.java).apply {
+                        Intent(mContext, MyPageActivity::class.java).apply {
                             putExtra("memberId", memberId)
                             startActivity(this)
                         }
@@ -142,14 +149,14 @@ class HomeFragment : Fragment() {
     }
 
     fun moveToMoreTraveler(view: View) {
-        startActivity(Intent(requireContext(), MoreTravelerActivity::class.java))
+        startActivity(Intent(mContext, MoreTravelerActivity::class.java))
     }
 
     fun moveToMoreMonthlyTrip(view: View) {
-        startActivity(Intent(requireContext(), MoreMonthlyTripActivity::class.java))
+        startActivity(Intent(mContext, MoreMonthlyTripActivity::class.java))
     }
 
     fun moveToMoreRecentTrip(view: View) {
-        startActivity(Intent(requireContext(), MoreRecentTripActivity::class.java))
+        startActivity(Intent(mContext, MoreRecentTripActivity::class.java))
     }
 }

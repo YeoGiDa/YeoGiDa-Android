@@ -85,7 +85,7 @@ class ChangeProfileFragment : Fragment() {
 
             context?.let { context ->
                 imageUri?.let { imageUri ->
-                    imageFile = ImageUtil.getResizePicture(requireContext(), imageUri)
+                    imageFile = ImageUtil.getResizePicture(mContext, imageUri)
                     Log.e("imageFile", "Null ? ${imageFile == null}")
                 }
             }
@@ -142,7 +142,7 @@ class ChangeProfileFragment : Fragment() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    requireContext().shortToast("권한을 거부하였습니다.")
+                    mContext.shortToast("권한을 거부하였습니다.")
                 } else {
 
                 }
@@ -152,7 +152,7 @@ class ChangeProfileFragment : Fragment() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     navigatePhotos()
                 } else if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    requireContext().shortToast("권한을 거부하였습니다.")
+                    mContext.shortToast("권한을 거부하였습니다.")
                     CoroutineScope(Dispatchers.IO).launch {
                         dataStore.saveIsImgPermissionRejected(true)
                     }
@@ -172,7 +172,7 @@ class ChangeProfileFragment : Fragment() {
 
                 when {
                     ContextCompat.checkSelfPermission(
-                        requireContext(),
+                        mContext,
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         withContext(Dispatchers.Main) {
@@ -184,13 +184,13 @@ class ChangeProfileFragment : Fragment() {
 
                     isRejected -> {
                         withContext(Dispatchers.Main) {
-                            showSettingDialog(requireContext())
+                            showSettingDialog(mContext)
                         }
                     }
 
                     shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
                         withContext(Dispatchers.Main) {
-                            showPermissionContextPopup(requireContext())
+                            showPermissionContextPopup(mContext)
                         }
                         Log.i("BUTTON", "showpermission")
                     }
@@ -284,7 +284,7 @@ class ChangeProfileFragment : Fragment() {
                 when (response.code()) {
                     200 -> {
                         withContext(Dispatchers.Main) {
-                            requireContext().shortToast("정보가 수정되었습니다.")
+                            mContext.shortToast("정보가 수정되었습니다.")
                             findNavController().navigateUp()
                             progressDialog.dismissDialog()
                         }
@@ -377,7 +377,7 @@ class ChangeProfileFragment : Fragment() {
         userProfileImageUrl?.let { // 프로필 이미지 URL
             Log.d("initImageFile", "사진 url : $it")
 
-            GlideApp.with(requireContext())
+            GlideApp.with(mContext)
                 .asBitmap()
                 .load(it)
                 .into(object : CustomTarget<Bitmap>(1920, 1080) {

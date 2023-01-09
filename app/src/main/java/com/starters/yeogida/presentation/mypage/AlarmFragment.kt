@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.mypage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.starters.yeogida.util.customEnqueue
 
 class AlarmFragment : Fragment() {
     private lateinit var binding: FragmentAlarmBinding
+    private lateinit var mContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +33,11 @@ class AlarmFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         initNavigation()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     private fun initAdapter() {
@@ -64,18 +71,18 @@ class AlarmFragment : Fragment() {
     private fun moveToPage(type: String, followerId: Long, placeId: Long, tripId: Long) {
         when (type) {
             "NEW_FOLLOW" -> {
-                val intent = Intent(requireContext(), UserProfileActivity::class.java)
+                val intent = Intent(mContext, UserProfileActivity::class.java)
                 intent.putExtra("memberId", followerId)
                 startActivity(intent)
             }
             "NEW_COMMENT" -> {
-                val intent = Intent(requireContext(), PlaceActivity::class.java)
+                val intent = Intent(mContext, PlaceActivity::class.java)
                 intent.putExtra("type", "comment_alarm")
                 intent.putExtra("placeId", placeId)
                 startActivity(intent)
             }
             "NEW_HEART" -> {
-                val intent = Intent(requireContext(), PlaceActivity::class.java)
+                val intent = Intent(mContext, PlaceActivity::class.java)
                 intent.putExtra("type", "heart")
                 intent.putExtra("tripId", tripId)
                 startActivity(intent)

@@ -198,7 +198,7 @@
                 android:layout_weight="1"
                 android:text="FAQ"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -244,7 +244,7 @@
                 android:layout_weight="1"
                 android:text="@string/setting_terms"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -290,7 +290,7 @@
                 android:layout_weight="1"
                 android:text="@string/setting_opensource"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -336,7 +336,7 @@
                 android:layout_weight="1"
                 android:text="@string/setting_personal"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"

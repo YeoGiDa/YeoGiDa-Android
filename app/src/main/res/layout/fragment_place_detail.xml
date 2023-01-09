@@ -108,10 +108,10 @@
                     tools:text="케이스퀘어 빌딩" />
 
                 <TextView
-                    android:layout_marginTop="10dp"
                     android:id="@+id/tv_place_detail_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="12dp"
                     android:background="@drawable/rectangle_fill_light_yellow_17"
                     android:fontFamily="@font/noto_sans_regular"
@@ -130,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:fontFamily="@font/noto_sans_medium"
                     android:text="@{place.address}"
                     android:textColor="@color/gray_400"
@@ -144,7 +144,7 @@
                     style="@style/CustomRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="12dp"
                     android:isIndicator="true"
                     android:numStars="5"
                     android:rating="@{place.star}"
@@ -155,7 +155,7 @@
                     android:id="@+id/tv_place_detail_review"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/noto_sans_medium"
                     android:text="@{place.content}"
                     android:textColor="@color/black"

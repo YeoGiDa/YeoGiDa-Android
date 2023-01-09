@@ -31,9 +31,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/noto_sans_regular"
+                android:text="@string/around_place_map_title"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:text="@string/around_place_map_title" />
+                android:textSize="18sp" />
 
         </androidx.appcompat.widget.Toolbar>
 

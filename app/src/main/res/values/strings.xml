@@ -16,6 +16,11 @@
     <string name="login_kakao">카카오로 로그인</string>
     <string name="login_naver">네이버로 로그인</string>
     <string name="login_google">구글로 로그인</string>
+    <string name="login_notice1">로그인 시</string>
+    <string name="login_notice2">이용약관</string>
+    <string name="login_notice3">과</string>
+    <string name="login_notice4">개인정보 처리 방침</string>
+    <string name="login_notice5">에 동의하게 됩니다.</string>
 
     <!-- Join Activity -->
     <string name="join_title">회원가입</string>
@@ -59,6 +64,7 @@
     <string name="around_place_top">맨 위로</string>
     <string name="around_place_empty">아직 기록이 없어요 \n + 버튼을 눌러 기록을 추가해주세요.</string>
     <string name="around_place_description">장소 둘러보기</string>
+    <string name="around_place_map_title">장소 지도로 보기</string>
 
     <!-- Mypage Fragment -->
     <string name="mypage">마이페이지</string>
@@ -114,7 +120,7 @@
     <string name="alarm_title">알림</string>
 
     <!-- Around Fragment -->
-    <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
+    <string name="around_search_hint">둘러보고 싶은 지역이나 장소를 입력해보세요</string>
 
     <!-- Like Fragment -->
     <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>

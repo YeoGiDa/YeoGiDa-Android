@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.mypage
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import kotlinx.coroutines.withContext
 class MyCommentPlaceFragment : Fragment() {
     private lateinit var binding: FragmentMyCommentPlaceBinding
     private val viewModel: AroundPlaceViewModel by viewModels()
+    private lateinit var mContext: Context
 
     private val placeList = mutableListOf<PlaceData>()
 
@@ -43,7 +45,7 @@ class MyCommentPlaceFragment : Fragment() {
         initClickListener()
 
         viewModel.openPlaceDetailEvent.observe(viewLifecycleOwner, EventObserver { placeId ->
-            Intent(requireContext(), PlaceActivity::class.java).apply {
+            Intent(mContext, PlaceActivity::class.java).apply {
                 putExtra("placeId", placeId)
                 putExtra("type", "my_comment")
                 startActivity(this)
@@ -54,6 +56,11 @@ class MyCommentPlaceFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         getMyCommentedPlace()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     private fun initView() {

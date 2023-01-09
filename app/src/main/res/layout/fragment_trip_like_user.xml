@@ -23,8 +23,18 @@
                 android:id="@+id/tb_trip_like_user_list"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="@drawable/ic_back"
-                app:title="@string/item_trip_like_user_title" />
+                app:navigationIcon="@drawable/ic_back">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/item_trip_like_user_title"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 

@@ -1,12 +1,12 @@
 package com.starters.yeogida.presentation.user.profile
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
@@ -28,15 +28,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment() {
-
     private lateinit var binding: FragmentUserProfileBinding
     private val viewModel: UserProfileViewModel by viewModels()
+    private lateinit var mContext: Context
 
     private val userService = YeogidaClient.userService
     private val followService = YeogidaClient.followService
     private val tripService = YeogidaClient.tripService
-
-    private val dataStore = YeogidaApplication.getInstance().getDataStore()
 
     private var memberId: Long = 0
     private var region: String = "nothing"
@@ -75,6 +73,11 @@ class UserProfileFragment : Fragment() {
         setMoveTop()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
     private fun setMoveTop() {
         viewModel.moveTopEvent.observe(viewLifecycleOwner) {
             binding.svUserProfile.smoothScrollTo(0, 0)
@@ -91,7 +94,7 @@ class UserProfileFragment : Fragment() {
         viewModel.openAroundPlaceEvent.observe(
             viewLifecycleOwner,
             EventObserver { tripId ->
-                Intent(requireContext(), PlaceActivity::class.java).apply {
+                Intent(mContext, PlaceActivity::class.java).apply {
                     putExtra("tripId", tripId)
                     startActivity(this)
                 }
@@ -127,7 +130,7 @@ class UserProfileFragment : Fragment() {
     private fun addRegionChip(region: String) {
         with(binding.chipGroup) {
             addView(
-                Chip(requireContext(), null, R.attr.regionChipStyle).apply {
+                Chip(mContext, null, R.attr.regionChipStyle).apply {
                     text = region
                 }
             )
@@ -274,7 +277,7 @@ class UserProfileFragment : Fragment() {
                                         setTextColor(resources.getColor(R.color.black, null))
                                     }
                                     initUserProfile()
-                                    requireContext().shortToast("팔로우 취소 실패")
+                                    mContext.shortToast("팔로우 취소 실패")
                                 }
                             }
                         }
@@ -308,7 +311,7 @@ class UserProfileFragment : Fragment() {
                                         setTextColor(resources.getColor(R.color.white, null))
                                     }
                                     initUserProfile()
-                                    requireContext().shortToast("팔로우 추가 실패")
+                                    mContext.shortToast("팔로우 추가 실패")
                                 }
                             }
                         }
@@ -345,14 +348,14 @@ class UserProfileFragment : Fragment() {
         ).customEnqueue(
             onSuccess = {
                 if (it.code == 200) {
-                    requireContext().shortToast("유저를 신고했습니다.")
+                    mContext.shortToast("유저를 신고했습니다.")
                 }
             }
         )
     }
 
     fun setReportDialog(view: View) {
-        CustomDialog(requireContext()).apply {
+        CustomDialog(mContext).apply {
             showDialog()
             setTitle("정말 신고하시겠습니까?")
             setPositiveBtn("신고") {

@@ -43,7 +43,7 @@
     <style name="CollapsingToolbar.Expanded.Trip.Title" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="CollapsingToolbar.Expanded.Place.Title" parent="@android:style/TextAppearance">
@@ -54,7 +54,7 @@
     <!-- Trip Subtitle -->
     <style name="CollapsingToolbar.Expanded.Trip.SubTitle" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <!-- CollapsingToolbar Collapsed Title Style -->

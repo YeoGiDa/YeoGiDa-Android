@@ -3,7 +3,7 @@ package com.starters.yeogida.presentation.around
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 
-class Place(
+class ClusterPlace(
     val id: Long,
     val latLng: LatLng,
     val name: String,

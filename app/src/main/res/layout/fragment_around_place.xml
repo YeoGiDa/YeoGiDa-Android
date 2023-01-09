@@ -268,13 +268,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="24dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/noto_sans_bold"
                     android:maxLines="1"
                     android:text="@string/around_place_description"
                     android:textColor="@color/black"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -433,17 +433,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="24dp"
-                    android:background="@drawable/rectangle_fill_gray100_17"
+                    android:background="@drawable/rectangle_fill_gray100_20"
                     android:onClick="@{view::moveToTop}"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingTop="8dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -452,8 +453,8 @@
                         android:fontFamily="@font/noto_sans_regular"
                         android:gravity="center"
                         android:text="@string/around_place_top"
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -461,7 +462,8 @@
                         android:layout_gravity="center"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
-                        android:src="@drawable/ic_up" />
+                        android:src="@drawable/ic_up"
+                        app:tint="@color/gray_600" />
 
                 </LinearLayout>
 

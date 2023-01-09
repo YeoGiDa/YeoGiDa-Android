@@ -1,5 +1,6 @@
 package com.starters.yeogida.presentation.follow
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -24,10 +25,10 @@ import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 
 class FollowFragment : Fragment() {
-
     private lateinit var binding: FragmentFollowBinding
     private val viewModel: FollowViewModel by viewModels()
     private val followService = YeogidaClient.followService
+    private lateinit var mContext: Context
 
     companion object {
         val FOLLOW_CATEGORY_ITEM = "FOLLOW_CATEGORY_ITEM"
@@ -40,11 +41,7 @@ class FollowFragment : Fragment() {
                 }
             }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    
     override fun onResume() {
         super.onResume()
         Log.e("FollowFragment", "onResume()")
@@ -60,6 +57,11 @@ class FollowFragment : Fragment() {
         binding = FragmentFollowBinding.inflate(inflater, container, false)
         binding.view = this
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,7 +163,7 @@ class FollowFragment : Fragment() {
 
                 else -> {
                     Log.e("FollowerResponse", "팔로워 불러오기 실패 $followerUserResponse")
-                    requireContext().shortToast("팔로워 불러오기 실패")
+                    mContext.shortToast("팔로워 불러오기 실패")
                 }
             }
         }
@@ -194,7 +196,7 @@ class FollowFragment : Fragment() {
                 }
                 else -> {
                     Log.e("FollowerResponse", "팔로잉 목록 불러오기 실패 $followingUserResponse")
-                    requireContext().shortToast("팔로잉 목록 불러오기 실패")
+                    mContext.shortToast("팔로잉 목록 불러오기 실패")
                 }
             }
         }
@@ -219,7 +221,7 @@ class FollowFragment : Fragment() {
         viewModel.openUserProfileEvent.observe(
             viewLifecycleOwner,
             EventObserver { memberId ->
-                Intent(requireContext(), UserProfileActivity::class.java).apply {
+                Intent(mContext, UserProfileActivity::class.java).apply {
                     putExtra("memberId", memberId)
                     startActivity(this)
                 }
@@ -273,7 +275,7 @@ class FollowFragment : Fragment() {
     }
 
     private fun showDialog(choice: Int, user: FollowUserData) {
-        CustomDialog(requireContext()).apply {
+        CustomDialog(mContext).apply {
             setTitle("${if (choice == 0) "팔로워" else "팔로잉"} 목록에서 삭제합니다.")
             setPositiveBtn("삭제") {
                 deleteFollowUser(choice, user)
@@ -337,6 +339,6 @@ class FollowFragment : Fragment() {
     }
 
     fun moveToSearchFriend(view: View) {
-        startActivity(Intent(requireContext(), SearchFriendActivity::class.java))
+        startActivity(Intent(mContext, SearchFriendActivity::class.java))
     }
 }

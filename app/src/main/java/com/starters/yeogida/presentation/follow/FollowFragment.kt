@@ -159,6 +159,12 @@ class FollowFragment : Fragment() {
                 200 -> {
                     val followerList = followerUserResponse.body()?.data?.followerList
                     setFollowerList(followerList)
+                    withContext(Dispatchers.Main) {
+                        setEmptyView(
+                            FollowLists.follower,
+                            "아직 회원님을 팔로우한 사람이 없어요!"
+                        )
+                    }
                 }
 
                 else -> {
@@ -177,10 +183,6 @@ class FollowFragment : Fragment() {
 
         withContext(Dispatchers.Main) {
             binding.rvFollow.adapter?.notifyDataSetChanged()
-            setEmptyView(
-                FollowLists.follower,
-                "아직 회원님을 팔로우한 사람이 없어요!"
-            )
         }
     }
 
@@ -193,6 +195,12 @@ class FollowFragment : Fragment() {
                 200 -> {
                     val followingList = followingUserResponse.body()?.data?.followingList
                     setFollowingList(followingList)
+                    withContext(Dispatchers.Main) {
+                        setEmptyView(
+                            FollowLists.following,
+                            "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
+                        )
+                    }
                 }
                 else -> {
                     Log.e("FollowerResponse", "팔로잉 목록 불러오기 실패 $followingUserResponse")
@@ -210,10 +218,6 @@ class FollowFragment : Fragment() {
 
         withContext(Dispatchers.Main) {
             binding.rvFollow.adapter?.notifyDataSetChanged()
-            setEmptyView(
-                FollowLists.following,
-                "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
-            )
         }
     }
 
@@ -300,10 +304,6 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.follower.remove(user) // 목록에서 삭제
-                            setEmptyView(
-                                FollowLists.follower,
-                                "아직 회원님을 팔로우한 사람이 없어요!"
-                            )
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -323,10 +323,6 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.following.remove(user) // 목록에서 삭제
-                            setEmptyView(
-                                FollowLists.following,
-                                "아직 팔로잉한 사람이 없어요\n" + "사람들을 팔로잉 해보세요!"
-                            )
                             binding.rvFollow.adapter?.notifyDataSetChanged()
                         }
                     }

@@ -91,6 +91,7 @@
     <string name="notification_setting_like">좋아요 알림</string>
     <string name="notification_setting_follow">팔로우 알림</string>
     <string name="notification_setting_comment">댓글 알림</string>
+    <string name="notification_setting_title">알림이 오지 않는 경우\n설정에서 기기의 알림 설정을 변경해주세요.</string>
     <string name="setting_terms">이용약관</string>
     <string name="setting_opensource">오픈소스 라이센스</string>
     <string name="setting_personal">개인정보 처리방침</string>

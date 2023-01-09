@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                             val nickname = userAccount.profile?.nickname
                             val profileImageUrl = userAccount.profile?.profileImageUrl
 
-                            CoroutineScope(Dispatchers.Main).launch {
+                            CoroutineScope(Dispatchers.IO).launch {
                                 postLogin(email, userNum, nickname, profileImageUrl)
                             }
                         }

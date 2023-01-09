@@ -42,6 +42,10 @@ object YeogidaClient {
         provideService(FollowService::class.java)
     }
 
+    val searchService: SearchService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        provideService(SearchService::class.java)
+    }
+
     // HJ
     private fun <T> provideService(service: Class<T>): T = Retrofit.Builder()
         .baseUrl(BASE_URL)

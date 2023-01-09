@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/tb_trip_like_user_list"
+                android:id="@+id/tb_trip_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
@@ -26,25 +26,47 @@
                 app:contentInsetStartWithNavigation="4dp"
                 app:navigationIcon="@drawable/ic_back">
 
-                <EditText
-                    android:id="@+id/et_trip_search"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/selector_et_blue"
-                    android:drawableRight="@drawable/ic_search"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:hint="@string/like_search_hint"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="16dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="10dp"
-                    android:textCursorDrawable="@drawable/main_blue_cursor"
-                    android:textSize="13sp" />
+                    android:layout_height="wrap_content">
 
+                    <EditText
+                        android:id="@+id/et_trip_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/selector_et_blue"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:hint="@string/like_search_hint"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="16dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="40dp"
+                        android:paddingBottom="10dp"
+                        android:textCursorDrawable="@drawable/main_blue_cursor"
+                        android:textSize="13sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_trip_search"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        app:layout_constraintDimensionRatio="1:1"
+                        android:layout_marginEnd="10dp"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_search"
+                        app:layout_constraintBottom_toBottomOf="@id/et_trip_search"
+                        app:layout_constraintEnd_toEndOf="@id/et_trip_search"
+                        app:layout_constraintTop_toTopOf="@id/et_trip_search" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -93,7 +115,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="12dp"
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none"
                     app:layout_constraintEnd_toEndOf="@+id/btn_trip_search_remove_all"
@@ -146,342 +167,16 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_popular_search_title"
                     app:layout_constraintStart_toEndOf="@id/tv_popular_search_title" />
 
-                <LinearLayout
-                    android:id="@+id/layout_popular_search"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_search_trip"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
-                    android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_popular_search_title"
-                    app:layout_constraintTop_toBottomOf="@id/tv_popular_search_title">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:text="1"
-                                android:textColor="@color/main_blue"
-                                android:textSize="18dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="6"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_6"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="20dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:text="2"
-                                android:textColor="@color/main_blue"
-                                android:textSize="18dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="경기도" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="7"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_7"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="20dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_bold"
-                                android:text="3"
-                                android:textColor="@color/main_blue"
-                                android:textSize="18dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_3"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="8"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_8"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="20dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="4"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_4"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="9"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_9"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="20dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="5"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_5"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
-                                android:ellipsize="end"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginStart="7dp"
-                            android:layout_weight="1">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/noto_sans_regular"
-                                android:text="10"
-                                android:textColor="@color/black"
-                                android:textSize="16dp" />
-
-                            <TextView
-                                android:id="@+id/tv_popular_search_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:ellipsize="end"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                tools:text="서울" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
+                    app:layout_constraintTop_toBottomOf="@id/tv_popular_search_title"
+                    tools:listitem="@layout/item_popular_keyword" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

@@ -119,6 +119,8 @@
 
         <item name="closeIconVisible">true</item>
         <item name="closeIcon">@drawable/ic_chip_close</item>
+        <item name="closeIconStartPadding">6dp</item>
+        <item name="closeIconEndPadding">6dp</item>
         <item name="closeIconTint">@color/main_blue</item>
         <item name="closeIconSize">10dp</item>
 
@@ -132,6 +134,13 @@
     <style name="RecentSearchChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:textSize">15sp</item>
         <item name="android:fontFamily">@font/noto_sans_regular</item>
+    </style>
+
+    <!-- 인기 검색어 1, 2, 3위 숫자 색깔 -->
+    <style name="PopularTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/main_blue</item>
+        <item name="android:fontFamily">@font/noto_sans_bold</item>
     </style>
 
     <!-- Bottom Sheet -->

@@ -1,10 +1,14 @@
 package com.starters.yeogida.presentation.search
 
+import android.graphics.Insets
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.view.inputmethod.EditorInfo
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -21,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class TripSearchFragment : Fragment() {
     private lateinit var binding: FragmentTripSearchBinding
@@ -153,9 +158,23 @@ class TripSearchFragment : Fragment() {
         }
     }
 
+    private fun getScreenWidth(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics = requireActivity().windowManager.currentWindowMetrics
+            val insets: Insets = windowMetrics.windowInsets
+                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            windowMetrics.bounds.width() - insets.left - insets.right
+        } else {
+            val displayMetrics = DisplayMetrics()
+            requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+            displayMetrics.widthPixels
+        }
+    }
+
     private fun setRankAdapter(rankList: List<RankTrip>) {
+        val dpWidth = getScreenWidth()
         with(binding.rvSearchTrip) {
-            adapter = PopularSearchAdapter(rankList, viewModel)
+            adapter = PopularSearchAdapter(rankList, viewModel, dpWidth)
         }
     }
 

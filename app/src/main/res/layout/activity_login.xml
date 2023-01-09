@@ -103,7 +103,7 @@
             android:id="@+id/tv_login_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="280dp"
+            android:layout_marginBottom="300dp"
             android:fontFamily="@font/noto_sans_regular"
             android:text="@string/login_description"
             android:textColor="@color/white"
@@ -205,6 +205,63 @@
             app:layout_constraintStart_toStartOf="@id/btn_login_google"
             app:layout_constraintTop_toTopOf="@id/btn_login_google"
             app:layout_constraintBottom_toBottomOf="@id/btn_login_google" />
+
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login_google"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_login_notice1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:text="@string/login_notice1" />
+
+            <TextView
+                android:id="@+id/tv_login_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:textSize="12dp"
+                android:text="@string/login_notice2" />
+
+            <TextView
+                android:id="@+id/tv_login_notice2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:text="@string/login_notice3" />
+
+            <TextView
+                android:id="@+id/tv_login_terms_personal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/white"
+                android:paddingLeft="4dp"
+                android:textSize="12dp"
+                android:text="@string/login_notice4" />
+
+            <TextView
+                android:id="@+id/tv_login_notice3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans_regular"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:text="@string/login_notice5" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

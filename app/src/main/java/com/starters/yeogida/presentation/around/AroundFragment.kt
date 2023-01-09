@@ -10,11 +10,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -24,13 +26,23 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterManager
 import com.starters.yeogida.BuildConfig
+import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.place.PlaceActivity
 import com.starters.yeogida.util.customEnqueue
+import kotlinx.android.synthetic.main.fragment_around.*
+import java.util.*
 
 class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var binding: FragmentAroundBinding
@@ -40,8 +52,9 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+    private lateinit var autocompleteFragment: AutocompleteSupportFragment
 
-    private var userList: ArrayList<Place> = ArrayList()
+    private var userList: ArrayList<ClusterPlace> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +62,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAroundBinding.inflate(inflater, container, false)
+        binding.view = this
 
         mView = binding.mapViewAround
         mView.onCreate(savedInstanceState)
@@ -60,6 +74,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         mView.getMapAsync(this)
 
         setPlaceBottomSheet()
+        initGooglePlace()
 
         return binding.root
     }
@@ -81,7 +96,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
     }
 
     private fun getPlaceItem() {
-        var arrayList: ArrayList<Place> = ArrayList()
+        var arrayList: ArrayList<ClusterPlace> = ArrayList()
 
         YeogidaClient.aroundService.getClusterList().customEnqueue(
             onSuccess = {
@@ -90,7 +105,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
                     for (i in 0 until (it.data?.placeList?.size ?: 0)) {
                         val mLatLng = it.data?.placeList?.get(i)?.let { place -> LatLng(place.latitude, place.longitude) }
                         if (mLatLng != null) {
-                            val place = Place(it.data.placeList[i].placeId, mLatLng, it.data.placeList[i].title, it.data.placeList[i].address)
+                            val place = ClusterPlace(it.data.placeList[i].placeId, mLatLng, it.data.placeList[i].title, it.data.placeList[i].address)
                             arrayList.add(place)
                         }
                     }
@@ -125,8 +140,8 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
 //        return arrayList
 //    }
 
-    private fun setUpClusterManager(mMap: GoogleMap, list: ArrayList<Place>) {
-        val clusterManager = ClusterManager<Place> (requireContext(), mMap)
+    private fun setUpClusterManager(mMap: GoogleMap, list: ArrayList<ClusterPlace>) {
+        val clusterManager = ClusterManager<ClusterPlace> (requireContext(), mMap)
         mMap.setOnCameraIdleListener(clusterManager)
         clusterManager.addItems(list)
         clusterManager.cluster()
@@ -228,6 +243,13 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         }
     }
 
+    private fun initGooglePlace() {
+        val apiKey = getString(R.string.google_map_app_key)
+        if (!Places.isInitialized()) {
+            Places.initialize(requireActivity().application, apiKey)
+        }
+    }
+
     private fun moveToDetail(tripId: Long, placeId: Long) {
         val intent = Intent(requireContext(), PlaceActivity::class.java)
         intent.putExtra("type", "around")
@@ -321,4 +343,44 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         mView.onDestroy()
         super.onDestroy()
     }
+
+    fun openSearchView(view: View) {
+        val fields = listOf(
+            Place.Field.LAT_LNG,
+            Place.Field.NAME,
+        )
+
+
+        val intent = Autocomplete.IntentBuilder(
+            AutocompleteActivityMode.OVERLAY,
+            fields
+        )
+            .setCountry("KR")
+            .build(requireContext())
+
+        placeResultLauncher.launch(intent)
+    }
+
+    private val placeResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val data = result.data
+
+                data?.let { data ->
+                    val place = Autocomplete.getPlaceFromIntent(data)
+
+                    place.latLng?.let { latLng ->
+
+                        // 지도에 마커 찍기
+                        val center = LatLng(latLng.latitude, latLng.longitude)
+                        mView.getMapAsync {
+                            it.moveCamera(CameraUpdateFactory.newLatLng(center))
+                            it.moveCamera(CameraUpdateFactory.zoomTo(15f))
+                        }
+//                        mMap.clear()
+//                        mMap.addMarker(MarkerOptions().position(center))
+                    }
+                }
+            }
+        }
 }

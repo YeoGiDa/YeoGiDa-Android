@@ -20,8 +20,18 @@
             android:maxHeight="500dp"
             app:behavior_draggable="true"
             app:behavior_hideable="true"
-            app:behavior_peekHeight="150dp"
+            app:behavior_peekHeight="124dp"
             app:layout_behavior="@string/bottom_sheet_behavior">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/tv_place_bottom_sheet_name"
+                android:src="@drawable/ic_bottom_sheet_indicator" />
 
             <TextView
                 android:id="@+id/tv_place_bottom_sheet_name"
@@ -54,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="12dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

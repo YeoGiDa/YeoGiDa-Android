@@ -19,6 +19,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_item_popular_keyword"
         android:onClick="@{() -> viewModel.onKeywordClicked(rankTrip.searchKeyword)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

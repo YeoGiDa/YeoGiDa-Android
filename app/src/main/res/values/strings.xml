@@ -166,4 +166,5 @@
     <string name="trip_search_recent_remove">전체삭제</string>
     <string name="trip_search_popular_title">인기 검색어</string>
     <string name="trip_search_refresh_description">매일매일 초기화 돼요!</string>
+    <string name="trip_search_result_empty">검색 결과가 없습니다.</string>
 </resources>

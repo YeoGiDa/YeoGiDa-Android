@@ -84,6 +84,7 @@ class TripSearchResultFragment : Fragment() {
                                 "heart" -> binding.btnTripSearchResultSort.text = "인기순"
                             }
                             initTripListView()
+                            setVisibility()
                             setTripAdapter()
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
@@ -103,7 +104,9 @@ class TripSearchResultFragment : Fragment() {
                     "최신순" -> sortValue = "id"
                     "인기순" -> sortValue = "heart"
                 }
-                getSortedData()
+                if (!binding.etTripSearch.text.isNullOrBlank()) {
+                    getSortedData()
+                }
             }
             bottomSheetDialog.show(parentFragmentManager, bottomSheetDialog.tag)
         }
@@ -197,6 +200,7 @@ class TripSearchResultFragment : Fragment() {
                             setTripAdapter()
                             binding.btnTripSearchResultSort.text = "최신순"
                             binding.rvTrip.adapter?.notifyDataSetChanged()
+                            setVisibility()
                         }
                     }
                 }
@@ -205,5 +209,23 @@ class TripSearchResultFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setVisibility() {
+        if (tripList.isEmpty()) {
+            binding.layoutTripSearchResultTop.visibility = View.GONE
+            binding.btnTripSearchResultSort.visibility = View.GONE
+            binding.rvTrip.visibility = View.GONE
+            binding.tvResultEmpty.visibility = View.VISIBLE
+        } else {
+            binding.layoutTripSearchResultTop.visibility = View.VISIBLE
+            binding.btnTripSearchResultSort.visibility = View.VISIBLE
+            binding.rvTrip.visibility = View.VISIBLE
+            binding.tvResultEmpty.visibility = View.GONE
+        }
+    }
+
+    fun onMoveTopClicked(v: View) {
+        binding.svTripSearchResult.smoothScrollTo(0, 0)
     }
 }

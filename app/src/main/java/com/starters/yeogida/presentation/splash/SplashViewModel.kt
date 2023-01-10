@@ -1,6 +1,5 @@
 package com.starters.yeogida.presentation.splash
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,21 +34,14 @@ class SplashViewModel : ViewModel() {
             userAccessToken = dataStore.userAccessToken.first()
             userRefreshToken = dataStore.userRefreshToken.first()
 
-            /*Log.e("SplashViewModel/init/userAccessToken", userAccessToken)
-            Log.e("SplashViewModel/init/userRefreshToken", userRefreshToken)*/
-
             validateToken(TokenData(userAccessToken, userRefreshToken))
         }
     }
 
     private suspend fun validateToken(tokenData: TokenData) {
-        /*Log.e("SplashViewModel/validateToken/userAccessToken", tokenData.accessToken )
-        Log.e("SplashViewModel/validateToken/userRefreshToken", tokenData.refreshToken )*/
-
         CoroutineScope(Dispatchers.IO).launch {
             if (tokenData.accessToken.isNotEmpty() && tokenData.refreshToken.isNotEmpty()) {
                 val response = userService.validateToken(tokenData)
-                Log.e("SplashViewModel/validateToken/response", "$response")
 
                 launch {
                     when (response.code()) {
@@ -70,7 +62,6 @@ class SplashViewModel : ViewModel() {
                         403 -> { // Access, Refresh 둘 다 만료 or 비정상적인 형식의 토큰
                             _isLogin.postValue(false)
 
-                            Log.e("SplashViewModel/403", "403")
                             removeUserData()
                         }
 
@@ -78,7 +69,6 @@ class SplashViewModel : ViewModel() {
                             // DataStore 에 있는 회원 정보가 DB에 있는 회원이 아닐 때(밴 당했을 때)
                             _isLogin.postValue(false)
 
-                            Log.e("SplashViewModel/404", "404")
                             removeUserData()
 
                             // 다시 이메일을 사용하여 가입하려 할 때, 가입을 막거나 할 수 있을듯
@@ -101,5 +91,6 @@ class SplashViewModel : ViewModel() {
         dataStore.saveIsLogin(false)
         dataStore.removeUserToken()
         dataStore.removeMemberId()
+        dataStore.removeLoginType()
     }
 }

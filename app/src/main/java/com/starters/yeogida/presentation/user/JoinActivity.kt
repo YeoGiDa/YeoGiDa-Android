@@ -65,6 +65,7 @@ class JoinActivity : AppCompatActivity() {
     private lateinit var userNum: String
     private var userNickname: String? = null
     private var userProfileImageUrl: String? = null
+    private var loginType: String? = null
 
     private lateinit var progressDialog: CustomProgressDialog
 
@@ -133,6 +134,7 @@ class JoinActivity : AppCompatActivity() {
         userNum = intent.getStringExtra("userNum")?.let { it }.toString()
         userNickname = intent.getStringExtra("nickname")?.let { it }
         userProfileImageUrl = intent.getStringExtra("profileImageUrl")?.let { it }
+        loginType = intent.getStringExtra("loginType")?.let { it }
     }
 
     override fun onRequestPermissionsResult(
@@ -311,6 +313,9 @@ class JoinActivity : AppCompatActivity() {
                         dataStore.saveIsLogin(true)
                         dataStore.saveUserToken(accessToken, refreshToken)
                         dataStore.saveMemberId(memberId)
+                        loginType?.let {
+                            dataStore.saveLoginType(it)
+                        }
 
                         withContext(Dispatchers.Main) {
                             Log.e(

@@ -28,7 +28,6 @@ import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -97,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
                             val profileImageUrl = userAccount.profile?.profileImageUrl
 
                             CoroutineScope(Dispatchers.IO).launch {
-                                postLogin(email, userNum, nickname, profileImageUrl)
+                                postLogin(email, userNum, nickname, profileImageUrl, "kakao")
                             }
                         }
                     }
@@ -127,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
                 // Log.e("handleSignInResult", "imgUrl : ${it.photoUrl}")
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    postLogin(it.email.toString(), it.id.toString(), null, null)
+                    postLogin(it.email.toString(), it.id.toString(), null, null, "google")
                 }
             }
         } catch (e: ApiException) {
@@ -194,7 +193,8 @@ class LoginActivity : AppCompatActivity() {
         email: String,
         userNum: String,
         nickname: String?,
-        profileImageUrl: String?
+        profileImageUrl: String?,
+        loginType: String
     ) {
         Log.d("카카오 로그인", "email = $email")
         Log.d("카카오 로그인", "회원번호 = $userNum")
@@ -218,10 +218,7 @@ class LoginActivity : AppCompatActivity() {
                 dataStore.saveIsLogin(true)
                 dataStore.saveUserToken(accessToken, refreshToken)
                 dataStore.saveMemberId(memberId)
-
-                Log.e("Login/userAccessToken", dataStore.userAccessToken.first())
-                Log.e("Login/userRefreshToken", dataStore.userRefreshToken.first())
-                Log.e("Login/userMemberId", dataStore.memberId.first().toString())
+                dataStore.saveLoginType(loginType)
 
                 withContext(Dispatchers.Main) {
                     progressDialog.dismissDialog()
@@ -233,7 +230,7 @@ class LoginActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     progressDialog.dismissDialog()
-                    startJoin(email, userNum, nickname, profileImageUrl)
+                    startJoin(email, userNum, nickname, profileImageUrl, loginType)
                 }
             }
             else -> {
@@ -247,12 +244,14 @@ class LoginActivity : AppCompatActivity() {
         email: String,
         userNum: String,
         nickname: String?,
-        profileImageUrl: String?
+        profileImageUrl: String?,
+        loginType: String
     ) {
         Intent(this@LoginActivity, JoinActivity::class.java).apply {
             putExtra("email", email) // 이메일
             putExtra("userNum", userNum) // 회원번호
             putExtra("fcmToken", fcmToken)
+            putExtra("loginType", loginType)
 
             nickname?.let {
                 putExtra("nickname", it) // 닉네임
@@ -280,7 +279,8 @@ class LoginActivity : AppCompatActivity() {
     private fun initUnderLine() {
         with(binding) {
             tvLoginTerms.paintFlags = tvLoginTerms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            tvLoginTermsPersonal.paintFlags = tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            tvLoginTermsPersonal.paintFlags =
+                tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         }
     }
 

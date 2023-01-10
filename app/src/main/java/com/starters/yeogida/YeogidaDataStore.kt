@@ -14,9 +14,12 @@ class YeogidaDataStore(private val context: Context) {
     private val USER_ACCESS_TOKEN_KEY = stringPreferencesKey("USER_ACCESS_TOKEN")
     private val USER_REFRESH_TOKEN_KEY = stringPreferencesKey("USER_REFRESH_TOKEN")
     private val USER_BEARER_TOKEN_KEY = stringPreferencesKey("USER_BEARER_TOKEN")
+    private val USER_LOGIN_TYPE_KEY = stringPreferencesKey("USER_LOGIN_TYPE")
+
     private val USER_IS_LOGIN_KEY = booleanPreferencesKey("USER_IS_LOGIN")
     private val IMAGE_PERMISSION_IS_REJECTED_KEY =
         booleanPreferencesKey("IS_IMAGE_PERMISSION_REJECTED")
+
     private val MEMBER_ID = longPreferencesKey("MEMBER_ID")
 
     // 알림
@@ -58,6 +61,18 @@ class YeogidaDataStore(private val context: Context) {
         }
         .map { userPrefs ->
             userPrefs[USER_BEARER_TOKEN_KEY] ?: ""
+        }
+
+    val userLoginType: Flow<String> = context.userDataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { userPrefs ->
+            userPrefs[USER_LOGIN_TYPE_KEY] ?: ""
         }
 
     val userIsLogin: Flow<Boolean> = context.userDataStore.data
@@ -167,6 +182,19 @@ class YeogidaDataStore(private val context: Context) {
             userPrefs[USER_BEARER_TOKEN_KEY] = ""
         }
     }
+
+    suspend fun saveLoginType(loginType: String) {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[USER_LOGIN_TYPE_KEY] = loginType
+        }
+    }
+
+    suspend fun removeLoginType() {
+        context.userDataStore.edit { userPrefs ->
+            userPrefs[USER_LOGIN_TYPE_KEY] = ""
+        }
+    }
+
 
     suspend fun saveMemberId(memberId: Long) {
         context.userDataStore.edit { userPrefs ->

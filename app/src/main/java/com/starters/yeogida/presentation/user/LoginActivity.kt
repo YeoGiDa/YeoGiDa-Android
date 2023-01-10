@@ -6,9 +6,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
@@ -23,7 +28,6 @@ import com.starters.yeogida.presentation.common.CustomProgressDialog
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -34,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var fcmToken: String
     private lateinit var progressDialog: CustomProgressDialog
 
-    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+    private val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             when {
                 error.toString() == AuthErrorCause.AccessDenied.toString() -> {
@@ -92,13 +96,41 @@ class LoginActivity : AppCompatActivity() {
                             val profileImageUrl = userAccount.profile?.profileImageUrl
 
                             CoroutineScope(Dispatchers.IO).launch {
-                                postLogin(email, userNum, nickname, profileImageUrl)
+                                postLogin(email, userNum, nickname, profileImageUrl, "kakao")
                             }
                         }
                     }
                 }
             }
 
+        }
+    }
+    private val googleSignInResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleSignInResult(task)
+        } else {
+            Log.e("googleSignInResult", "${(result.resultCode == RESULT_CANCELED)}")
+        }
+    }
+
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
+        try {
+            val account = task.getResult(ApiException::class.java)
+
+            account?.let {
+                Log.e("handleSignInResult", "email : ${it.email}")
+                Log.e("handleSignInResult", "id : ${it.id}")
+                // Log.e("handleSignInResult", "imgUrl : ${it.photoUrl}")
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    postLogin(it.email.toString(), it.id.toString(), null, null, "google")
+                }
+            }
+        } catch (e: ApiException) {
+            Log.e("handleSignInResult", "signInResultFail : Code = ${e.statusCode}")
         }
     }
 
@@ -112,6 +144,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLoginKakao.setOnClickListener {
             getFCMToken()
+            kakaoLogin()
         }
 
         binding.btnLoginNaver.setOnClickListener {
@@ -119,7 +152,22 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnLoginGoogle.setOnClickListener {
-            shortToast("구현 준비 중입니다")
+            getFCMToken()
+            googleLogin()
+        }
+    }
+
+    private fun googleLogin() {
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, GoogleLoginObj.signInOption)
+        val signIntent = mGoogleSignInClient.signInIntent
+        googleSignInResult.launch(signIntent)
+    }
+
+    private fun kakaoLogin() {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+            UserApiClient.instance.loginWithKakaoTalk(this, callback = kakaoCallback)
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = kakaoCallback)
         }
     }
 
@@ -134,11 +182,6 @@ class LoginActivity : AppCompatActivity() {
                 // Get new FCM registration token
                 fcmToken = task.result
 
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                    UserApiClient.instance.loginWithKakaoTalk(this, callback = mCallback)
-                } else {
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                }
 
                 // Log and toast
                 Log.d("token", "FCM Token is $fcmToken")
@@ -150,7 +193,8 @@ class LoginActivity : AppCompatActivity() {
         email: String,
         userNum: String,
         nickname: String?,
-        profileImageUrl: String?
+        profileImageUrl: String?,
+        loginType: String
     ) {
         Log.d("카카오 로그인", "email = $email")
         Log.d("카카오 로그인", "회원번호 = $userNum")
@@ -174,10 +218,7 @@ class LoginActivity : AppCompatActivity() {
                 dataStore.saveIsLogin(true)
                 dataStore.saveUserToken(accessToken, refreshToken)
                 dataStore.saveMemberId(memberId)
-
-                Log.e("Login/userAccessToken", dataStore.userAccessToken.first())
-                Log.e("Login/userRefreshToken", dataStore.userRefreshToken.first())
-                Log.e("Login/userMemberId", dataStore.memberId.first().toString())
+                dataStore.saveLoginType(loginType)
 
                 withContext(Dispatchers.Main) {
                     progressDialog.dismissDialog()
@@ -189,7 +230,7 @@ class LoginActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     progressDialog.dismissDialog()
-                    startJoin(email, userNum, nickname, profileImageUrl)
+                    startJoin(email, userNum, nickname, profileImageUrl, loginType)
                 }
             }
             else -> {
@@ -203,12 +244,14 @@ class LoginActivity : AppCompatActivity() {
         email: String,
         userNum: String,
         nickname: String?,
-        profileImageUrl: String?
+        profileImageUrl: String?,
+        loginType: String
     ) {
         Intent(this@LoginActivity, JoinActivity::class.java).apply {
             putExtra("email", email) // 이메일
             putExtra("userNum", userNum) // 회원번호
             putExtra("fcmToken", fcmToken)
+            putExtra("loginType", loginType)
 
             nickname?.let {
                 putExtra("nickname", it) // 닉네임
@@ -236,7 +279,8 @@ class LoginActivity : AppCompatActivity() {
     private fun initUnderLine() {
         with(binding) {
             tvLoginTerms.paintFlags = tvLoginTerms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            tvLoginTermsPersonal.paintFlags = tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            tvLoginTermsPersonal.paintFlags =
+                tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         }
     }
 

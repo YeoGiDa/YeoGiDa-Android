@@ -100,6 +100,9 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.0.0'
     implementation 'com.google.maps.android:places-ktx:2.0.0'
 
+    // Google Auth
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
     // tink Off Indicator
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.2.4"
 

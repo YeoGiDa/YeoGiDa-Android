@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_trip_search"
+    app:startDestination="@id/tripSearchFragment">
+
+    <fragment
+        tools:layout="@layout/fragment_trip_search"
+        android:id="@+id/tripSearchFragment"
+        android:name="com.starters.yeogida.presentation.search.TripSearchFragment"
+        android:label="TripSearchFragment">
+        <action
+            android:id="@+id/action_tripSearch_to_tripSearchResult"
+            app:destination="@id/tripSearchResultFragment" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_trip_search_result"
+        android:id="@+id/tripSearchResultFragment"
+        android:name="com.starters.yeogida.presentation.search.TripSearchResultFragment"
+        android:label="TripSearchResultFragment" />
+
+</navigation>

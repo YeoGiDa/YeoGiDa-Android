@@ -51,51 +51,51 @@
         </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.imageview.ShapeableImageView
-            circleImageUrl="@{user.imgUrl}"
             android:id="@+id/iv_mypage_profile"
+            circleImageUrl="@{user.imgUrl}"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_my_page"
             app:shapeAppearanceOverlay="@style/Circle"
             tools:src="@drawable/rectangle_fill_gray100_10" />
 
         <TextView
-            android:text="@{user.nickname}"
             android:id="@+id/tv_mypage_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:fontFamily="@font/noto_sans_bold"
+            android:text="@{user.nickname}"
             android:textColor="@color/black"
+            android:layout_marginTop="12dp"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/iv_mypage_profile"
-            app:layout_constraintTop_toTopOf="@+id/iv_mypage_profile"
+            app:layout_constraintEnd_toEndOf="@+id/iv_mypage_profile"
+            app:layout_constraintStart_toStartOf="@+id/iv_mypage_profile"
+            app:layout_constraintTop_toBottomOf="@+id/iv_mypage_profile"
             tools:text="나는닉네임최대8" />
 
         <TextView
             android:id="@+id/tv_mypage_follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="36dp"
             android:text="@string/mypage_follow"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/tv_mypage_trip"
-            app:layout_constraintStart_toStartOf="@+id/tv_mypage_nickname"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/tv_mypage_nickname" />
 
         <TextView
-            count="@{user.followerCount}"
             android:id="@+id/tv_mypage_follow_count"
-            android:layout_width="0dp"
+            count="@{user.followerCount}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_follow"
-            app:layout_constraintEnd_toStartOf="@+id/tv_mypage_following"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_follow"
+            app:layout_constraintStart_toEndOf="@id/tv_mypage_follow"
             app:layout_constraintTop_toTopOf="@+id/tv_mypage_follow"
             tools:text="123" />
 
@@ -103,21 +103,21 @@
             android:id="@+id/tv_mypage_trip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="36dp"
             android:text="@string/mypage_trip"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_mypage_profile"
-            app:layout_constraintStart_toStartOf="@+id/tv_mypage_nickname" />
+            app:layout_constraintEnd_toEndOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/tv_mypage_follow" />
 
         <TextView
-            count="@{user.tripCount}"
             android:id="@+id/tv_mypage_trip_count"
+            count="@{user.tripCount}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_trip"
-            app:layout_constraintEnd_toStartOf="@id/tv_mypage_like"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_trip"
+            app:layout_constraintStart_toEndOf="@id/tv_mypage_trip"
             app:layout_constraintTop_toTopOf="@+id/tv_mypage_trip"
             tools:text="31" />
 
@@ -125,11 +125,11 @@
             android:id="@+id/tv_mypage_following"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="8dp"
             android:text="@string/mypage_following"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_follow"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_follow"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="@+id/tv_mypage_follow" />
 
         <TextView
@@ -147,11 +147,11 @@
             android:id="@+id/tv_mypage_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="8dp"
             android:text="@string/mypage_like"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/tv_mypage_trip"
-            app:layout_constraintStart_toEndOf="@+id/tv_mypage_trip"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="@+id/tv_mypage_trip" />
 
         <TextView
@@ -169,11 +169,11 @@
             android:id="@+id/view1"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="18dp"
             android:background="@color/gray_300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_mypage_profile" />
+            app:layout_constraintTop_toBottomOf="@id/tv_mypage_trip" />
 
         <LinearLayout
             android:id="@+id/layout_mypage_trip"
@@ -200,8 +200,9 @@
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:text="@string/mypage_mytrip"
+                android:fontFamily="@font/noto_sans_regular"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -246,8 +247,9 @@
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:text="@string/mypage_mycomment"
+                android:fontFamily="@font/noto_sans_regular"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -292,8 +294,9 @@
                 android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:text="@string/mypage_account"
+                android:fontFamily="@font/noto_sans_regular"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -339,7 +342,8 @@
                 android:layout_weight="1"
                 android:text="@string/mypage_alarm"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:fontFamily="@font/noto_sans_regular"
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -358,6 +362,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_mypage_account" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.YeoGida" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.YeoGida" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -17,13 +17,15 @@
         <item name="appBarLayoutStyle">@style/AppbarStyle</item>
 
         <item name="regionChipStyle">@style/MyRegionChip</item>
+        <item name="recentSearchChipStyle">@style/RecentSearchChip</item>
+
     </style>
 
     <style name="AppbarStyle" parent="Widget.Design.AppBarLayout">
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="Theme.YeoGida.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.YeoGida.Splash" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/img_splash</item>
         <item name="android:statusBarColor">@color/main_blue</item>
     </style>

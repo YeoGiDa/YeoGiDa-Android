@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.starters.yeogida.presentation.search.SearchViewModel" />
+
+        <variable
+            name="rank"
+            type="Integer" />
+
+        <variable
+            name="rankTrip"
+            type="com.starters.yeogida.data.remote.response.trip.RankTrip" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_item_popular_keyword"
+        android:onClick="@{() -> viewModel.onKeywordClicked(rankTrip.searchKeyword)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tv_item_popular_keyword_rank"
+            rank="@{rank}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/noto_sans_regular"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tv_item_popular_keyword_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/noto_sans_regular"
+            android:maxLines="1"
+            android:text="@{rankTrip.searchKeyword}"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_item_popular_keyword_rank"
+            app:layout_constraintStart_toEndOf="@+id/tv_item_popular_keyword_rank"
+            app:layout_constraintTop_toTopOf="@id/tv_item_popular_keyword_rank"
+            tools:text="서울" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

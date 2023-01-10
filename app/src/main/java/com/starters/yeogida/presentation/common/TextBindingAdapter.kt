@@ -1,8 +1,8 @@
 package com.starters.yeogida.presentation.common
 
-import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.starters.yeogida.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -45,5 +45,13 @@ fun translateDate(view: TextView, dateTime: String) {
             else -> 30
         } -> view.text = "${compareDayTime}일전"
         else -> view.text = dateTime.substring(0, 10)
+    }
+}
+
+@BindingAdapter("rank")
+fun setRank(view: TextView, value: Int) {
+    view.text = value.toString()
+    if (value == 1 || value == 2 || value == 3) {
+        view.setTextAppearance(R.style.PopularTextAppearance)
     }
 }

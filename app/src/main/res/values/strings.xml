@@ -16,6 +16,11 @@
     <string name="login_kakao">카카오로 로그인</string>
     <string name="login_naver">네이버로 로그인</string>
     <string name="login_google">구글로 로그인</string>
+    <string name="login_notice1">로그인 시</string>
+    <string name="login_notice2">이용약관</string>
+    <string name="login_notice3">과</string>
+    <string name="login_notice4">개인정보 처리 방침</string>
+    <string name="login_notice5">에 동의하게 됩니다.</string>
 
     <!-- Join Activity -->
     <string name="join_title">회원가입</string>
@@ -59,6 +64,7 @@
     <string name="around_place_top">맨 위로</string>
     <string name="around_place_empty">아직 기록이 없어요 \n + 버튼을 눌러 기록을 추가해주세요.</string>
     <string name="around_place_description">장소 둘러보기</string>
+    <string name="around_place_map_title">장소 지도로 보기</string>
 
     <!-- Mypage Fragment -->
     <string name="mypage">마이페이지</string>
@@ -85,6 +91,10 @@
     <string name="notification_setting_like">좋아요 알림</string>
     <string name="notification_setting_follow">팔로우 알림</string>
     <string name="notification_setting_comment">댓글 알림</string>
+    <string name="notification_setting_title">알림이 오지 않는 경우\n설정에서 기기의 알림 설정을 변경해주세요.</string>
+    <string name="setting_terms">이용약관</string>
+    <string name="setting_opensource">오픈소스 라이센스</string>
+    <string name="setting_personal">개인정보 처리방침</string>
 
     <!-- Alarm Fragment -->
     <string name="alarm_empty">아직 알림이 없어요</string>
@@ -111,7 +121,7 @@
     <string name="alarm_title">알림</string>
 
     <!-- Around Fragment -->
-    <string name="around_search_hint">어느 도시를 둘러볼까요?</string>
+    <string name="around_search_hint">둘러보고 싶은 지역이나 장소를 입력해보세요</string>
 
     <!-- Like Fragment -->
     <string name="like_search_hint">여행지 이름으로 검색해보세요.</string>
@@ -149,4 +159,12 @@
 
     <!-- Edit Place Fragment -->
     <string name="edit_place_title">장소 수정</string>
+
+    <!-- Search User Activity -->
+    <string name="search_user_title">유저 검색</string>
+    <string name="trIp_search_recent_title">최근 검색어</string>
+    <string name="trip_search_recent_remove">전체삭제</string>
+    <string name="trip_search_popular_title">인기 검색어</string>
+    <string name="trip_search_refresh_description">매일매일 초기화 돼요!</string>
+    <string name="trip_search_result_empty">검색 결과가 없습니다.</string>
 </resources>

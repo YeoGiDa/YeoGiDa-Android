@@ -43,7 +43,7 @@
     <style name="CollapsingToolbar.Expanded.Trip.Title" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="CollapsingToolbar.Expanded.Place.Title" parent="@android:style/TextAppearance">
@@ -54,7 +54,7 @@
     <!-- Trip Subtitle -->
     <style name="CollapsingToolbar.Expanded.Trip.SubTitle" parent="@android:style/TextAppearance">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <!-- CollapsingToolbar Collapsed Title Style -->
@@ -84,6 +84,7 @@
         <item name="chipBackgroundColor">@color/mtrl_choice_chip_background_color</item>
     </style>
 
+    <!-- 유저 상세 지역 칩 스타일 -->
     <style name="MyRegionChip" parent="Base.Widget.MaterialComponents.Chip">
         <item name="android:checkable">true</item>
         <item name="android:focusable">false</item>
@@ -105,6 +106,40 @@
 
     <style name="RegionChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_bold</item>
+    </style>
+
+    <!-- 최근 검색어 칩 스타일 -->
+    <style name="RecentSearchChip" parent="Base.Widget.MaterialComponents.Chip">
+        <item name="android:checkable">false</item>
+        <item name="android:focusable">false</item>
+
+        <item name="chipIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+
+        <item name="closeIconVisible">true</item>
+        <item name="closeIcon">@drawable/ic_chip_close</item>
+        <item name="closeIconStartPadding">6dp</item>
+        <item name="closeIconEndPadding">6dp</item>
+        <item name="closeIconTint">@color/main_blue</item>
+        <item name="closeIconSize">10dp</item>
+
+        <item name="android:textColor">@color/main_blue</item>
+        <item name="android:textAppearance">@style/RecentSearchChipTextAppearance</item>
+
+        <item name="rippleColor">@null</item>
+        <item name="chipBackgroundColor">#e8f0fe</item>
+    </style>
+
+    <style name="RecentSearchChipTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
+    </style>
+
+    <!-- 인기 검색어 1, 2, 3위 숫자 색깔 -->
+    <style name="PopularTextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/main_blue</item>
         <item name="android:fontFamily">@font/noto_sans_bold</item>
     </style>
 

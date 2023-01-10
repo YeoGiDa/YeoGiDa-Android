@@ -42,23 +42,8 @@ object YeogidaClient {
         provideService(FollowService::class.java)
     }
 
-    // YS
-    private val okHttpClient: OkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor(
-                HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-            )
-            .build()
-    }
-
-    private val retrofit: Retrofit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient) // 로그캣에서 패킷 내용을 모니터링 할 수 있음 (인터셉터)
-            .build()
+    val searchService: SearchService by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        provideService(SearchService::class.java)
     }
 
     // HJ
@@ -72,7 +57,7 @@ object YeogidaClient {
     private fun provideHttpLoggingClient(): OkHttpClient =
         OkHttpClient.Builder()
             .run {
-                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+                addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 addInterceptor(provideInterceptor())
                 addInterceptor(AuthInterceptor(BASE_URL))
                 build()

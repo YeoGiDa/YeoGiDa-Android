@@ -29,6 +29,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     private lateinit var binding: FragmentAroundPlaceMapBinding
     private lateinit var mMap: GoogleMap
     private lateinit var mPlaceMapList: List<PlaceMapList>
+    private lateinit var mContext: Context
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +47,11 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
         initNavigation()
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -88,8 +94,11 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
     // 장소들의 중심 좌표로 카메라 이동
     private fun initMapCamera(latitude: Double, longitude: Double) {
         val mLatLng = LatLng(latitude, longitude)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mLatLng))
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(11f))
+        val cameraPosition = CameraPosition.Builder()
+            .target(mLatLng)
+            .zoom(12f)
+            .build()
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
     private fun initNavigation() {
@@ -100,7 +109,7 @@ class AroundPlaceMapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarke
 
     private fun createMarker(arrayList: ArrayList<LatLng>) {
         for (i in 0 until arrayList.size) {
-            val marker = bitmapDescriptorFromVector(requireContext(), R.drawable.ic_app_marker)
+            val marker = bitmapDescriptorFromVector(mContext, R.drawable.ic_app_marker)
             mMap.addMarker(MarkerOptions().position(arrayList[i]).icon(marker))
         }
     }

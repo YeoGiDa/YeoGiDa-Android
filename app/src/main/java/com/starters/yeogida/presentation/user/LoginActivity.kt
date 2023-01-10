@@ -1,9 +1,12 @@
 package com.starters.yeogida.presentation.user
 
 import android.content.Intent
+import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -23,6 +26,7 @@ import com.starters.yeogida.data.remote.request.LoginRequestData
 import com.starters.yeogida.databinding.ActivityLoginBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomProgressDialog
+import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -93,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
                             val nickname = userAccount.profile?.nickname
                             val profileImageUrl = userAccount.profile?.profileImageUrl
 
-                            CoroutineScope(Dispatchers.Main).launch {
+                            CoroutineScope(Dispatchers.IO).launch {
                                 postLogin(email, userNum, nickname, profileImageUrl)
                             }
                         }
@@ -134,7 +138,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        binding.view = this
 
+        initUnderLine()
         progressDialog = CustomProgressDialog(this)
 
         binding.btnLoginKakao.setOnClickListener {
@@ -165,6 +171,14 @@ class LoginActivity : AppCompatActivity() {
             UserApiClient.instance.loginWithKakaoTalk(this, callback = kakaoCallback)
         } else {
             UserApiClient.instance.loginWithKakaoAccount(this, callback = kakaoCallback)
+        }
+
+        binding.btnLoginNaver.setOnClickListener {
+            shortToast("구현 준비 중입니다")
+        }
+
+        binding.btnLoginGoogle.setOnClickListener {
+            shortToast("구현 준비 중입니다")
         }
     }
 
@@ -270,5 +284,27 @@ class LoginActivity : AppCompatActivity() {
             )
         )
         finish()
+    }
+
+    // 약관 밑줄
+    private fun initUnderLine() {
+        with(binding) {
+            tvLoginTerms.paintFlags = tvLoginTerms.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            tvLoginTermsPersonal.paintFlags = tvLoginTermsPersonal.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        }
+    }
+
+    // 인터넷 창 생성
+    private fun openInternetSite(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
+    fun openTermsPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/e1197727840a4ac0a382f53b43d371e6")
+    }
+
+    fun openPersonalPage(view: View) {
+        openInternetSite("https://yeogida.notion.site/dcbf68223c254d2990d9076bab1624ec")
     }
 }

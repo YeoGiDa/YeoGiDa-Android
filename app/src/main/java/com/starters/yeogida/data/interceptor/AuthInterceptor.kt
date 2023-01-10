@@ -7,8 +7,11 @@ import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.common.ValidateTokenResponse
 import com.starters.yeogida.presentation.user.LoginActivity
 import gun0912.tedimagepicker.util.ToastUtil.showToast
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -35,6 +38,7 @@ class AuthInterceptor(private val baseUrl: String) : Interceptor {
             dataStore.saveIsLogin(false)
             dataStore.removeUserToken()
             dataStore.removeMemberId()
+            dataStore.removeLoginType()
         }
     }
 

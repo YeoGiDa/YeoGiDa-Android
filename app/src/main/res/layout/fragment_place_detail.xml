@@ -34,15 +34,20 @@
                 app:collapsedTitleTextAppearance="@style/CollapsingToolbar.Collapsed.Title"
                 app:contentScrim="@color/white"
                 app:expandedTitleTextAppearance="@style/CollapsingToolbar.Expanded.Place.Title"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@{place.title}">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewpager_place_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    app:layout_collapseMode="parallax" />
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.3" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/rectangle_gradient_black" />
 
                 <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
                     android:id="@+id/indicator_place_detail_toolbar"

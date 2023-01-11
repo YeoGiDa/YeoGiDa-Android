@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initNetwork() {
-        val bestTripAdapter = TripAdapter { tripId: Long ->
+        val bestTripAdapter = BestTripAdapter { tripId: Long ->
             moveToTrip(tripId)
         }
         binding.rvBestMonthlyTrip.adapter = bestTripAdapter
@@ -76,6 +76,17 @@ class HomeFragment : Fragment() {
             onSuccess = { responseData ->
                 responseData.data?.let { data -> bestTravelerAdapter.bestTravelerList.addAll(data.memberList) }
                 bestTravelerAdapter.notifyDataSetChanged()
+            }
+        )
+
+        val recentTripAdapter = TripAdapter { tripId: Long ->
+            moveToTrip(tripId)
+        }
+        binding.rvRecentTrip.adapter = recentTripAdapter
+        YeogidaClient.homeService.getRecentTrip().customEnqueue(
+            onSuccess = {
+                it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
+                recentTripAdapter.notifyDataSetChanged()
             }
         )
 

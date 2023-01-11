@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="trip"
+            type="com.starters.yeogida.data.remote.response.TripListData" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_marginEnd="6dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_best_trip_thumbnail"
+            imageUrl="@{trip.imgUrl}"
+            android:layout_width="200dp"
+            android:layout_height="280dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedBig"
+            tools:src="@drawable/rectangle_fill_gray100_10" />
+
+        <TextView
+            android:id="@+id/tv_best_trip_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/noto_sans_bold"
+            android:gravity="end"
+            android:maxLines="1"
+            android:paddingStart="2dp"
+            android:paddingEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="@{trip.title}"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tv_best_trip_nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="여행지 이름" />
+
+        <TextView
+            android:id="@+id/tv_best_trip_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/noto_sans_regular"
+            android:gravity="center"
+            android:text="@{trip.nickname}"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_best_trip_thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="닉네임최대8글자" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

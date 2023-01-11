@@ -2,6 +2,11 @@ package com.starters.yeogida.presentation.place
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -81,6 +88,43 @@ class PlaceDetailFragment : Fragment() {
         initAuthorization()
         initPlaceData()
         checkActiveAndLength()
+        setOnOffsetChangedListener()
+    }
+
+    private fun setOnOffsetChangedListener() {
+        binding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val icBack = ResourcesCompat.getDrawable(resources, R.drawable.ic_back, null)
+            val icMore = ResourcesCompat.getDrawable(resources, R.drawable.ic_more, null)
+            if (verticalOffset < -700) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    icBack?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
+                    )
+                    icMore?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
+                    )
+                } else {
+                    icBack?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                    icMore?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                }
+
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    icBack?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
+                    )
+                    icMore?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
+                    )
+                } else {
+                    icBack?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+                    icMore?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+                }
+            }
+
+            binding.tbPlaceDetail.navigationIcon = icBack
+            binding.ivPlaceDetailMore.setImageDrawable(icMore)
+        }
     }
 
     private fun setUserProfileClicked() {

@@ -39,7 +39,8 @@ class TripSearchResultFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentTripSearchResultBinding.inflate(inflater, container, false)
@@ -48,6 +49,8 @@ class TripSearchResultFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.view = this
+
         setOnBackPressed()
         setTripAdapter()
         setSearchListener()
@@ -60,9 +63,7 @@ class TripSearchResultFragment : Fragment() {
     // TODO. 검색 결과 엠티뷰 나중에 할 때 사용하기
     private fun initTripListView() {
         if (tripList.isEmpty()) {
-
         } else {
-
         }
     }
 
@@ -205,7 +206,6 @@ class TripSearchResultFragment : Fragment() {
                     }
                 }
                 else -> {
-
                 }
             }
         }

@@ -68,9 +68,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_marginEnd="12dp"
-                        android:padding="4dp"
                         android:onClick="@{view::showBottomSheet}"
-                        android:src="@drawable/ic_more"/>
+                        android:padding="4dp"
+                        android:src="@drawable/ic_more" />
 
                 </androidx.appcompat.widget.Toolbar>
 
@@ -102,9 +102,10 @@
                     android:text="@{place.title}"
                     android:textColor="@color/black"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_place_detail_tag"
                     app:layout_constraintEnd_toStartOf="@+id/tv_place_detail_tag"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_place_detail_tag"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="케이스퀘어 빌딩" />
 
                 <TextView
@@ -262,8 +263,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/selector_send_comment"
-                android:padding="8dp"
                 android:onClick="@{view::sendComment}"
+                android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_comment_submit"
                 app:layout_constraintBottom_toBottomOf="parent"

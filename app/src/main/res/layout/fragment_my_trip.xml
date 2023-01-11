@@ -98,6 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/rectangle_fill_gray100_20"
                     android:onClick="@{view::moveToTop}"
                     android:orientation="horizontal"

@@ -54,6 +54,7 @@ class LikeTripFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         setTripClickListener()
         setMoveTop()
@@ -371,12 +372,7 @@ class LikeTripFragment : Fragment() {
     }
 
     private fun setMoveTop() {
-        binding.layoutLikeTripTop.setOnClickListener {
-            viewModel.onMoveTopClicked()
-        }
-
         viewModel.moveTopEvent.observe(viewLifecycleOwner) {
-            Log.e("moveToTop", "맨 위로")
             binding.svLikeTrip.smoothScrollTo(0, 0)
         }
     }

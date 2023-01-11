@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun initNetwork() {
-        val bestTripAdapter = TripAdapter { tripId: Long ->
+        val bestTripAdapter = BestTripAdapter { tripId: Long ->
             moveToTrip(tripId)
         }
         binding.rvBestMonthlyTrip.adapter = bestTripAdapter
@@ -85,17 +85,28 @@ class HomeFragment : Fragment() {
         binding.rvRecentTrip.adapter = recentTripAdapter
         YeogidaClient.homeService.getRecentTrip().customEnqueue(
             onSuccess = {
+                it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
+                recentTripAdapter.notifyDataSetChanged()
+            }
+        )
+
+        val followRecentTripAdapter = TripAdapter { tripId: Long ->
+            moveToTrip(tripId)
+        }
+        binding.rvFollowRecentTrip.adapter = followRecentTripAdapter
+        YeogidaClient.homeService.getFollowRecentTrip().customEnqueue(
+            onSuccess = {
                 if (it.code == 200) {
-                    binding.tvHomeRecentTripEmpty.text = ""
-                    it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
-                    recentTripAdapter.notifyDataSetChanged()
+                    binding.tvHomeFollowRecentTripEmpty.text = ""
+                    it.data?.let { data -> followRecentTripAdapter.tripList.addAll(data.tripList) }
+                    followRecentTripAdapter.notifyDataSetChanged()
                 }
             },
             onError = {
                 if (it.message == "No one Follow Error!") {
-                    binding.tvHomeRecentTripEmpty.text = "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
+                    binding.tvHomeFollowRecentTripEmpty.text = "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
                 } else if (it.message == "Trip NotFound Error!") {
-                    binding.tvHomeRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
+                    binding.tvHomeFollowRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
                 }
             }
         )

@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name=".presentation.place.PlaceActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustUnspecified"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

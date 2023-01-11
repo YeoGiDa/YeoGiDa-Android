@@ -19,4 +19,8 @@ interface HomeService {
     // 팔로잉의 최근 게시글
     @GET("trips/follow/basic")
     fun getFollowRecentTrip(): Call<BaseResponse<HomeTripResponseResponse>>
+
+    // 방금 작성된 여행지
+    @GET("trips/recent")
+    fun getRecentTrip(): Call<BaseResponse<HomeTripResponseResponse>>
 }

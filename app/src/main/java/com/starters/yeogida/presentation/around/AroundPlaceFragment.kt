@@ -2,11 +2,18 @@ package com.starters.yeogida.presentation.around
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -76,6 +83,66 @@ class AroundPlaceFragment : Fragment() {
         initBottomSheet()
         initChipClickListener()
         setOpenPlaceDetail()
+        setOnOffsetChangedListener()
+    }
+
+    private fun setOnOffsetChangedListener() {
+        binding.appbarAroundPlace.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val icBack = ResourcesCompat.getDrawable(resources, R.drawable.ic_back, null)
+            val icMore = ResourcesCompat.getDrawable(resources, R.drawable.ic_more, null)
+            val icLike = ResourcesCompat.getDrawable(resources, R.drawable.ic_like, null)
+            val icLikeRed =
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_like_selected_red, null)
+
+            if (verticalOffset < -700) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    icBack?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
+                    )
+                    icMore?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
+                    )
+
+                    icLike?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
+                    )
+                } else {
+                    icBack?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                    icMore?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                    icLike?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
+                }
+
+                binding.layoutAroundPlaceCount.visibility = View.GONE   // 장소, 좋아요 카운트 안 보이게
+
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    icBack?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
+                    )
+                    icMore?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
+                    )
+                    icLike?.colorFilter = BlendModeColorFilter(
+                        ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
+                    )
+
+                } else {
+                    icBack?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+                    icMore?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+                    icLike?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
+                }
+                binding.layoutAroundPlaceCount.visibility = View.VISIBLE
+            }
+
+            binding.tbAroundPlace.navigationIcon = icBack
+            binding.ivAroundPlaceMore.setImageDrawable(icMore)
+            if (isLike) {
+                binding.btnAroundPlaceLike.setImageDrawable(icLikeRed)
+
+            } else {
+                binding.btnAroundPlaceLike.setImageDrawable(icLike)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {

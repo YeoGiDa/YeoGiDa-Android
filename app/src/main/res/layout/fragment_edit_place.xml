@@ -31,7 +31,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:contentInsetStart="0dp"
                 app:contentInsetStartWithNavigation="4dp"
-                app:layout_scrollFlags="scroll"
+                app:layout_scrollFlags="noScroll"
                 app:navigationIcon="@drawable/ic_back"
                 app:title="@string/edit_place_title" />
 
@@ -40,7 +40,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="80dp"
+            android:layout_marginBottom="100dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -344,10 +344,7 @@
             android:padding="16dp"
             android:text="@string/add_trip_confirm"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="16sp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

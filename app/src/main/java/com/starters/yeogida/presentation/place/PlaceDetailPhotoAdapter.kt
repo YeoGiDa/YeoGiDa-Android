@@ -17,7 +17,7 @@ class PlaceDetailPhotoAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        holder.bind(imageUrlList[position], position)
+        holder.bind(imageUrlList[position])
     }
 
     override fun getItemCount(): Int {
@@ -27,10 +27,8 @@ class PlaceDetailPhotoAdapter(
     inner class PlaceViewHolder(
         private val binding: ItemPlaceDetailPhotoBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(placeImg: PlaceImg, position: Int) {
+        fun bind(placeImg: PlaceImg) {
             binding.imgUrl = placeImg.imgUrl
-            binding.position = (position + 1).toString()
-            binding.size = imageUrlList.size.toString()
             binding.executePendingBindings()
         }
     }

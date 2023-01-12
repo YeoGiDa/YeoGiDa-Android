@@ -21,6 +21,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.ReportRequest
@@ -202,8 +203,23 @@ class PlaceDetailFragment : Fragment() {
 
     private fun setToolbar(placeImages: List<PlaceImg>) {
         with(binding.viewpagerPlaceToolbar) {
-            adapter = PlaceDetailPhotoAdapter(placeImages)
+            val placeDetailPhotoAdapter = PlaceDetailPhotoAdapter(placeImages)
+            adapter = PlaceDetailPhotoAdapter(placeImages).apply {
+                binding.tvAroundPlacePhotoCounter.text = "1 / $itemCount"
+            }
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
+
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                    binding.tvAroundPlacePhotoCounter.text =
+                        "${position + 1} / ${placeDetailPhotoAdapter.itemCount}"
+                }
+            })
         }
     }
 

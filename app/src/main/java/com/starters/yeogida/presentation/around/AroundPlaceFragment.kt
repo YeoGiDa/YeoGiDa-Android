@@ -86,6 +86,17 @@ class AroundPlaceFragment : Fragment() {
         setOnOffsetChangedListener()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initTripData()
+        initPlaceResumeList()
+    }
+
     private fun setOnOffsetChangedListener() {
         binding.appbarAroundPlace.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val icBack = ResourcesCompat.getDrawable(resources, R.drawable.ic_back, null)
@@ -143,17 +154,6 @@ class AroundPlaceFragment : Fragment() {
                 binding.btnAroundPlaceLike.setImageDrawable(icLike)
             }
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }
-
-    override fun onResume() {
-        super.onResume()
-        initTripData()
-        initPlaceResumeList()
     }
 
     private fun getTripId() {
@@ -371,6 +371,12 @@ class AroundPlaceFragment : Fragment() {
         viewModel.likeTripEvent.observe(
             viewLifecycleOwner,
             EventObserver { tripId ->
+                val icLike =
+                    ResourcesCompat.getDrawable(resources, R.drawable.selector_btn_like, null)
+
+                binding.btnAroundPlaceLike.setImageDrawable(icLike)
+                isLike = binding.btnAroundPlaceLike.isSelected
+
                 if (isLike) {
                     // 좋아요가 눌려있을 때 -> 좋아요 취소 하기
                     binding.btnAroundPlaceLike.isSelected = false

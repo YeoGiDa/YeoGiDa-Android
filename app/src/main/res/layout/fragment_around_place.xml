@@ -76,10 +76,10 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="?attr/actionBarSize"
                     android:background="?attr/selectableItemBackground"
+                    android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}"
                     android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:paddingEnd="12dp"
-                    android:onClick="@{() -> viewModel.onUserProfileClicked(tripInfo.memberId)}">
+                    android:paddingBottom="12dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_around_place_profile"
@@ -118,6 +118,98 @@
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
                     android:background="@drawable/rectangle_fill_black_transparent_top_20" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_around_place_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:animateLayoutChanges="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="8dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="6dp"
+                    app:layout_anchor="@id/appbar_around_place"
+                    app:layout_anchorGravity="bottom|end">
+
+                    <ImageView
+                        android:id="@+id/iv_around_place_place_count"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_place_fill_blue"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="1:1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_around_place_place_count"
+                        count="@{tripInfo.placeCount}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:fontFamily="@font/noto_sans_regular"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_around_place_place_count"
+                        app:layout_constraintStart_toEndOf="@id/iv_around_place_place_count"
+                        app:layout_constraintTop_toTopOf="@id/iv_around_place_place_count"
+                        tools:text="99" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:background="?attr/selectableItemBackground"
+                        android:id="@+id/layout_around_place_like_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="6dp"
+                        android:onClick="@{() -> viewModel.onLikeCountClicked(tripId)}"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_around_place_place_count"
+                        app:layout_constraintStart_toEndOf="@id/tv_around_place_place_count"
+                        app:layout_constraintTop_toTopOf="@id/tv_around_place_place_count">
+
+                        <ImageView
+                            android:id="@+id/iv_around_place_trip_like_count"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:src="@drawable/ic_like_selected_red"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_around_place_trip_like_count"
+                            count="@{tripInfo.heartCount}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:fontFamily="@font/noto_sans_regular"
+                            android:src="@drawable/ic_place_gray"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/iv_around_place_trip_like_count"
+                            tools:text="99" />
+
+                        <ImageView
+                            android:id="@+id/iv_around_place_like_arrow"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintStart_toEndOf="@id/tv_around_place_trip_like_count"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/white" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <androidx.appcompat.widget.Toolbar
@@ -165,101 +257,13 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="@id/btn_around_place_like" />
 
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </androidx.appcompat.widget.Toolbar>
 
             </com.google.android.material.appbar.SubtitleCollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_around_place_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/rectangle_border_white_16"
-            android:paddingStart="8dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="4dp"
-            android:paddingBottom="6dp"
-            app:layout_anchor="@id/appbar_around_place"
-            app:layout_anchorGravity="bottom|end">
-
-            <ImageView
-                android:padding="2dp"
-                android:id="@+id/iv_around_place_place_count"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_place_fill_blue"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_around_place_place_count"
-                count="@{tripInfo.placeCount}"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:fontFamily="@font/noto_sans_regular"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="@id/iv_around_place_place_count"
-                app:layout_constraintBottom_toBottomOf="@id/iv_around_place_place_count"
-                app:layout_constraintStart_toEndOf="@id/iv_around_place_place_count"
-                tools:text="99" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_around_place_like_count"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="6dp"
-                android:onClick="@{() -> viewModel.onLikeCountClicked(tripId)}"
-                app:layout_constraintBottom_toBottomOf="@id/tv_around_place_place_count"
-                app:layout_constraintStart_toEndOf="@id/tv_around_place_place_count"
-                app:layout_constraintTop_toTopOf="@id/tv_around_place_place_count">
-
-                <ImageView
-                    android:id="@+id/iv_around_place_trip_like_count"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_like_selected_red"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/tv_around_place_trip_like_count"
-                    count="@{tripInfo.heartCount}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/noto_sans_regular"
-                    android:src="@drawable/ic_place_gray"
-                    android:textColor="@color/black"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/iv_around_place_trip_like_count"
-                    tools:text="99" />
-
-                <ImageView
-                    android:id="@+id/iv_around_place_like_arrow"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:padding="4dp"
-                    android:src="@drawable/ic_arrow_right"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintStart_toEndOf="@id/tv_around_place_trip_like_count"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView_around_place"

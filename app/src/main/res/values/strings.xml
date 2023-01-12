@@ -168,4 +168,8 @@
     <string name="trip_search_popular_title">인기 검색어</string>
     <string name="trip_search_refresh_description">매일매일 초기화 돼요!</string>
     <string name="trip_search_result_empty">검색 결과가 없습니다.</string>
+
+    <!-- Help dialog -->
+    <string name="dialog_help_title">여행지에서는 여행했던 지역을 추가하세요!\n추가한 여행지 안에 좋았던 장소들을 기록해보세요:)</string>
+    <string name="dialog_help_subtitle">예시) 여행지: 부산/ 장소: 해운대, 광안리</string>
 </resources>

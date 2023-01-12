@@ -19,6 +19,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Fade
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
@@ -41,6 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 class AroundPlaceFragment : Fragment() {
     private lateinit var binding: FragmentAroundPlaceBinding
@@ -105,7 +109,9 @@ class AroundPlaceFragment : Fragment() {
             val icLikeRed =
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_like_selected_red, null)
 
-            if (verticalOffset < -700) {
+
+            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
+                //  Collapsed
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     icBack?.colorFilter = BlendModeColorFilter(
                         ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
@@ -122,10 +128,20 @@ class AroundPlaceFragment : Fragment() {
                     icMore?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
                     icLike?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
                 }
+            } else if (abs(verticalOffset) > 0) {
+                with(binding.layoutAroundPlaceCount) {
+                    val transition: Transition = Fade()
+                    transition.duration = 600L
+                    transition.addTarget(this)
 
-                binding.layoutAroundPlaceCount.visibility = View.GONE   // 장소, 좋아요 카운트 안 보이게
-
+                    TransitionManager.beginDelayedTransition(
+                        binding.layoutCollapsingAroundPlace,
+                        transition
+                    )
+                    visibility = View.GONE
+                }
             } else {
+                //Expanded
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     icBack?.colorFilter = BlendModeColorFilter(
                         ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
@@ -142,7 +158,18 @@ class AroundPlaceFragment : Fragment() {
                     icMore?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
                     icLike?.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
                 }
-                binding.layoutAroundPlaceCount.visibility = View.VISIBLE
+
+                with(binding.layoutAroundPlaceCount) {
+                    val transition: Transition = Fade()
+                    transition.duration = 600L
+                    transition.addTarget(this)
+
+                    TransitionManager.beginDelayedTransition(
+                        binding.layoutCollapsingAroundPlace,
+                        transition
+                    )
+                    visibility = View.VISIBLE
+                }
             }
 
             binding.tbAroundPlace.navigationIcon = icBack
@@ -154,6 +181,8 @@ class AroundPlaceFragment : Fragment() {
                 binding.btnAroundPlaceLike.setImageDrawable(icLike)
             }
         }
+
+        binding.layoutCollapsingAroundPlace.addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 -> }
     }
 
     private fun getTripId() {

@@ -29,6 +29,7 @@
                 android:layout_height="match_parent">
 
                 <EditText
+                    android:visibility="gone"
                     android:id="@+id/et_like_trip_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

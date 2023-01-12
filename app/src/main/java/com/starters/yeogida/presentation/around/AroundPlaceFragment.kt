@@ -109,7 +109,6 @@ class AroundPlaceFragment : Fragment() {
             val icLikeRed =
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_like_selected_red, null)
 
-
             if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
                 //  Collapsed
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -128,10 +127,10 @@ class AroundPlaceFragment : Fragment() {
                     icMore?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
                     icLike?.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
                 }
-            } else if (abs(verticalOffset) > 0) {
+
                 with(binding.layoutAroundPlaceCount) {
                     val transition: Transition = Fade()
-                    transition.duration = 600L
+                    transition.duration = 1L
                     transition.addTarget(this)
 
                     TransitionManager.beginDelayedTransition(
@@ -181,8 +180,6 @@ class AroundPlaceFragment : Fragment() {
                 binding.btnAroundPlaceLike.setImageDrawable(icLike)
             }
         }
-
-        binding.layoutCollapsingAroundPlace.addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 -> }
     }
 
     private fun getTripId() {

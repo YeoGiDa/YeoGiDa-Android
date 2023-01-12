@@ -41,6 +41,19 @@
             app:layout_constraintStart_toEndOf="@+id/iv_add_trip_back"
             app:layout_constraintTop_toTopOf="@+id/iv_add_trip_back" />
 
+        <ImageView
+            android:id="@+id/iv_add_trip_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:onClick="@{view::showDialog}"
+            android:padding="12dp"
+            android:src="@drawable/ic_help"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_add_trip_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_add_trip_back" />
+
+
         <TextView
             android:id="@+id/tv_add_trip_region_title"
             android:layout_width="wrap_content"

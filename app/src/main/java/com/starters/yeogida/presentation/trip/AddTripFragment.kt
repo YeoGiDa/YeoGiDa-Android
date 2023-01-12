@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -443,5 +445,15 @@ class AddTripFragment : Fragment() {
 
     fun close(view: View) {
         (activity as AddTripActivity).finish()
+    }
+
+    fun showDialog(view: View) {
+        val myLayout = layoutInflater.inflate(R.layout.dialog_help, null)
+        val build = android.app.AlertDialog.Builder(view.context).apply {
+            setView(myLayout)
+        }
+        val dialog = build.create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 }

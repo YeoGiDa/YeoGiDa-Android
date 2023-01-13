@@ -187,6 +187,8 @@ class FollowFragment : Fragment() {
     }
 
     private fun initFollowingData() {
+        binding.etSearch.hint = "팔로잉 유저를 검색해보세요"
+
         CoroutineScope(Dispatchers.IO).launch {
             // 팔로잉 목록
             val followingUserResponse = followService.getFollowingUser()

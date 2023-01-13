@@ -39,7 +39,7 @@
     <string name="navi_follow">팔로우</string>
 
     <!-- Follow Fragment -->
-    <string name="follow_search_hint">유저 닉네임으로 검색해보세요</string>
+    <string name="follow_search_hint">팔로워 유저를 검색해보세요</string>
     <string name="follow_item_delete">삭제</string>
 
     <!-- Home Fragment -->

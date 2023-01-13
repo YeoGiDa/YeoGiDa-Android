@@ -58,6 +58,7 @@
             app:layout_constraintTop_toTopOf="@+id/tv_home_title" />
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView_home"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
@@ -165,26 +166,12 @@
                     android:layout_marginTop="24dp"
                     android:fontFamily="@font/noto_sans_bold"
                     android:text="@string/home_recent_trip_title"
+                    android:onClick="@{view::clickRecentTripAll}"
                     android:textColor="@color/black_blue"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="@+id/tv_best_traveler_title"
                     app:layout_constraintTop_toBottomOf="@+id/rv_best_monthly_trip" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_recent_trip"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="24dp"
-                    android:orientation="horizontal"
-                    android:paddingEnd="10dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_recent_trip"
-                    tools:listitem="@layout/item_home_trip" />
 
                 <TextView
                     android:id="@+id/tv_more_recent_trip"
@@ -205,17 +192,19 @@
                     android:id="@+id/tv_follow_recent_trip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="12dp"
                     android:fontFamily="@font/noto_sans_bold"
                     android:text="@string/home_recent_trip_title_follow"
-                    android:textColor="@color/black_blue"
+                    android:textColor="@color/gray_400"
                     android:textSize="18sp"
+                    android:onClick="@{view::clickRecentTripFollow}"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/tv_recent_trip"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_recent_trip" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_recent_trip"
+                    app:layout_constraintStart_toEndOf="@+id/tv_recent_trip"
+                    app:layout_constraintTop_toTopOf="@+id/tv_recent_trip" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_follow_recent_trip"
+                    android:id="@+id/rv_recent_trip"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"

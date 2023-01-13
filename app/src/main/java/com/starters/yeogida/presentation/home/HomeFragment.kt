@@ -2,7 +2,10 @@ package com.starters.yeogida.presentation.home
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +33,10 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var mContext: Context
+    private var recyclerViewState = 0
+    private val recentTripAdapter = TripAdapter { tripId: Long ->
+        moveToTrip(tripId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,37 +86,44 @@ class HomeFragment : Fragment() {
             }
         )
 
-        val recentTripAdapter = TripAdapter { tripId: Long ->
-            moveToTrip(tripId)
-        }
-        binding.rvRecentTrip.adapter = recentTripAdapter
-        YeogidaClient.homeService.getRecentTrip().customEnqueue(
-            onSuccess = {
-                it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
-                recentTripAdapter.notifyDataSetChanged()
-            }
-        )
+        initRecentTripAdapter("all")
+    }
 
-        val followRecentTripAdapter = TripAdapter { tripId: Long ->
-            moveToTrip(tripId)
-        }
-        binding.rvFollowRecentTrip.adapter = followRecentTripAdapter
-        YeogidaClient.homeService.getFollowRecentTrip().customEnqueue(
-            onSuccess = {
-                if (it.code == 200) {
-                    binding.tvHomeFollowRecentTripEmpty.text = ""
-                    it.data?.let { data -> followRecentTripAdapter.tripList.addAll(data.tripList) }
-                    followRecentTripAdapter.notifyDataSetChanged()
-                }
-            },
-            onError = {
-                if (it.message == "No one Follow Error!") {
-                    binding.tvHomeFollowRecentTripEmpty.text = "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
-                } else if (it.message == "Trip NotFound Error!") {
-                    binding.tvHomeFollowRecentTripEmpty.text = "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
-                }
+    private fun initRecentTripAdapter(type: String) {
+        when (type) {
+            "all" -> {
+                binding.rvRecentTrip.adapter = recentTripAdapter
+                YeogidaClient.homeService.getRecentTrip().customEnqueue(
+                    onSuccess = {
+                        recentTripAdapter.tripList.clear()
+                        it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
+                        recentTripAdapter.notifyDataSetChanged()
+                    }
+                )
             }
-        )
+            "follow" -> {
+                binding.rvRecentTrip.adapter = recentTripAdapter
+                YeogidaClient.homeService.getFollowRecentTrip().customEnqueue(
+                    onSuccess = {
+                        if (it.code == 200) {
+                            recentTripAdapter.tripList.clear()
+                            binding.tvHomeFollowRecentTripEmpty.text = ""
+                            it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
+                            recentTripAdapter.notifyDataSetChanged()
+                        }
+                    },
+                    onError = {
+                        if (it.message == "No one Follow Error!") {
+                            binding.tvHomeFollowRecentTripEmpty.text =
+                                "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
+                        } else if (it.message == "Trip NotFound Error!") {
+                            binding.tvHomeFollowRecentTripEmpty.text =
+                                "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
+                        }
+                    }
+                )
+            }
+        }
     }
 
     private fun moveToTrip(tripId: Long) {
@@ -169,5 +183,17 @@ class HomeFragment : Fragment() {
 
     fun moveToMoreRecentTrip(view: View) {
         startActivity(Intent(mContext, MoreRecentTripActivity::class.java))
+    }
+
+    fun clickRecentTripFollow(view: View) {
+        binding.tvRecentTrip.setTextColor(Color.parseColor("#BCBCBC"))
+        binding.tvFollowRecentTrip.setTextColor(Color.parseColor("#000000"))
+        initRecentTripAdapter("follow")
+    }
+
+    fun clickRecentTripAll(view: View) {
+        binding.tvRecentTrip.setTextColor(Color.parseColor("#000000"))
+        binding.tvFollowRecentTrip.setTextColor(Color.parseColor("#BCBCBC"))
+        initRecentTripAdapter("all")
     }
 }

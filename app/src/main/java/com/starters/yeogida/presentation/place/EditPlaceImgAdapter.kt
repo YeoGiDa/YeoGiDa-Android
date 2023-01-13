@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.databinding.ItemEditPlacePhotoBinding
+import com.starters.yeogida.util.ImageUtil
 import java.io.File
 
 class EditPlaceImgAdapter(
@@ -12,14 +13,28 @@ class EditPlaceImgAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val binding =
-            ItemEditPlacePhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemEditPlacePhotoBinding.inflate(inflater, parent, false)
+
         return ImgViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        imageFileList[position]?.let {
-            if (holder is ImgViewHolder) holder.bind(it)
+        if (holder is ImgViewHolder) {
+            imageFileList[position]?.let { file ->
+                holder.bind(file)
+
+                if (position <= imageFileList.size) {
+                    val endPosition = if (position + 6 > imageFileList.size) {
+                        imageFileList.size
+                    } else {
+                        position + 6
+                    }
+                    imageFileList.subList(position, endPosition).map { it }.forEach {
+                        ImageUtil.preload(holder.itemView.context, file)
+                    }
+                }
+            }
         }
     }
 
@@ -36,5 +51,4 @@ class EditPlaceImgAdapter(
             binding.executePendingBindings()
         }
     }
-
 }

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
+import com.starters.yeogida.GlideApp
 import java.io.File
 import java.io.FileInputStream
 
@@ -97,5 +98,18 @@ object ImageUtil {
         }
     }
 
-    //
+    fun preload(context: Context, imageFile: File) {
+        GlideApp.with(context).load(imageFile)
+            .preload(150, 150)
+    }
+
+    fun preload(context: Context, url: String) {
+        GlideApp.with(context).load(url)
+            .preload(150, 150)
+    }
+
+    fun preload(context: Context, uri: Uri) {
+        GlideApp.with(context).load(uri)
+            .preload(150, 150)
+    }
 }

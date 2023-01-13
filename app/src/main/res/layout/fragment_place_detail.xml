@@ -44,6 +44,25 @@
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.3" />
 
+                <TextView
+                    android:id="@+id/tv_around_place_photo_counter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/rectangle_fill_black_a30_16"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="bottom|end"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_item_place_detail"
+                    tools:text="1 / 26" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"

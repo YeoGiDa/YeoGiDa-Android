@@ -21,6 +21,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.ReportRequest
@@ -41,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 import kotlin.properties.Delegates
 
 class PlaceDetailFragment : Fragment() {
@@ -95,7 +97,9 @@ class PlaceDetailFragment : Fragment() {
         binding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val icBack = ResourcesCompat.getDrawable(resources, R.drawable.ic_back, null)
             val icMore = ResourcesCompat.getDrawable(resources, R.drawable.ic_more, null)
-            if (verticalOffset < -700) {
+
+            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
+                //  Collapsed
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     icBack?.colorFilter = BlendModeColorFilter(
                         ContextCompat.getColor(requireContext(), R.color.black), BlendMode.SRC_ATOP
@@ -109,6 +113,7 @@ class PlaceDetailFragment : Fragment() {
                 }
 
             } else {
+                //Expanded
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     icBack?.colorFilter = BlendModeColorFilter(
                         ContextCompat.getColor(requireContext(), R.color.white), BlendMode.SRC_ATOP
@@ -202,8 +207,23 @@ class PlaceDetailFragment : Fragment() {
 
     private fun setToolbar(placeImages: List<PlaceImg>) {
         with(binding.viewpagerPlaceToolbar) {
-            adapter = PlaceDetailPhotoAdapter(placeImages)
+            val placeDetailPhotoAdapter = PlaceDetailPhotoAdapter(placeImages)
+            adapter = PlaceDetailPhotoAdapter(placeImages).apply {
+                binding.tvAroundPlacePhotoCounter.text = "1 / $itemCount"
+            }
             binding.indicatorPlaceDetailToolbar.attachToPager(this)
+
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
+                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                    binding.tvAroundPlacePhotoCounter.text =
+                        "${position + 1} / ${placeDetailPhotoAdapter.itemCount}"
+                }
+            })
         }
     }
 

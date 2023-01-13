@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -25,13 +25,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.BuildConfig
-import com.starters.yeogida.GlideApp
 import com.starters.yeogida.R
 import com.starters.yeogida.YeogidaApplication
+import com.starters.yeogida.data.remote.response.place.PlaceImg
 import com.starters.yeogida.databinding.FragmentEditPlaceBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
@@ -52,6 +50,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.net.URL
 
 class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
 
@@ -73,8 +72,6 @@ class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
     private var placeTag: String? = null
 
     private val placeImageFileList = mutableListOf<File?>()    // 기존 이미지 파일
-
-    private lateinit var placeRequestImages: List<MultipartBody.Part>
 
     private lateinit var mContext: Context
 
@@ -108,7 +105,6 @@ class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
         progressDialog = CustomProgressDialog(mContext)
 
         setOnBackPressed() // 뒤로가기 리스너
-        setPlaceImageAdapter()
         getPlaceDetail()
 
         onAddPhotoButtonClicked() // 장소 사진 추가 버튼 클릭
@@ -227,21 +223,15 @@ class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
                                     currChip.isChecked = true
                                 }
                             }
-
-                            // 기존 장소 사진 목록 가져오기
-                            if (data.placeImgs[0].imgUrl != "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png") {
-                                // 기본 이미지가 아닐 때
-                                placeImageFileList.clear()
-
-                                // Url -> File
-                                for (placeImg in data.placeImgs) {
-                                    initImageFiles(placeImg.imgUrl)
-                                }
-                                progressDialog.dismissDialog()
-                            } else {
+                        }
+                        // 기존 장소 사진 목록 가져오기
+                        if (data.placeImgs[0].imgUrl != "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png") {
+                            // 기본 이미지가 아닐 때
+                            initImageFiles(data.placeImgs)
+                        } else {
+                            withContext(Dispatchers.Main) {
                                 progressDialog.dismissDialog()
                             }
-
                         }
                     }
                 }
@@ -249,26 +239,22 @@ class EditPlaceFragment : Fragment(), PlaceEditImageClickListener {
         }
     }
 
-    private fun initImageFiles(imgUrl: String) {
-        imgUrl?.let {
-            GlideApp.with(mContext)
-                .asBitmap()
-                .load(it)
-                .into(object : CustomTarget<Bitmap>(1920, 1080) {
-                    override fun onResourceReady(
-                        bitmap: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        bitmapToImageFile(bitmap)
-                        binding.rvEditPlacePhoto.adapter?.notifyDataSetChanged()
-                    }
+    private suspend fun initImageFiles(placeImgs: List<PlaceImg>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            placeImgs.forEach { placeImg ->
+                val bitmap = BitmapFactory.decodeStream(URL(placeImg.imgUrl).openStream())
+                bitmapToImageFile(bitmap)
+            }
+        }.join()
 
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                })
+        withContext(Dispatchers.Main) {
+            setPlaceImageAdapter()
+            binding.rvEditPlacePhoto.adapter?.notifyItemRangeInserted(0, placeImgs.size)
+            progressDialog.dismissDialog()
         }
     }
 
-    private fun bitmapToImageFile(bitmap: Bitmap) {
+    private fun bitmapToImageFile(bitmap: Bitmap?) {
         val uri = UriUtil.bitmapToCompressedUri(mContext, bitmap, "")
         uri?.let {
             placeImageFileList.add(

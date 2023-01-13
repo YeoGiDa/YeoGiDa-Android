@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.chip.Chip
 import com.starters.yeogida.R
-import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.data.remote.request.ReportRequest
 import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentUserProfileBinding
@@ -61,12 +60,10 @@ class UserProfileFragment : Fragment() {
 
         getMemberId()
         setOnBackPressed()
-        // initUserProfile()
         setOnFollowBtnClicked()
 
         setTripAdapter()
         setOnTripClicked()
-        // initUserTripList()
         initBottomSheet()
         initChipClickListener()
 

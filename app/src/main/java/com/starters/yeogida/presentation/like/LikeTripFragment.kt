@@ -11,13 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.starters.yeogida.data.local.LikeTripData
 import com.starters.yeogida.data.remote.response.common.TripResponse
 import com.starters.yeogida.databinding.FragmentLikeTripBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.EventObserver
 import com.starters.yeogida.presentation.place.PlaceActivity
-import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,6 +27,8 @@ class LikeTripFragment : Fragment() {
     private val viewModel: LikeTripViewModel by viewModels()
     private val tripService = YeogidaClient.tripService
     private lateinit var mContext: Context
+
+    private val tripList = mutableListOf<TripResponse>()
 
     companion object {
         val REGION_CATEGORY_ITEM = "region_category_item"
@@ -101,28 +101,12 @@ class LikeTripFragment : Fragment() {
                                 200 -> {
                                     val data = response.body()?.data
                                     data?.let { data ->
-                                        val tripList = data.tripList
+                                        tripList.clear()
+                                        tripList.addAll(data.tripList)
 
-                                        RegionTripLists.all.clear()
-
-                                        for (i in tripList.indices) {
-                                            RegionTripLists.all.add(
-                                                LikeTripData(
-                                                    tripList[i].tripId,
-                                                    tripList[i].region,
-                                                    tripList[i].imgUrl,
-                                                    tripList[i].title,
-                                                    tripList[i].subTitle,
-                                                    tripList[i].nickname,
-                                                    true,
-                                                    tripList[i].heartCount,
-                                                    tripList[i].placeCount
-                                                )
-                                            )
-                                        }
                                         withContext(Dispatchers.Main) {
-                                            initMoveTopView(RegionTripLists.all)
-                                            setLikeAdapter(RegionTripLists.all)
+                                            initMoveTopView(tripList)
+                                            setLikeAdapter(tripList)
                                             binding.rvTrip.adapter?.notifyDataSetChanged()
                                         }
                                     }
@@ -165,28 +149,13 @@ class LikeTripFragment : Fragment() {
                 200 -> {
                     val data = response.body()?.data
                     data?.let { data ->
-                        val list = data.tripList
+                        tripList.clear()
+                        tripList.addAll(data.tripList)
 
-                        with(RegionTripLists) {
-                            when (region) {
-                                "서울" -> fetchList(seoul, list)
-                                "경기도" -> fetchList(gyeonggi, list)
-                                "인천" -> fetchList(incheon, list)
-                                "세종" -> fetchList(sejong, list)
-                                "강원도" -> fetchList(kangwon, list)
-                                "충청북도" -> fetchList(chungbuk, list)
-                                "충청남도" -> fetchList(chungnam, list)
-                                "대전" -> fetchList(daejeon, list)
-                                "광주" -> fetchList(kwangju, list)
-                                "전라북도" -> fetchList(jeonbuk, list)
-                                "전라남도" -> fetchList(jeonnam, list)
-                                "대구" -> fetchList(daegu, list)
-                                "울산" -> fetchList(ulsan, list)
-                                "부산" -> fetchList(busan, list)
-                                "경상북도" -> fetchList(kyeongbuk, list)
-                                "경상남도" -> fetchList(kyeongnam, list)
-                                else -> fetchList(jeju, list)
-                            }
+                        withContext(Dispatchers.Main) {
+                            initMoveTopView(tripList)
+                            setLikeAdapter(tripList)
+                            binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
                     }
                 }
@@ -196,36 +165,6 @@ class LikeTripFragment : Fragment() {
         }
     }
 
-    private suspend fun fetchList(
-        regionList: MutableList<LikeTripData>,
-        list: List<TripResponse>
-    ) {
-        regionList.clear()
-
-        for (i in list.indices) {
-            regionList.add(
-                LikeTripData(
-                    list[i].tripId,
-                    list[i].region,
-                    list[i].imgUrl,
-                    list[i].title,
-                    list[i].subTitle,
-                    list[i].nickname,
-                    true,
-                    list[i].heartCount,
-                    list[i].placeCount
-                )
-            )
-        }
-
-        withContext(Dispatchers.Main) {
-            initMoveTopView(regionList)
-            setLikeAdapter(regionList)
-            binding.rvTrip.adapter?.notifyDataSetChanged()
-        }
-    }
-
-
     private fun initLikeTrip() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = tripService.getLikeTrip()
@@ -234,28 +173,12 @@ class LikeTripFragment : Fragment() {
                 200 -> {
                     val data = response.body()?.data
                     data?.let { data ->
-                        val list = data.tripList
+                        tripList.clear()
+                        tripList.addAll(data.tripList)
 
-                        RegionTripLists.all.clear()
-
-                        for (i in list.indices) {
-                            RegionTripLists.all.add(
-                                LikeTripData(
-                                    list[i].tripId,
-                                    list[i].region,
-                                    list[i].imgUrl,
-                                    list[i].title,
-                                    list[i].subTitle,
-                                    list[i].nickname,
-                                    true,
-                                    list[i].heartCount,
-                                    list[i].placeCount
-                                )
-                            )
-                        }
                         withContext(Dispatchers.Main) {
-                            initMoveTopView(RegionTripLists.all)
-                            setLikeAdapter(RegionTripLists.all)
+                            initMoveTopView(tripList)
+                            setLikeAdapter(tripList)
                             binding.rvTrip.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -291,79 +214,13 @@ class LikeTripFragment : Fragment() {
         })
     }
 
-    private fun setLikeAdapter(list: List<LikeTripData>) {
+    private fun setLikeAdapter(list: List<TripResponse>) {
         with(binding.rvTrip) {
-            adapter = LikeTripAdapter(list, viewModel).apply {
-                itemClick = object : LikeTripAdapter.ItemClick {
-                    override fun onClick(likeBtn: View, likeTrip: LikeTripData) {
-
-                        if (likeBtn.isSelected) { // 좋아요가 눌려있을 때
-                            deleteLikeTrip(likeTrip, likeBtn)
-                        } else { // 좋아요가 눌려있지 않을 때
-                            addLikeTrip(likeTrip, likeBtn)
-                        }
-                    }
-                }
-            }
+            adapter = LikeTripAdapter(tripList, viewModel)
         }
     }
 
-    private fun addLikeTrip(
-        likeTrip: LikeTripData,
-        likeBtn: View
-    ) {
-        likeBtn.isSelected = true
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = tripService.postTripHeart(
-                likeTrip.tripId
-            )
-
-            when (response.code()) {
-                201 -> {
-                    withContext(Dispatchers.Main) {
-                        mContext.shortToast("좋아요를 추가하였습니다")
-                    }
-                }
-                else -> {
-                    Log.e("LikeResponse/Error", response.message())
-                    withContext(Dispatchers.Main) {
-                        likeBtn.isSelected = true
-                        mContext.shortToast("에러")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun deleteLikeTrip(
-        likeTrip: LikeTripData,
-        likeBtn: View
-    ) {
-        likeBtn.isSelected = false
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = tripService.deleteTripHeart(
-                likeTrip.tripId
-            )
-
-            when (response.code()) {
-                200 -> {
-                    withContext(Dispatchers.Main) {
-                        mContext.shortToast("좋아요를 취소하였습니다")
-                    }
-                }
-                else -> {
-                    Log.e("LikeResponse/Error", response.message())
-                    withContext(Dispatchers.Main) {
-                        likeBtn.isSelected = true
-                        mContext.shortToast("에러")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun initMoveTopView(list: List<LikeTripData>) {
+    private fun initMoveTopView(list: List<TripResponse>) {
         if (list.isEmpty()) {
             binding.layoutLikeTripTop.visibility = View.GONE
         } else {

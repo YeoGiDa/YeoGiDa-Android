@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.starters.yeogida.data.remote.response.place.PlaceImg
 import com.starters.yeogida.databinding.ItemPlaceDetailPhotoBinding
+import com.starters.yeogida.util.ImageUtil
 
 class PlaceDetailPhotoAdapter(
     private val imageUrlList: List<PlaceImg>
@@ -17,7 +18,20 @@ class PlaceDetailPhotoAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        holder.bind(imageUrlList[position])
+        imageUrlList[position]?.let { url ->
+            holder.bind(url)
+
+            if (position <= imageUrlList.size) {
+                val endPosition = if (position + 6 > imageUrlList.size) {
+                    imageUrlList.size
+                } else {
+                    position + 6
+                }
+                imageUrlList.subList(position, endPosition).map { it }.forEach {
+                    ImageUtil.preload(holder.itemView.context, url.imgUrl)
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int {

@@ -96,6 +96,7 @@ class HomeFragment : Fragment() {
                 YeogidaClient.homeService.getRecentTrip().customEnqueue(
                     onSuccess = {
                         recentTripAdapter.tripList.clear()
+                        binding.tvHomeFollowRecentTripEmpty.text = ""
                         it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
                         recentTripAdapter.notifyDataSetChanged()
                     }
@@ -114,9 +115,13 @@ class HomeFragment : Fragment() {
                     },
                     onError = {
                         if (it.message == "No one Follow Error!") {
+                            recentTripAdapter.tripList.clear()
+                            recentTripAdapter.notifyDataSetChanged()
                             binding.tvHomeFollowRecentTripEmpty.text =
                                 "아직 팔로잉한 사람이 없어요\n사람들을 팔로잉 해보세요!"
                         } else if (it.message == "Trip NotFound Error!") {
+                            recentTripAdapter.tripList.clear()
+                            recentTripAdapter.notifyDataSetChanged()
                             binding.tvHomeFollowRecentTripEmpty.text =
                                 "팔로잉들이 아직 게시글을 올리지 않았어요\n더 많은 사람들을 팔로잉 해보세요!"
                         }

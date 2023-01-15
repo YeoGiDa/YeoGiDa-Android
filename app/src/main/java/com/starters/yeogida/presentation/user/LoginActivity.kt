@@ -96,7 +96,14 @@ class LoginActivity : AppCompatActivity() {
                             val profileImageUrl = userAccount.profile?.profileImageUrl
 
                             CoroutineScope(Dispatchers.IO).launch {
-                                postLogin(email, userNum, nickname, profileImageUrl, "kakao")
+                                if (this@LoginActivity::fcmToken.isInitialized) {
+                                    postLogin(email, userNum, nickname, profileImageUrl, "kakao")
+                                } else {
+                                    launch {
+                                        getFCMToken()
+                                    }.join()
+                                    postLogin(email, userNum, nickname, profileImageUrl, "kakao")
+                                }
                             }
                         }
                     }
@@ -126,7 +133,14 @@ class LoginActivity : AppCompatActivity() {
                 // Log.e("handleSignInResult", "imgUrl : ${it.photoUrl}")
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    postLogin(it.email.toString(), it.id.toString(), null, null, "google")
+                    if (this@LoginActivity::fcmToken.isInitialized) {
+                        postLogin(it.email.toString(), it.id.toString(), null, null, "google")
+                    } else {
+                        launch {
+                            getFCMToken()
+                        }.join()
+                        postLogin(it.email.toString(), it.id.toString(), null, null, "google")
+                    }
                 }
             }
         } catch (e: ApiException) {
@@ -182,7 +196,6 @@ class LoginActivity : AppCompatActivity() {
                 // Get new FCM registration token
                 fcmToken = task.result
 
-
                 // Log and toast
                 Log.d("token", "FCM Token is $fcmToken")
             }
@@ -198,7 +211,6 @@ class LoginActivity : AppCompatActivity() {
     ) {
         Log.d("카카오 로그인", "email = $email")
         Log.d("카카오 로그인", "회원번호 = $userNum")
-
         val loginResponse = userService.postLogin(
             LoginRequestData(
                 email,

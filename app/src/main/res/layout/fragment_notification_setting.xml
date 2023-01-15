@@ -50,16 +50,31 @@
 
         <TextView
             android:id="@+id/tv_notification_setting"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/noto_sans_regular"
             android:gravity="center"
             android:text="@string/notification_setting_title"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_move_to_setting"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tb_notification_setting" />
+
+        <TextView
+            android:id="@+id/tv_move_to_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:paddingEnd="24dp"
+            android:text="설정하기"
+            android:onClick="@{view::moveToSetting}"
+            android:textColor="@color/main_blue"
+            app:layout_constraintBottom_toBottomOf="@id/tv_notification_setting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_notification_setting"
+            app:layout_constraintTop_toTopOf="@id/tv_notification_setting"
+            app:layout_constraintVertical_bias="0.0" />
 
         <View
             android:id="@+id/view1"

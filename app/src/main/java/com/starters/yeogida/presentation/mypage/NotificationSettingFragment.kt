@@ -1,11 +1,15 @@
 package com.starters.yeogida.presentation.mypage
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.YeogidaApplication
 import com.starters.yeogida.databinding.FragmentNotificationSettingBinding
 import kotlinx.coroutines.CoroutineScope
@@ -47,7 +51,7 @@ class NotificationSettingFragment : Fragment() {
         }
     }
 
-// 각 알림 switch check 변경 시
+    // 각 알림 switch check 변경 시
     fun changeSwitch(view: View) {
         with(binding) {
             // 각 알림 switch check를 모두 true 변경 시
@@ -60,7 +64,11 @@ class NotificationSettingFragment : Fragment() {
                 switchNotificationAll.isChecked = false
             }
 
-            saveNotification(like = switchNotificationLike.isChecked, follow = switchNotificationFollow.isChecked, comment = switchNotificationComment.isChecked)
+            saveNotification(
+                like = switchNotificationLike.isChecked,
+                follow = switchNotificationFollow.isChecked,
+                comment = switchNotificationComment.isChecked
+            )
         }
     }
 
@@ -95,5 +103,13 @@ class NotificationSettingFragment : Fragment() {
         binding.tbNotificationSetting.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    // 설정 화면으로 이동
+    fun moveToSetting(view: View) {
+        val intent =
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                .setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID))
+        startActivity(intent)
     }
 }

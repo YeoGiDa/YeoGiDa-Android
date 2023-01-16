@@ -6,17 +6,19 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -29,13 +31,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.starters.yeogida.BuildConfig
 import com.starters.yeogida.R
 import com.starters.yeogida.databinding.FragmentAroundBinding
@@ -150,6 +150,7 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
         val clusterManager = ClusterManager<ClusterPlace> (mContext, mMap)
         mMap.setOnCameraIdleListener(clusterManager)
         clusterManager.addItems(list)
+        clusterManager.renderer = MarkerClusterRenderer(mContext, mMap, clusterManager)
         clusterManager.cluster()
 
         clusterManager.setOnClusterItemClickListener {
@@ -159,6 +160,41 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             initBottomSheetAdapter(it.latLng.latitude, it.latLng.longitude)
 
             return@setOnClusterItemClickListener false
+        }
+    }
+
+    // 마커 이미지
+    class MarkerClusterRenderer(
+        context: Context?,
+        map: GoogleMap?,
+        clusterManager: ClusterManager<ClusterPlace>
+    ) :
+        DefaultClusterRenderer<ClusterPlace>(context, map, clusterManager) {
+        val context = context
+        override fun onBeforeClusterItemRendered(item: ClusterPlace, markerOptions: MarkerOptions) {
+            val marker = context?.let { bitmapDescriptorFromVector(it, R.drawable.ic_app_marker) }
+            markerOptions.icon(marker)
+        }
+
+        private fun bitmapDescriptorFromVector(
+            context: Context,
+            @DrawableRes vectorResId: Int
+        ): BitmapDescriptor? {
+            val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+            vectorDrawable!!.setBounds(
+                0,
+                0,
+                vectorDrawable.intrinsicWidth,
+                vectorDrawable.intrinsicHeight
+            )
+            val bitmap = Bitmap.createBitmap(
+                vectorDrawable.intrinsicWidth,
+                vectorDrawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            vectorDrawable.draw(canvas)
+            return BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
@@ -355,7 +391,6 @@ class AroundFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickLi
             Place.Field.LAT_LNG,
             Place.Field.NAME,
         )
-
 
         val intent = Autocomplete.IntentBuilder(
             AutocompleteActivityMode.OVERLAY,

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,10 +32,15 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var mContext: Context
-    private var recyclerViewState = 0
     private val recentTripAdapter = TripAdapter { tripId: Long ->
         moveToTrip(tripId)
     }
+
+    // 스크롤 위치 저장 변수
+    var stateBestTraveler: Parcelable? = null
+    var stateMonthlyTrip: Parcelable? = null
+    var stateRecentTrip: Parcelable? = null
+    var stateRecentFollowTrip: Parcelable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +68,19 @@ class HomeFragment : Fragment() {
         mContext = context
     }
 
+    override fun onPause() {
+        super.onPause()
+        saveRecyclerviewPosition()
+    }
+
+    // 스크롤 위치 저장
+    private fun saveRecyclerviewPosition() {
+        stateBestTraveler = binding.rvBestTraveler.layoutManager?.onSaveInstanceState()
+        stateRecentFollowTrip = binding.rvRecentTrip.layoutManager?.onSaveInstanceState()
+        stateRecentTrip = binding.rvRecentTrip.layoutManager?.onSaveInstanceState()
+        stateMonthlyTrip = binding.rvBestMonthlyTrip.layoutManager?.onSaveInstanceState()
+    }
+
     private fun initNetwork() {
         val bestTripAdapter = BestTripAdapter { tripId: Long ->
             moveToTrip(tripId)
@@ -74,6 +91,7 @@ class HomeFragment : Fragment() {
             onSuccess = { responseData ->
                 responseData.data?.let { data -> bestTripAdapter.tripList.addAll(data.tripList) }
                 bestTripAdapter.notifyDataSetChanged()
+                binding.rvBestMonthlyTrip.layoutManager?.onRestoreInstanceState(stateMonthlyTrip)
             }
         )
 
@@ -83,6 +101,7 @@ class HomeFragment : Fragment() {
             onSuccess = { responseData ->
                 responseData.data?.let { data -> bestTravelerAdapter.bestTravelerList.addAll(data.memberList) }
                 bestTravelerAdapter.notifyDataSetChanged()
+                binding.rvBestTraveler.layoutManager?.onRestoreInstanceState(stateBestTraveler)
             }
         )
 
@@ -99,6 +118,7 @@ class HomeFragment : Fragment() {
                         binding.tvHomeFollowRecentTripEmpty.text = ""
                         it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
                         recentTripAdapter.notifyDataSetChanged()
+                        binding.rvRecentTrip.layoutManager?.onRestoreInstanceState(stateRecentTrip)
                     }
                 )
             }
@@ -111,6 +131,7 @@ class HomeFragment : Fragment() {
                             binding.tvHomeFollowRecentTripEmpty.text = ""
                             it.data?.let { data -> recentTripAdapter.tripList.addAll(data.tripList) }
                             recentTripAdapter.notifyDataSetChanged()
+                            binding.rvRecentTrip.layoutManager?.onRestoreInstanceState(stateRecentFollowTrip)
                         }
                     },
                     onError = {
@@ -193,12 +214,14 @@ class HomeFragment : Fragment() {
     fun clickRecentTripFollow(view: View) {
         binding.tvRecentTrip.setTextColor(Color.parseColor("#BCBCBC"))
         binding.tvFollowRecentTrip.setTextColor(Color.parseColor("#000000"))
+        stateRecentFollowTrip = binding.rvRecentTrip.layoutManager?.onSaveInstanceState()
         initRecentTripAdapter("follow")
     }
 
     fun clickRecentTripAll(view: View) {
         binding.tvRecentTrip.setTextColor(Color.parseColor("#000000"))
         binding.tvFollowRecentTrip.setTextColor(Color.parseColor("#BCBCBC"))
+        stateRecentTrip = binding.rvRecentTrip.layoutManager?.onSaveInstanceState()
         initRecentTripAdapter("all")
     }
 }

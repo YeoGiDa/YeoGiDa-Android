@@ -54,8 +54,6 @@ class LikeFragment : Fragment() {
                     tempRegionList.add("전체")
 
                     for (i in tripList.indices) {
-                        Log.e("getRegionData", regionList.toString())
-                        Log.e("getRegionData", tripList[i].region)
                         if (tempRegionList.contains(tripList[i].region)) continue
                         tempRegionList.add(tripList[i].region)
                     }

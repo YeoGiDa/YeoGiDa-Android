@@ -4,169 +4,174 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.starters.yeogida.presentation.user.JoinViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.user.JoinActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_join"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_join"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            app:contentInsetStart="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationContentDescription="뒤로가기"
-            app:navigationIcon="@drawable/ic_back">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_join"
+                app:layout_scrollFlags="noScroll"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/noto_sans_medium"
-                android:text="@string/join_title"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:paddingStart="4dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:contentInsetStart="0dp"
+                app:navigationContentDescription="뒤로가기"
+                app:navigationIcon="@drawable/ic_back">
 
-        </androidx.appcompat.widget.Toolbar>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:text="@string/join_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
-        <View
-            android:id="@+id/view_separate"
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:paddingBottom="100dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/gray_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_join" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_profile_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/join_profile_image"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_separate" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:fontFamily="@font/noto_sans_regular"
-            android:text="@string/join_profile_image_optional"
-            app:layout_constraintBottom_toBottomOf="@id/tv_profile_description"
-            app:layout_constraintStart_toEndOf="@+id/tv_profile_description" />
+                <TextView
+                    android:id="@+id/tv_profile_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:text="@string/join_profile_image"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/iv_profile"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="80dp"
-            android:background="@drawable/oval_gray100_border"
-            android:onClick="@{ () -> viewModel.onImageButtonClick() }"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_profile_description"
-            app:shapeAppearanceOverlay="@style/RoundedMedium" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:text="@string/join_profile_image_optional"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_profile_description"
+                    app:layout_constraintStart_toEndOf="@+id/tv_profile_description" />
 
-        <ImageButton
-            android:id="@+id/btn_plus"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/oval_white"
-            android:backgroundTint="@color/main_blue"
-            android:onClick="@{ () -> viewModel.onImageButtonClick() }"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_plus_image"
-            app:layout_constraintBottom_toBottomOf="@id/iv_profile"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@id/iv_profile"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:tint="@color/white" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/oval_gray100_border"
+                    android:onClick="@{ () -> viewModel.onImageButtonClick() }"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toTopOf="@id/tv_nick"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_profile_description"
+                    app:shapeAppearanceOverlay="@style/RoundedMedium" />
 
-        <TextView
-            android:id="@+id/tv_nick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/join_nickname"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_plus" />
+                <ImageButton
+                    android:id="@+id/btn_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/oval_white"
+                    android:backgroundTint="@color/main_blue"
+                    android:onClick="@{ () -> viewModel.onImageButtonClick() }"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_plus_image"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                    app:layout_constraintEnd_toEndOf="@id/iv_profile"
+                    app:tint="@color/white" />
 
-        <TextView
-            android:id="@+id/tv_nick_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="50dp"
-            android:fontFamily="@font/noto_sans_medium"
-            android:text="@string/join_nick_description"
-            android:textColor="@color/gray_500"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_nick"
-            app:layout_constraintStart_toEndOf="@+id/tv_nick" />
+                <TextView
+                    android:id="@+id/tv_nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="340dp"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:text="@string/join_nickname"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/et_nick"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/selector_et_blue"
-            android:fontFamily="@font/noto_sans_regular"
-            android:hint="@string/join_nickname_hint"
-            android:maxLength="8"
-            android:maxLines="1"
-            android:inputType="text"
-            android:padding="16dp"
-            android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/main_blue_cursor"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
+                <TextView
+                    android:id="@+id/tv_nick_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="50dp"
+                    android:fontFamily="@font/noto_sans_medium"
+                    android:text="@string/join_nick_description"
+                    android:textColor="@color/gray_500"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_nick"
+                    app:layout_constraintStart_toEndOf="@+id/tv_nick" />
 
-        <TextView
-            android:id="@+id/tv_warn_nick_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/join_nick_error"
-            android:textColor="@color/red"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/et_nick"
-            app:layout_constraintTop_toBottomOf="@+id/et_nick"
-            tools:visibility="visible" />
+                <EditText
+                    android:id="@+id/et_nick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/selector_et_blue"
+                    android:fontFamily="@font/noto_sans_regular"
+                    android:hint="@string/join_nickname_hint"
+                    android:inputType="text"
+                    android:maxLength="8"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@drawable/main_blue_cursor"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
+
+                <TextView
+                    android:id="@+id/tv_warn_nick_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/join_nick_error"
+                    android:textColor="@color/red"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@id/et_nick"
+                    app:layout_constraintTop_toBottomOf="@+id/et_nick"
+                    tools:visibility="visible" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_join_submit"
@@ -180,16 +185,10 @@
             android:text="@string/join_submit"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:layout_gravity="bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

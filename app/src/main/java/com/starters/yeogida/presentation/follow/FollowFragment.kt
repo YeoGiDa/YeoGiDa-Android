@@ -16,6 +16,8 @@ import com.starters.yeogida.databinding.FragmentFollowBinding
 import com.starters.yeogida.network.YeogidaClient
 import com.starters.yeogida.presentation.common.CustomDialog
 import com.starters.yeogida.presentation.common.EventObserver
+import com.starters.yeogida.presentation.follow.FollowLists.follower
+import com.starters.yeogida.presentation.follow.FollowLists.following
 import com.starters.yeogida.presentation.user.profile.UserProfileActivity
 import com.starters.yeogida.util.shortToast
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +29,7 @@ import java.util.regex.Pattern
 class FollowFragment : Fragment() {
     private lateinit var binding: FragmentFollowBinding
     private val viewModel: FollowViewModel by viewModels()
+
     private val followService = YeogidaClient.followService
     private lateinit var mContext: Context
 
@@ -177,12 +180,13 @@ class FollowFragment : Fragment() {
 
     private suspend fun setFollowerList(followerList: List<FollowUserData>?) {
         followerList?.let {
-            FollowLists.follower.clear()
-            FollowLists.follower.addAll(followerList)
-        }
+            follower.clear()
+            follower.addAll(it)
 
-        withContext(Dispatchers.Main) {
-            binding.rvFollow.adapter?.notifyDataSetChanged()
+            withContext(Dispatchers.Main) {
+                setFollowAdapter(follower, 0)
+
+            }
         }
     }
 
@@ -214,12 +218,12 @@ class FollowFragment : Fragment() {
 
     private suspend fun setFollowingList(followingList: List<FollowUserData>?) {
         followingList?.let {
-            FollowLists.following.clear()
-            FollowLists.following.addAll(followingList)
-        }
+            following.clear()
+            following.addAll(it)
 
-        withContext(Dispatchers.Main) {
-            binding.rvFollow.adapter?.notifyDataSetChanged()
+            withContext(Dispatchers.Main) {
+                setFollowAdapter(following, 1)
+            }
         }
     }
 
@@ -239,11 +243,11 @@ class FollowFragment : Fragment() {
         choice?.let {
             when (choice) {
                 0 -> {
-                    setFollowAdapter(FollowLists.follower, choice)
+                    // setFollowAdapter(follower, choice)
                     initFollowerData()
                 }
                 1 -> {
-                    setFollowAdapter(FollowLists.following, choice)
+                    // setFollowAdapter(following, choice)
                     initFollowingData()
                 }
                 else -> {}
@@ -276,6 +280,7 @@ class FollowFragment : Fragment() {
                         showDialog(choice, user)
                     }
                 }
+                submitList(followUserResponseList)
             }
         }
     }
@@ -306,7 +311,7 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.follower.remove(user) // 목록에서 삭제
-                            binding.rvFollow.adapter?.notifyDataSetChanged()
+                            setFollowAdapter(follower, 0)
                         }
                     }
                     else -> {
@@ -325,7 +330,7 @@ class FollowFragment : Fragment() {
                     200 -> {
                         withContext(Dispatchers.Main) {
                             FollowLists.following.remove(user) // 목록에서 삭제
-                            binding.rvFollow.adapter?.notifyDataSetChanged()
+                            setFollowAdapter(following, 1)
                         }
                     }
                     else -> {

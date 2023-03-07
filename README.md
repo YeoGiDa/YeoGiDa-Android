@@ -1,4 +1,4 @@
-# YeoGiDa-Android
+# 여기다
 
 <img src="https://user-images.githubusercontent.com/77600832/221890855-cf3721c4-2619-45f0-88a3-0c1501a8cb9d.png"  width="200" height="200"/>
 
@@ -9,6 +9,25 @@
 인기있는 여행지와 Traveler를 볼 수 있는 홈 화면, 위치를 기준으로 장소를 확인할 수 있는 둘러보기 화면이 있습니다. 또한, 내가 좋아요한 여행지를 한 눈에 볼 수 있는 여기 좋아 화면, 팔로우 / 팔로잉을 확인할 수 있는 친구 화면이 있습니다.
 <br> </br>
 ![여기다 캡처](https://user-images.githubusercontent.com/77600832/223436141-9ba5c659-138f-41a5-87c7-1bfc7c12c079.png)
+
+----
+
+## 기능 소개
+
+### 여행지, 장소 기록
+![image](https://user-images.githubusercontent.com/77600832/223440591-06b149fd-f861-48f0-a959-1daf41e9a23b.png)
+
+
+### 지도로 둘러보기
+![지도로 둘러보기](https://user-images.githubusercontent.com/77600832/223441313-e339ed8f-9aba-4650-8897-62fc31936c14.png)
+
+
+### 팔로잉/팔로워
+![팔로잉, 팔로워](https://user-images.githubusercontent.com/77600832/223441373-912661f5-5765-4dfc-b42a-ca509b90094f.png)
+
+
+### 베스트 여행지, Traveler
+![베스트 여행지, 트래블러](https://user-images.githubusercontent.com/77600832/223441443-387746dc-4376-4a96-9201-5732af94a548.png)
 
 ## Tech Spec
 - Lang : Kotlin
